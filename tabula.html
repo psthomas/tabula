@@ -1,0 +1,284 @@
+
+<!doctype html>
+<head>
+<style>
+body {
+/*    max-width: 900px;
+    margin: 40px auto;*/
+    /*font-family: sans-serif;*/
+}
+
+/*https://css-tricks.com/simple-css-row-column-highlighting/*/
+table {
+  overflow: hidden;
+  border:1px solid #ccc;
+}
+
+tr:hover {
+  background-color: #f2f2f2;;
+}
+td, th {
+  position: relative;
+}
+td:hover::after,
+th:hover::after {
+  content: "";
+  position: absolute;
+  background-color: #f2f2f2;;
+  left: 0;
+  top: -5000px;
+  height: 10000px;
+  width: 100%;
+  z-index: -1;
+}
+
+
+/*table tr:nth-child(even) {
+    background-color:lightgray;
+}*/
+table tr {
+	border:1px solid #ccc;
+}
+table tr:nth-child(odd) {
+    /*background-color:#f2f2f2;*/
+}
+table th {
+	background-color:#f2f2f2;
+	border:1px solid #ccc;
+}
+.wrapper {
+/*	width:700px;*/
+	/*margin: 40px auto;*/
+	margin:50px 0px;
+	text-align:center;
+}
+.center {
+	display:inline-block;
+}
+#input {
+	text-align:left;
+}
+
+.grid { /*margin:1em auto;*/ border-collapse:collapse }
+.grid td {
+    cursor:pointer;
+    width:20px; height:20px;  /*30, 30*/
+    border:1px solid #ccc;
+    text-align:center;
+    font-family:sans-serif; font-size:13px
+}
+.grid td.clicked {
+    background-color:yellow;
+    font-weight:bold; color:red;
+}
+/*#input {margin:1em auto;}*/
+</style>
+
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script> -->
+<script src="./seedrandom.js"></script>
+
+</head>
+
+<body>
+
+
+<div class="wrapper">
+<div class="center">
+	<div id='input'>
+		<!-- Should the master be password protected too?-->
+		Master: <input id="seed" type="text" size="70" value="CorrectHorseBatteryStaple"/>
+		<input id="click" type="button" value="Create" onclick="buildGrid();"/> <br>
+		Output: <input type="password" size="70" value="" id="password">
+		<button onclick="copyPs()">Copy</button> 
+		<button onclick="clearPs();">Clear</button> <br>
+		<input type="checkbox" onclick="togglePs();">Show Password 
+		
+	</div>
+	<div id="tabula"></div>
+	<!-- <input type="password" name="password" id="myPassword" size="70" /> -->
+	<!-- <img src="theicon" onmouseover="mouseoverPass();" onmouseout="mouseoutPass();" /> -->
+</div>
+</div>
+
+
+<!-- source: https://stackoverflow.com/questions/9140101,  http://jsfiddle.net/6qkdP/2/ -->
+<script>
+
+
+// var seed = document.getElementById('seed').value;
+// Math.seedrandom(seed);
+// // var src = Math.random();
+// // var src2 = Math.random();
+// // console.log(src, src2);
+// var all = [];
+
+// var lastClicked;
+// var grid = clickableGrid(26,26,function(el,row,col,i){
+//     // console.log("You clicked on element:",el);
+//     // console.log("You clicked on row:",row);
+//     // console.log("You clicked on col:",col);
+//     // console.log("You clicked on item #:",i);
+//     el.className='clicked';
+//     if (lastClicked) lastClicked.className='';
+//     lastClicked = el;
+// });
+
+// document.body.appendChild(grid);
+
+function generateHeader(alpha) {
+	//console.log(alpha);
+    var header = document.createElement('thead');
+    var hrow = document.createElement('tr');
+    hrow.appendChild(document.createElement('th'));
+    for (var j=0; j<alpha.length; j++) {
+    	var th = document.createElement('th');
+    	th.innerHTML = alpha[j];
+    	hrow.appendChild(th);
+    }
+    header.appendChild(hrow);
+    //console.log(header);
+    return header;
+}
+
+
+
+//source: https://stackoverflow.com/questions/9140101,
+// http://jsfiddle.net/6qkdP/2/      
+function clickableGrid(rows, cols, callback){
+    var i=0;
+    var grid = document.createElement('table');
+    grid.className = 'grid';
+
+    var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    var header = generateHeader(alpha);
+    grid.appendChild(header);
+    
+    for (var r=0; r<rows; ++r){
+        var tr = grid.appendChild(document.createElement('tr'));
+
+        //Add the row alphabet header
+        var h = document.createElement('th');
+        h.innerHTML = alpha[r];
+        tr.appendChild(h);
+
+        for (var c=0; c<cols; ++c){
+            var cell = tr.appendChild(document.createElement('td'));
+            //cell.innerHTML = ++i;
+            ++i;
+            var str = randomString(1);
+            cell.innerHTML = str;
+            cell.addEventListener('click',(function(el,r,c,i,str){
+                return function(){
+                    callback(el,r,c,i,str);
+                }
+            })(cell,r,c,i,str),false);
+        }
+    }
+    return grid;
+}
+
+//Todo: insert white space in grid to begin with
+//generate all characters, then use d3 transition to transition 
+//from A or something else to final character
+// &nbsp; to begin with?
+
+
+function buildGrid() {
+
+	document.getElementById("password").value = "";
+
+	//Using seedrandom.js
+	//https://github.com/davidbau/seedrandom
+	//MIT License
+	var seed = document.getElementById('seed').value;
+	Math.seedrandom(seed);
+	// var src = Math.random();
+	// var src2 = Math.random();
+	// console.log(src, src2);
+	//var all = [];
+
+	var rows = 26;
+	var cols = 26;
+
+
+	//var lastClicked; //Not needed currently
+	var grid = clickableGrid(rows, cols, function(el,row,col,i,str){
+	    // console.log("You clicked on element:",el);
+	    // console.log("You clicked on row:",row);
+	    // console.log("You clicked on col:",col);
+	    // console.log("You clicked on item #:",i);
+	    el.className='clicked';
+
+	    //Uncomment to remove coloring of all but current click:
+	    // if (lastClicked) lastClicked.className='';
+	    // lastClicked = el;
+
+	    var ps = document.getElementById('password');
+	    // console.log(ps.value);
+	    // console.log(i);
+	    ps.value = ps.value += str;
+
+	});
+
+	//console.log(grid);
+	//console.log(typeof grid);
+
+	var el = document.getElementById('tabula');
+	el.innerHTML = '';
+	el.appendChild(grid);
+
+}
+
+
+//ASCII Printable characters: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
+//https://stackoverflow.com/questions/1349404
+function randomString(len, charSet) {
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+    	//Random here is the special seedrandom.js version
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz,randomPoz+1);
+    }
+    return randomString;
+}
+
+function togglePs() {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+function copyPs() {
+	var x = document.getElementById("password");
+	var open = false;
+	if(x.type === 'password') {open=true; togglePs();}
+
+	x.select();
+	document.execCommand("Copy");
+	if(open) {togglePs();}
+}
+
+function clearPs() {
+    var ps = document.getElementById('password');
+    ps.value = '';
+    //Remove all highlighted classes
+    //https://stackoverflow.com/questions/22754315
+    var hls = Array.from(document.getElementsByClassName('clicked'));
+    hls.map(function(el){el.className = '';});
+}
+
+
+//Todo: pull the character generating process out & put them in a data
+// structure so they can be iterated over.  List of list?
+
+
+
+</script>
+
+</body>
+</html>
