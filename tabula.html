@@ -20,7 +20,7 @@ body {
     /*font-family: monospace !important;*/
     font-size:14px;
     font-family:sans-serif;
-    line-height:1.5;
+    line-height:1.6;
 }
 
 /*https://css-tricks.com/simple-css-row-column-highlighting/*/
@@ -64,8 +64,13 @@ th {
 	/*padding:3px 3px;*/
 }
 hr {
-background-color: #ccc; height: 1px; border: 0;
+	background-color: #ddd; height: 1px; border: 0;
 }
+input {
+	font-family: Monaco, monospace;
+	margin: 5px 2px;
+}
+
 .wrapper {
 /*	width:700px;*/
 	/*margin: 40px auto;*/
@@ -81,7 +86,7 @@ background-color: #ccc; height: 1px; border: 0;
 }
 #output {
 	text-align:left;
-	margin: 20px auto;
+	/*margin: 20px auto;*/
 }
 
 .grid { 
@@ -132,10 +137,11 @@ background-color: #ccc; height: 1px; border: 0;
 		<button onclick="clearAll();">Clear</button> 
 		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> 
 		<!-- <br> -->
-		<hr>
+		<!-- <hr> -->
 	</div>
 
 	<div id="tabula"></div>
+	<br>
 
 	<div id="output">
 		<strong>Options</strong>
@@ -150,6 +156,7 @@ background-color: #ccc; height: 1px; border: 0;
 		<div id='dir'>
 		</div>
 		Length: <input id="length" type="text" size="3" value="16"/>
+		<br>
 		<br>
 		<strong>Results</strong>
 		<hr>
@@ -196,7 +203,7 @@ var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{
 var emptyChars = ' '
 //var charList = generateCharacters(rows,cols,emptyChars);
 
-buildGrid(st.blankList);
+appendGrid(st.blankList);
 
 
 //TODO: pull the character generating process out & put them in a data
@@ -225,7 +232,6 @@ function renderDirections() {
 		var sel = document.createElement('select');
 		sel.id = 'direction';
 		var opts = options.cardinal.concat(options.angle);
-		console.log(opts);
 		opts.forEach(function(opt) {
 			var el = document.createElement('option');
 			el.value = opt;
@@ -272,7 +278,7 @@ function generateHeader(alpha) {
 //source: https://stackoverflow.com/questions/9140101,
 // http://jsfiddle.net/6qkdP/2/   
 //buildGrid instead   
-function clickableGrid(rows, cols, charList, callback){
+function buildGrid(rows, cols, charList, callback){
     var i=0;
     var grid = document.createElement('table');
     grid.className = 'grid';
@@ -310,57 +316,68 @@ function clickableGrid(rows, cols, charList, callback){
     return grid;
 }
 
+function clicked(el,row,col,i,str) {
+
+    var meth = document.getElementById('method');
+    var method = meth.options[meth.selectedIndex].value;
+    var len = document.getElementById('length');
+    var length = Number(len.value);
+
+	switch(method) {
+		case 'manual':
+		    var ps = document.getElementById('password');
+		    ps.value = ps.value += el.textContent;
+		    el.className='clicked';
+		    break;
+		case 'line':
+	    	var dir = document.getElementById('direction');
+	    	var direction = dir.options[dir.selectedIndex].value;
+			return highlightPs(lineMatrix(col,row,direction,length));
+			break;
+		case 'step':
+	    	var dir = document.getElementById('direction');
+	    	var direction = dir.options[dir.selectedIndex].value;
+			return highlightPs(stepMatrix(col,row,direction,length));
+			break;
+		case 'spiral':
+			return highlightPs(spiralMatrix(col,row,length));
+			break;
+
+	}
+
+    // if (method === 'manual') {
+	   //  //Uncomment to remove coloring of all but current click:
+	   //  // if (lastClicked) lastClicked.className='';
+	   //  // lastClicked = el;
+	   //  var ps = document.getElementById('password');
+	   //  ps.value = ps.value += el.textContent;
+	   //  el.className='clicked';
+    // } else if (method==='spiral') {
+    // 	generatePw(col,row,length,method);
+
+    // } else {
+    // 	var dir = document.getElementById('direction');
+    // 	var direction = dir.options[dir.selectedIndex].value;
+    // 	//x,y,len,dir,method;
+    // 	generatePw(col,row,length,direction,method);
+    // }
+}
+
 
 //Todo: maybe call appendGrid, or addGrid()
 //and call the clickableGrid buildGrid instead, more descriptive.  
-function buildGrid(charList) {
+function appendGrid(charList) {
 
 	//Reset pw
 	document.getElementById('password').value = '';
 
-
-	function clicked(el,row,col,i,str) {
-	    // console.log("You clicked on element:",el);
-	    // console.log("You clicked on row:",row);
-	    // console.log("You clicked on col:",col);
-	    // console.log("You clicked on item #:",i);
-
-	    var meth = document.getElementById('method');
-	    var method = meth.options[meth.selectedIndex].value;
-
-	    if (method === 'manual') {
-		    //Uncomment to remove coloring of all but current click:
-		    // if (lastClicked) lastClicked.className='';
-		    // lastClicked = el;
-		    var ps = document.getElementById('password');
-		    //ps.value = ps.value += str;
-		    ps.value = ps.value += el.textContent;
-		    el.className='clicked';
-	    } else {
-	    	var len = document.getElementById('length');
-	    	var length = Number(len.value);
-
-	    	//TODO: eventually, available directions need to change based on method
-	    	//e.g. hide if method === spiral,
-	    	//e.g. step can't have N, S E W as options 
-	    	var dir = document.getElementById('direction');
-	    	var direction = dir.options[dir.selectedIndex].value;
-	    	//x,y,len,dir,method;
-	    	generatePw(col,row,length,direction,method);
-	    }
-	}
-
 	//var lastClicked; //Not needed currently
-	var grid = clickableGrid(st.rows, st.cols, charList, clicked);
+	var grid = buildGrid(st.rows, st.cols, charList, clicked);
 	var el = document.getElementById('tabula');
 	el.innerHTML = '';
 	el.appendChild(grid);
 }
 
-// function fillGrid() {
-// 	var charList = generateCharacters(rows,cols,charSet);
-// 	buildGrid(charList);
-// }
 
 
 //ASCII Printable characters: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
@@ -450,31 +467,28 @@ function generateCharacters(rows, cols, charset) {
 }
 
 
+// //TODO: maybe just incorporate this into 'clicked function,
+// // as the switch is redundant to that logic.  
+// function generatePw(x,y,len,dir,method) {
+// 	//len = how long, strategy = e.g. digonal NE, start=cell start.  
+// 	//then write all the other functions outside
+// 	// eventually a switch based on
 
+// 	//dir won't be relevant to every function
 
-//
+// 	switch(method) {
+// 		case 'line':
+// 			return highlightPs(lineMatrix(x,y,dir,len));
+// 			break;
+// 		case 'spiral':
+// 			return highlightPs(spiralMatrix(x,y,len));
+// 			break;
+// 		case 'step':
+// 			return highlightPs(stepMatrix(x,y,dir,len));
+// 			break;
+// 	}
 
-function generatePw(x,y,len,dir,method) {
-	//len = how long, strategy = e.g. digonal NE, start=cell start.  
-	//then write all the other functions outside
-	// eventually a switch based on
-
-	//dir won't be relevant to every function
-
-	switch(method) {
-		case 'line':
-			return highlightPs(lineMatrix(x,y,dir,len));
-			break;
-		case 'spiral':
-			break;
-		case 'step':
-			return highlightPs(stepMatrix(x,y,dir,len));
-			break;
-	}
-	
-	//return highlightPs()
-
-}
+// }
 
 
 function highlightPs(obj) {
@@ -576,7 +590,7 @@ function stepMatrix(x, y, dir, len) {
 
 	while (pw.length < len) {
 
-		//Recurse if on edge
+		//Recurse if hits edge
 		if ((x === st.cols-1 && x + xinc > st.cols-1) || 
 			(x === 0 && x + xinc < 0) || 
 			(y === st.rows-1 && y + yinc > st.rows-1) || 
@@ -599,6 +613,116 @@ function stepMatrix(x, y, dir, len) {
 		//console.log(pw);
 		//console.log(pw.length);
 		//callback(pw,ids);
+	}
+	//If recursion isn't entered:
+	return {pw: pw, ids: ids};
+
+}
+
+function spiralMatrix(x,y,len) {
+
+	var matrix = st.charList; //Global matrix
+	var xinc = 1;
+	var yinc = -1;
+	var xlen = 1;
+	var ylen = 1;
+	var pw = '';
+	var ids = [];
+	var across = false;  //Start upwards
+
+	while (pw.length < len) {
+		// pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+		// ids.push('c' + String(x) + ',' + String(y))
+		//Alternates [Up, Right], [Down, Left] adding 1 cell length each time
+		if (across) {
+			for (var i=0; i<xlen; i++) {
+				//Recurse if on edge
+				if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+					(x === 0 && x + xinc < 0) || 
+					(y === st.rows-1 && y + yinc > st.rows-1) || 
+					(y === 0 && y + yinc < 0)) {  
+
+					return handleEdge(x,y,pw,ids,len,matrix);
+				}
+				pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+				ids.push('c' + String(x) + ',' + String(y));
+				x += xinc; //Increment x by the current direction
+			}
+			xlen += 1;  //Increas arm length for next time
+			xinc = -xinc;  //Switch sign of the increment
+			//xlen = xlen < 0 ? (-1*xlen + 1) : (-1*(xlen + 1)); //Flips sign, gets one longer
+			across = false;  //Move in y direction next
+		} else {
+			for (var i = 0; i<ylen; i++) {
+				//Recurse if on edge
+				if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+					(x === 0 && x + xinc < 0) || 
+					(y === st.rows-1 && y + yinc > st.rows-1) || 
+					(y === 0 && y + yinc < 0)) {  
+
+					return handleEdge(x,y,pw,ids,len,matrix);
+				}
+				pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+				ids.push('c' + String(x) + ',' + String(y));
+				y += yinc; //Increment x by the current direction
+			}
+			ylen += 1;  //Increas arm length for next time
+			yinc = -yinc;  //Switch sign of the increment
+			//xlen = xlen < 0 ? (-1*xlen + 1) : (-1*(xlen + 1)); //Flips sign, gets one longer
+			across = true;  //Move in x direction next
+		}
+	}
+	//If recursion isn't entered:
+	return {pw: pw, ids: ids};
+
+}
+
+
+//Needs some work, developed on accident while
+//making spiral.  Just needs a shift
+//could also do galaxy style, where offsets in outward
+//motion.  That would be too hard to re-create though,
+//manually if it was needed.  
+function starMatrix(x,y,len) {
+
+	var matrix = st.charList; //Global matrix
+	var xinc = 1;
+	var yinc = -1;
+	var pw = '';
+	var ids = [];
+	var across = false;  //Start upwards
+
+	while (pw.length < len) {
+
+		//Recurse if on edge
+		if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+			(x === 0 && x + xinc < 0) || 
+			(y === st.rows-1 && y + yinc > st.rows-1) || 
+			(y === 0 && y + yinc < 0)) {  
+
+			return handleEdge(x,y,pw,ids,len,matrix);
+		}
+
+		pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+		ids.push('c' + String(x) + ',' + String(y))
+
+		//Alternates [Up, Right], [Down, Left] adding 1 cell length each time
+		if (across) {
+
+			// for (i<0; i<xinc; i++) {
+			// 	pw += matri
+
+			// }
+			x += xinc;
+			xinc = xinc < 0 ? (-1*xinc + 1) : (-1*(xinc + 1)); //Flips sign, gets one longer
+			across = false;
+		} else {
+			y += yinc;
+			yinc = yinc < 0 ? (-1*yinc + 1) : (-1*(yinc + 1));; //Flips sign, gets one longer
+			across = true;
+		}
+		//console.log(pw);
+		//console.log(pw.length);
 	}
 	//If recursion isn't entered:
 	return {pw: pw, ids: ids};
@@ -690,7 +814,7 @@ function clearPs() {
 }
 
 function clearAll() {
-	buildGrid(st.blankList);
+	appendGrid(st.blankList);
 	clearPs();
 	var el = document.getElementById('seed');
 	el.value = '';
@@ -799,6 +923,9 @@ var res = [];
 function results(a) {
 	res.push(a);
 }
+
+
+
 
 
 
