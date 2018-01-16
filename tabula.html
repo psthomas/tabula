@@ -6,13 +6,20 @@
 * {
 /*    max-width: 900px;
     margin: 40px auto;*/
-    font-family: monospace;
+    /*Lucida console PC, Monaco Mac, chrome dev tools fonts
+    striped 0s, very clear symbol font*/
+    /*Not a huge fan of the font though, looks too "Playful", but I still need
+    one that clearly shows character distinctions. 
+    With: Monaco, No 0 slash: Courier New, Lucida Console, Terminal*/
+    /*font-family:  Monaco,monospace;*/
 }
 
 body {
 /*    max-width: 900px;
     margin: 40px auto;*/
     /*font-family: monospace !important;*/
+    font-size:14px;
+    font-family:sans-serif;
 }
 
 /*https://css-tricks.com/simple-css-row-column-highlighting/*/
@@ -49,9 +56,11 @@ table tr {
 table tr:nth-child(odd) {
     /*background-color:#f2f2f2;*/
 }
-table th {
+/*table th {*/
+th {
 	background-color:#f2f2f2;
 	border:1px solid #ccc;
+	/*padding:3px 3px;*/
 }
 .wrapper {
 /*	width:700px;*/
@@ -64,23 +73,31 @@ table th {
 }
 #input {
 	text-align:left;
+	margin: 20px auto;
 }
 #output {
 	text-align:left;
+	margin: 20px auto;
 }
 
-.grid { /*margin:1em auto;*/ border-collapse:collapse }
+.grid { 
+	/*margin:1em auto;*/ 
+	border-collapse:collapse;
+	font-family:  Monaco,monospace;
+}
 .grid td {
     cursor:pointer;
-    width:20px; height:20px;  /*30, 30*/
+    width:23px; height:20px;  /*30, 30*/
     border:1px solid #ccc;
     text-align:center;
+    /*padding:3px;*/
     /*font-family:sans-serif; */
-    font-size:13px
+    font-size:12px; /*13px*/
 }
 .grid td.clicked {
-    background-color:yellow;
-    font-weight:bold; color:red;
+    background-color:#ACCEF7;  /*yellow lightblue*/
+    font-weight:bold; 
+    /*color:red;*/
 }
 /*#input {margin:1em auto;}*/
 </style>
@@ -102,7 +119,8 @@ table th {
 <div class="center">
 	<div id='input'>
 		<!-- Should the master be password protected too?-->
-		Master: <input id="seed" type="text" size="70" value="CorrectHorseBatteryStaple"/>
+		Master: <input id="seed" type="password" size="70" value="CorrectHorseBatteryStaple"/>
+		<input type="checkbox" onclick="toggleSe();">Show
 		<input id="click" type="button" value="Create" onclick="populateGrid();"/>  <!--d3test();-->
 		<button onclick="clearAll();">Clear</button> 
 		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> <br>
@@ -112,9 +130,9 @@ table th {
 
 	<div id="output">
 		Output: <input type="password" size="70" value="" id="password">
+		<input type="checkbox" onclick="togglePs();">Show 
 		<button onclick="copyPs()">Copy</button> 
 		<button onclick="clearPs();">Clear</button> <br>
-		<input type="checkbox" onclick="togglePs();">Show Password 
 	</div>
 	<!-- <input type="password" name="password" id="myPassword" size="70" /> -->
 	<!-- <img src="theicon" onmouseover="mouseoverPass();" onmouseout="mouseoutPass();" /> -->
@@ -124,6 +142,50 @@ table th {
 
 <!-- source: https://stackoverflow.com/questions/9140101,  http://jsfiddle.net/6qkdP/2/ -->
 <script>
+
+var passchars = {
+	V: "AEIOU",
+	C: "BCDFGHJKLMNPQRSTVWXYZ",
+	v: "aeiou",
+	c: "bcdfghjklmnpqrstvwxyz",
+	A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
+	a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+	n: "0123456789",
+	o: "@&%?,=[]_:-+*$#!'^~;()/.",
+	x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+	" ": " "
+};
+
+//Initial settings
+var st = {
+	'rows': 26,  //Either this, or zero index rows/columns
+	'cols': 26,
+	'charSet': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<', //Get from form eventually?
+	'blankList': generateCharacters(26,26,' '),
+	'charList': []
+};
+
+//Initialize values, build empty grid
+var rows = 26;
+var cols = 26;
+var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<';
+var emptyChars = ' '
+//var charList = generateCharacters(rows,cols,emptyChars);
+
+buildGrid(st.blankList);
+
+
+//TODO: pull the character generating process out & put them in a data
+// structure so they can be iterated over.  List of list?
+//TODO: figure out how to create responsive tables for mobile. . . if you just
+//go with distributing the HTML page as the cross platform idea
+//https://zurb.com/playground/playground/responsive-tables/index.html
+//downloaded as responsive-tables.js/.css
+//swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
+//TODO: Finalize charset, because changing that will change the output
+//of all grids generated with the charSet
+
+
 
 
 function generateHeader(alpha) {
@@ -196,6 +258,8 @@ function buildGrid(charList) {
 	    // console.log("You clicked on row:",row);
 	    // console.log("You clicked on col:",col);
 	    // console.log("You clicked on item #:",i);
+
+	    
 	    el.className='clicked';
 
 	    //Uncomment to remove coloring of all but current click:
@@ -243,9 +307,8 @@ function randomString(len, charSet) {
 }
 
 
-function animate(cell, steps, duration) {
+function animateCell(cell, steps, duration) {
 	function changeCell(timestamp, cell, steps, duration){
-	    //if browser doesn't support requestAnimationFrame, generate our own timestamp using Date:
 	    var timestamp = timestamp || new Date().getTime();
 	    var runtime = timestamp - starttime;
 	    var progress = runtime / duration;
@@ -253,7 +316,8 @@ function animate(cell, steps, duration) {
 	    cell.textContent = String.fromCharCode(32+steps*progress);
 
 	    if (runtime < duration){ // if duration not met yet
-	        requestAnimationFrame(function(timestamp){ // call requestAnimationFrame again with parameters
+	    	// Call requestAnimationFrame again with parameters
+	        requestAnimationFrame(function(timestamp){ 
 	            changeCell(timestamp, cell, steps, duration);
 	        });
 	    }
@@ -273,7 +337,7 @@ function animate(cell, steps, duration) {
 //https://stackoverflow.com/questions/5226285
 function populateGrid() {
 	var charList = generateCharacters(rows,cols,st.charSet);
-	st.charlist = charList;
+	st.charList = charList;
 	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
 
 	var cells = Array.from(document.getElementsByTagName('td'));
@@ -285,12 +349,14 @@ function populateGrid() {
 		var endNum = joinedList[i].charCodeAt(0);
 		var cell = cells[i];
 		var steps = endNum - num;
-		var duration = 500; 
+		var duration = 750; 
 
 		//https://stackoverflow.com/questions/45829536/requestanimationframecallback-with-for-loop-issue
-		(function(cell,steps,duration) {
-			animate(cell,steps,duration);
-		})(cell,steps,duration);
+		// (function(cell,steps,duration) {
+		// 	animate(cell,steps,duration);
+		// })(cell,steps,duration);
+		// This function now is the closure:
+		animateCell(cell,steps,duration);
 	}
 
 }
@@ -305,17 +371,54 @@ function generateCharacters(rows, cols, charset) {
 	for (var i=0; i<cols; i++) {
 		charList.push(randomString(26, charset).split(''));
 	}
+	//Set global.  
+	//st.charList = charList;
 	return charList
 }
 
 
 
-function generatePw(len,strategy,start) {
+
+//
+
+function generatePw(x,y,len,dir,method) {
 	//len = how long, strategy = e.g. digonal NE, start=cell start.  
 	//then write all the other functions outside
+	// eventually a switch based on
 
-	//or can you 
+	//dir won't be relevant to every function
 
+	switch(method) {
+		case 'line':
+			return highlightPs(lineMatrix(x,y,dir,len));
+			break;
+		case 'spiral':
+			break;
+	}
+	
+	//return highlightPs()
+
+}
+
+
+function highlightPs(obj) {
+	// console.log(pw);
+	// console.log(ids);
+	console.log(obj);
+	var ids = obj.ids;
+	var pw = obj.pw;
+	function changeClass(id) { 
+		var el = document.getElementById(id);
+		el.className = 'clicked';
+	}
+
+	for (var j=0; j<ids.length; j++) {
+		var delay = 50;
+		setTimeout(changeClass.bind(null, ids[j]), delay*j);  //delay*j
+	}
+
+	var el = document.getElementById('password');
+	el.value = pw;
 }
 
 function handleDir(dir) {
@@ -339,88 +442,128 @@ function handleDir(dir) {
 //the directions that can be passed in for diagonal
 function lineMatrix(x, y, dir,len) {
 	var matrix = generateCharacters(st.rows,st.cols,charSet);
-
-
+	//var matrix = st.charList;
 	var inc = handleDir(dir);
+	console.log(inc);
+	//return;
 	var xinc = inc[0];
 	var yinc = inc[1];
 	var pw = '';
 	var ids = [];
 
-	while (pw.length <= len) {
+	while (pw.length < len) {
+		//console.log('entered while');
 		//Putting this condition first prevents the edge node from 
 		//being added before heading to handleEdge recursion. 
 
 		//This should only activate if next will be out of bounds. 
 		//Right now, if it's on top edge and going down, it shouldn't follow edge. 
-		if (x >= st.cols-1 || x <= 0 || y >= st.rows-1 || y<=0) {
-			handleEdge(x,y,pw,ids,len,matrix,callback);
-			break; //Leave while loop
+		// You need to look ahead here to see if next move will violate edge.  if not, continue
+		// The problem is that you need to check that its greather than, less than, AND that next step
+		// will be out of bounds
+		if ( (x === st.cols-1 && x + xinc > st.cols-1) || 
+			 (x === 0 && x + xinc < 0) || 
+			 (y === st.rows-1 && y + yinc > st.rows-1) || 
+			 (y === 0 && y + yinc < 0)) {  
+			 //So this works in SE, but not in NW.
+		//if (x + xinc >= st.cols-1 || x + xinc <= 0 || y + yinc >= st.rows-1 || y + yinc <= 0) {
+			//handleEdge(x,y,pw,ids,len,matrix,callback);
+			//break; //Leave while loop
+			//var res = handleEdge(x,y,pw,ids,len,matrix,callback);
+			return handleEdge(x,y,pw,ids,len,matrix);
+			//pw = res[0];
+			//ids = res[1];
+			//break;
 		}
-		pw += matrix[y][x]  //From top left, x is across, y works down on outer arrays
+		pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
 		ids.push('c' + String(x) + ',' + String(y))
 		x += xinc;
 		y += yinc;
 		console.log(pw);
-
+		//console.log(pw.length);
+		//callback(pw,ids);
 	}
-	function callback(pw, ids) {
 
-		function changeClass(id) { 
-			var el = document.getElementById(id);
-			el.className = 'clicked';
-		}
+	return {pw: pw, ids: ids};
 
-		for (var j=0; j<ids.length; j++) {
-			var delay = 50;
-			setTimeout(changeClass.bind(null, ids[j]), delay*j);  //delay*j
-		}
 
-		var el = document.getElementById('password');
-		el.value = pw;
-	}
+	//Can't figure out how to handle this, because either I need return values from the 
+	//recursion, or it never enters the recursion and I need this callback.  
+	//callback(pw,ids);
+
+	//Pull this callback out, and call it highlightCells, and use for all functions
+	// function callback(pw, ids) {
+	// 	console.log('eneter callback');
+
+	// 	console.log(ids);
+	// 	function changeClass(id) { 
+	// 		var el = document.getElementById(id);
+	// 		el.className = 'clicked';
+	// 	}
+
+	// 	for (var j=0; j<ids.length; j++) {
+	// 		var delay = 50;
+	// 		setTimeout(changeClass.bind(null, ids[j]), delay*j);  //delay*j
+	// 	}
+
+	// 	var el = document.getElementById('password');
+	// 	el.value = pw;
+	// }
 }
 
 function handleEdge(x, y, pw, ids, len, matrix, callback) {
 	//Always moves clockwise when it hits an edge
 	//This could function recursively as well
 	if (pw.length === len) {
-		callback(pw, ids);
-		return;
+		//callback(pw, ids);
+		//return [pw, ids];
+		return {pw: pw, ids: ids};
 	}
 
+	console.log('enter recurse');
+
+	//https://stackoverflow.com/questions/33513358
 	if (x === y) {  //You're at a SE, NW corner 
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
 		console.log(pw);
 		if (x === 0) {
-			handleEdge(x+1, y, pw, ids, len, matrix, callback); //Move right
-		} else {
-			handleEdge(x-1, y, pw, ids, len, matrix, callback); //Move left
+			return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
+		} else if (x === 25) {
+			return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
 		}
 	} else if (x >= st.cols-1) {  
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
 		console.log(pw);
-		handleEdge(x, y+1, pw, ids, len, matrix, callback); //Move down
+		return handleEdge(x, y+1, pw, ids, len, matrix); //Move down
 	} else if (x === 0) {
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
 		console.log(pw);
-		handleEdge(x, y-1, pw, ids, len, matrix, callback); //Move up
+		return handleEdge(x, y-1, pw, ids, len, matrix); //Move up
 	} else if (y >= st.cols-1) {
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
 		console.log(pw);
-		handleEdge(x-1, y, pw, ids, len, matrix, callback); //Move left
+		return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
 	} else if (y === 0) {
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
 		console.log(pw);
-		handleEdge(x+1, y, pw, ids, len, matrix, callback); //Move right
+		return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
 	}
 
 
+}
+
+function toggleSe() {
+    var x = document.getElementById("seed");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
 }
 
 function togglePs() {
@@ -457,49 +600,6 @@ function clearAll() {
 	var el = document.getElementById('seed');
 	el.value = '';
 }
-
-
-
-passchars = {
-	V: "AEIOU",
-	C: "BCDFGHJKLMNPQRSTVWXYZ",
-	v: "aeiou",
-	c: "bcdfghjklmnpqrstvwxyz",
-	A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
-	a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
-	n: "0123456789",
-	o: "@&%?,=[]_:-+*$#!'^~;()/.",
-	x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
-	" ": " "
-};
-
-//Initial settings
-st = {
-	'rows': 26,  //Either this, or zero index rows/columns
-	'cols': 26,
-	'charSet': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<', //Get from form eventually?
-	'blankList': generateCharacters(26,26,' '),
-	'charList': []
-};
-
-//Initialize values, build empty grid
-var rows = 26;
-var cols = 26;
-var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<';
-var emptyChars = ' '
-//var charList = generateCharacters(rows,cols,emptyChars);
-
-buildGrid(st.blankList);
-
-
-//TODO: pull the character generating process out & put them in a data
-// structure so they can be iterated over.  List of list?
-//TODO: figure out how to create responsive tables for mobile. . . if you just
-//go with distributing the HTML page as the cross platform idea
-//https://zurb.com/playground/playground/responsive-tables/index.html
-//downloaded as responsive-tables.js/.css
-//swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
-
 
 
 
