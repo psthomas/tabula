@@ -58,6 +58,9 @@ table th {
 #input {
 	text-align:left;
 }
+#output {
+	text-align:left;
+}
 
 .grid { /*margin:1em auto;*/ border-collapse:collapse }
 .grid td {
@@ -78,6 +81,10 @@ table th {
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script> -->
 <script src="./seedrandom.js"></script>
 
+<!--experiment with d3-->
+<script src="./d3.v4.js"></script>
+
+
 </head>
 
 <body>
@@ -88,14 +95,18 @@ table th {
 	<div id='input'>
 		<!-- Should the master be password protected too?-->
 		Master: <input id="seed" type="text" size="70" value="CorrectHorseBatteryStaple"/>
-		<input id="click" type="button" value="Create" onclick="buildGrid();"/> <br>
+		<input id="click" type="button" value="Create" onclick="d3test();"/> 
+		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> <br>
+	</div>
+
+	<div id="tabula"></div>
+
+	<div id="output">
 		Output: <input type="password" size="70" value="" id="password">
 		<button onclick="copyPs()">Copy</button> 
 		<button onclick="clearPs();">Clear</button> <br>
 		<input type="checkbox" onclick="togglePs();">Show Password 
-		
 	</div>
-	<div id="tabula"></div>
 	<!-- <input type="password" name="password" id="myPassword" size="70" /> -->
 	<!-- <img src="theicon" onmouseover="mouseoverPass();" onmouseout="mouseoutPass();" /> -->
 </div>
@@ -145,7 +156,7 @@ function generateHeader(alpha) {
 
 //source: https://stackoverflow.com/questions/9140101,
 // http://jsfiddle.net/6qkdP/2/      
-function clickableGrid(rows, cols, callback){
+function clickableGrid(rows, cols, charList, callback){
     var i=0;
     var grid = document.createElement('table');
     grid.className = 'grid';
@@ -156,6 +167,7 @@ function clickableGrid(rows, cols, callback){
     
     for (var r=0; r<rows; ++r){
         var tr = grid.appendChild(document.createElement('tr'));
+        var rowList = charList[r];
 
         //Add the row alphabet header
         var h = document.createElement('th');
@@ -166,8 +178,12 @@ function clickableGrid(rows, cols, callback){
             var cell = tr.appendChild(document.createElement('td'));
             //cell.innerHTML = ++i;
             ++i;
-            var str = randomString(1);
+            //var str = randomString(1);
+            var str = rowList[c];
             cell.innerHTML = str;
+            cell.id = String(c) +','+ String(r);  //x, y, where y is "negative"
+            //cell.innerHTML = ' ';  //Just build an empty one, then append data, event listener later?
+            //why not just bind these variables, rather than the convoluted encapsulation?
             cell.addEventListener('click',(function(el,r,c,i,str){
                 return function(){
                     callback(el,r,c,i,str);
@@ -184,26 +200,76 @@ function clickableGrid(rows, cols, callback){
 // &nbsp; to begin with?
 
 
-function buildGrid() {
 
-	document.getElementById("password").value = "";
-
+function generateCharacters(rows, cols, charset) {
 	//Using seedrandom.js
 	//https://github.com/davidbau/seedrandom
 	//MIT License
 	var seed = document.getElementById('seed').value;
 	Math.seedrandom(seed);
+	var charList = [];
+	for (var i=0; i<cols; i++) {
+		charList.push(randomString(26, charset).split(''));
+	}
+	return charList
+}
+
+
+//Todo: maybe call appendGrid,
+//and call the clickableGrid buildGrid instead, more descriptive.  
+function buildGrid(charList) {
+
+	document.getElementById('password').value = '';
+
+	//Using seedrandom.js
+	//https://github.com/davidbau/seedrandom
+	//MIT License
+	// var seed = document.getElementById('seed').value;
+	// Math.seedrandom(seed);
 	// var src = Math.random();
 	// var src2 = Math.random();
 	// console.log(src, src2);
 	//var all = [];
 
-	var rows = 26;
-	var cols = 26;
+	// var rows = 26;
+	// var cols = 26;
+	// var charList = [];
+	// for (var i=0; i<cols; i++) {
+	// 	charList.push(randomString(26).split(''));
+	// }
+	//console.log(charList);
+	//return;
 
+
+	function clicked(el,row,col,i,str) {
+	    // console.log("You clicked on element:",el);
+	    // console.log("You clicked on row:",row);
+	    // console.log("You clicked on col:",col);
+	    // console.log("You clicked on item #:",i);
+	    el.className='clicked';
+
+	    //Uncomment to remove coloring of all but current click:
+	    // if (lastClicked) lastClicked.className='';
+	    // lastClicked = el;
+
+	    var ps = document.getElementById('password');
+	    // console.log(ps.value);
+	    // console.log(i);
+
+	    //ps.value = ps.value += str;
+	    ps.value = ps.value += el.textContent;
+
+	    //Todo: this is where you can follow predefined patters
+	    //call a function like followPattern(row,col,i,str); that grabs the 
+	    //pattern from a form and follows, if not 'none'
+
+	}
 
 	//var lastClicked; //Not needed currently
-	var grid = clickableGrid(rows, cols, function(el,row,col,i,str){
+	var grid = clickableGrid(rows, cols, charList, clicked);
+
+	/*
+		function(el,row,col,i,str){
 	    // console.log("You clicked on element:",el);
 	    // console.log("You clicked on row:",row);
 	    // console.log("You clicked on col:",col);
@@ -219,7 +285,7 @@ function buildGrid() {
 	    // console.log(i);
 	    ps.value = ps.value += str;
 
-	});
+	}); */
 
 	//console.log(grid);
 	//console.log(typeof grid);
@@ -230,6 +296,11 @@ function buildGrid() {
 
 }
 
+function fillGrid() {
+	var charList = generateCharacters(rows,cols,charSet);
+	buildGrid(charList);
+}
+
 
 //ASCII Printable characters: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
 //https://stackoverflow.com/questions/1349404
@@ -238,8 +309,8 @@ function randomString(len, charSet) {
     var randomString = '';
     for (var i = 0; i < len; i++) {
     	//Random here is the special seedrandom.js version
-        var randomPoz = Math.floor(Math.random() * charSet.length);
-        randomString += charSet.substring(randomPoz,randomPoz+1);
+        var randomPos = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPos,randomPos+1);
     }
     return randomString;
 }
@@ -272,9 +343,188 @@ function clearPs() {
     hls.map(function(el){el.className = '';});
 }
 
+//Is this good, or does it make it seem less fragile?  
+//It's all for show. . . although not having to rebuild the html each
+//time is nice.  
+function d3test() {
+	var charList = generateCharacters(rows,cols,charSet);
+	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
+	//console.log(joinedList);
+	var td = d3.selectAll('td')
+		.data(joinedList)
+		//.enter()
+		//.append('td')
+		.text(function(d) {return d;})
+		.transition()
+		.duration(1200)
+		.ease(d3.easeLinear)
+		.tween("text", function(d) {
+			//https://stackoverflow.com/questions/45831942/tweening-numbers-in-d3-v4-not-working-anymore-like-in-v3
+			var node = this;
+			//var i = d3.interpolate(0, joinedList.length);
+			var i = d3.interpolate(33, d.charCodeAt(0));
+			//var i = d3.interpolate(0, 100);
+			//console.log(i(0.5));
+			return function(t) {
+				//d3.select(this).text(joinedList[i(t)]);
+				//d3.select(node).text(String.fromCharCode(Math.round(i(t))));
+				d3.select(node).text(String.fromCharCode(i(t)));
+			};
+		});
+		
+		//https://bl.ocks.org/bricedev/a0c5ef180272fac3aea6
+		//https://github.com/d3/d3-interpolate
+		//https://github.com/d3/d3-interpolate#interpolateString
+}
 
-//Todo: pull the character generating process out & put them in a data
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+//async function cycleChars()
+function cycleChars() {
+	var charList = generateCharacters(rows,cols,charSet);
+	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
+
+	var cells = Array.from(document.getElementsByTagName('td'));
+	//console.log(cells);
+
+	cells.forEach(function(cell, i) {
+		var num = 32;
+		var endNum = joinedList[i].charCodeAt(0);
+
+		/* Other attempt at sleep*/
+		var steps = endNum - num;
+		var delay = 10; //1000/steps;
+		//console.log(steps);
+		
+		function changeContent(node) {
+			node.innerHTML = String.fromCharCode(num+j);
+		}
+
+		//Can't quite get this working yet, not sure why.  
+		for (var j=0; j<steps; j++) {
+			//node = cell;
+			setTimeout(function() {cell.innerHTML = String.fromCharCode(num+j);}, delay*j);
+			//setTimeout(changeContent.bind(cell), delay*j);
+		}
+
+		//Creates unique function for each, calls immediately
+		//async function()
+		// (async function(){
+		// 	while(num <= endNum) {
+		// 		cell.innerHTML = String.fromCharCode(num);
+		// 		num +=1;
+		// 		//sleep(10);
+		// 	}
+		// })();
+	});
+
+}
+
+
+
+function generatePw(len,strategy,start) {
+	//len = how long, strategy = e.g. digonal NE, start=cell start.  
+	//then write all the other functions outside
+
+	//or can you 
+
+}
+
+function handleDir(dir) {
+	var xinc;
+	var yinc;
+	els = dir.split('');
+	if (els[0] === 'N') { yinc = -1; }
+	else { yinc = 1;}
+
+	if (els.length === 1) {
+
+
+	}
+	//Could be N, S, E, W
+	//Could be NE, NW, SE, SW
+
+	//[xinc, yinc]
+	{'N': [0, -1], 'S': [0, 1], 'E':[1, 0], 'W':[-1, 0],
+	 'NE':[1, -1], 'NW':[-1, -1], 'SE':[-1, -1], 'SW':}
+
+
+	if (els.length > 1) {
+		xinc = els[1] === 'E' ? 1 : -1;
+	}
+	
+
+}
+
+
+function diagonalMatrix() {
+	var matrix = generateCharacters(st.rows,st.cols,charSet);
+
+	var len = 13
+	var x = 13;
+	var y = 13;
+	var dir = 'NE';  //Somehow derive direction from here, for now, hardcode
+	var xinc = 1;
+	var yinc = 1;
+	var pw = '';
+
+	while (pw.length <= len) {
+		pw += matrix[y][x]  //From top left?   x is across, y works on outer arrays
+		x += xinc;
+		y += yinc;
+		if (x) {
+			handle edge clockwise.
+			break
+		}
+	}
+	console.log(pw);
+}
+
+function handleEdge(x,y) {
+
+}
+
+passchars = {
+	V: "AEIOU",
+	C: "BCDFGHJKLMNPQRSTVWXYZ",
+	v: "aeiou",
+	c: "bcdfghjklmnpqrstvwxyz",
+	A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
+	a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+	n: "0123456789",
+	o: "@&%?,=[]_:-+*$#!'^~;()/.",
+	x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+	" ": " "
+};
+
+//Initial settings
+st = {
+	'rows': 26,
+	'cols': 26,
+	'charSet': ' ',
+	'charList': generateCharacters(26,26,' ')
+};
+
+//Initialize values, build empty grid
+var rows = 26;
+var cols = 26;
+var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<';
+var emptyChars = ' '
+var charList = generateCharacters(rows,cols,emptyChars);
+
+buildGrid(st.charList);
+
+
+//TODO: pull the character generating process out & put them in a data
 // structure so they can be iterated over.  List of list?
+//TODO: figure out how to create responsive tables for mobile. . . if you just
+//go with distributing the HTML page as the cross platform idea
+//https://zurb.com/playground/playground/responsive-tables/index.html
+//downloaded as responsive-tables.js/.css
+//swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
 
 
 
