@@ -90,7 +90,7 @@ table th {
 <script src="./seedrandom.js"></script>
 
 <!--experiment with d3-->
-<script src="./d3.v4.js"></script>
+<!-- <script src="./d3.v4.js"></script> -->
 
 
 </head>
@@ -103,7 +103,7 @@ table th {
 	<div id='input'>
 		<!-- Should the master be password protected too?-->
 		Master: <input id="seed" type="text" size="70" value="CorrectHorseBatteryStaple"/>
-		<input id="click" type="button" value="Create" onclick="d3test();"/>
+		<input id="click" type="button" value="Create" onclick="populateGrid();"/>  <!--d3test();-->
 		<button onclick="clearAll();">Clear</button> 
 		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> <br>
 	</div>
@@ -126,26 +126,6 @@ table th {
 <script>
 
 
-// var seed = document.getElementById('seed').value;
-// Math.seedrandom(seed);
-// // var src = Math.random();
-// // var src2 = Math.random();
-// // console.log(src, src2);
-// var all = [];
-
-// var lastClicked;
-// var grid = clickableGrid(26,26,function(el,row,col,i){
-//     // console.log("You clicked on element:",el);
-//     // console.log("You clicked on row:",row);
-//     // console.log("You clicked on col:",col);
-//     // console.log("You clicked on item #:",i);
-//     el.className='clicked';
-//     if (lastClicked) lastClicked.className='';
-//     lastClicked = el;
-// });
-
-// document.body.appendChild(grid);
-
 function generateHeader(alpha) {
 	//console.log(alpha);
     var header = document.createElement('thead');
@@ -162,9 +142,9 @@ function generateHeader(alpha) {
 }
 
 
-
 //source: https://stackoverflow.com/questions/9140101,
-// http://jsfiddle.net/6qkdP/2/      
+// http://jsfiddle.net/6qkdP/2/   
+//buildGrid instead   
 function clickableGrid(rows, cols, charList, callback){
     var i=0;
     var grid = document.createElement('table');
@@ -203,51 +183,12 @@ function clickableGrid(rows, cols, charList, callback){
     return grid;
 }
 
-//Todo: insert white space in grid to begin with
-//generate all characters, then use d3 transition to transition 
-//from A or something else to final character
-// &nbsp; to begin with?
 
-
-
-function generateCharacters(rows, cols, charset) {
-	//Using seedrandom.js
-	//https://github.com/davidbau/seedrandom
-	//MIT License
-	var seed = document.getElementById('seed').value;
-	Math.seedrandom(seed);
-	var charList = [];
-	for (var i=0; i<cols; i++) {
-		charList.push(randomString(26, charset).split(''));
-	}
-	return charList
-}
-
-
-//Todo: maybe call appendGrid,
+//Todo: maybe call appendGrid, or addGrid()
 //and call the clickableGrid buildGrid instead, more descriptive.  
 function buildGrid(charList) {
 
 	document.getElementById('password').value = '';
-
-	//Using seedrandom.js
-	//https://github.com/davidbau/seedrandom
-	//MIT License
-	// var seed = document.getElementById('seed').value;
-	// Math.seedrandom(seed);
-	// var src = Math.random();
-	// var src2 = Math.random();
-	// console.log(src, src2);
-	//var all = [];
-
-	// var rows = 26;
-	// var cols = 26;
-	// var charList = [];
-	// for (var i=0; i<cols; i++) {
-	// 	charList.push(randomString(26).split(''));
-	// }
-	//console.log(charList);
-	//return;
 
 
 	function clicked(el,row,col,i,str) {
@@ -262,8 +203,6 @@ function buildGrid(charList) {
 	    // lastClicked = el;
 
 	    var ps = document.getElementById('password');
-	    // console.log(ps.value);
-	    // console.log(i);
 
 	    //ps.value = ps.value += str;
 	    ps.value = ps.value += el.textContent;
@@ -277,27 +216,6 @@ function buildGrid(charList) {
 	//var lastClicked; //Not needed currently
 	var grid = clickableGrid(rows, cols, charList, clicked);
 
-	/*
-		function(el,row,col,i,str){
-	    // console.log("You clicked on element:",el);
-	    // console.log("You clicked on row:",row);
-	    // console.log("You clicked on col:",col);
-	    // console.log("You clicked on item #:",i);
-	    el.className='clicked';
-
-	    //Uncomment to remove coloring of all but current click:
-	    // if (lastClicked) lastClicked.className='';
-	    // lastClicked = el;
-
-	    var ps = document.getElementById('password');
-	    // console.log(ps.value);
-	    // console.log(i);
-	    ps.value = ps.value += str;
-
-	}); */
-
-	//console.log(grid);
-	//console.log(typeof grid);
 
 	var el = document.getElementById('tabula');
 	el.innerHTML = '';
@@ -305,10 +223,10 @@ function buildGrid(charList) {
 
 }
 
-function fillGrid() {
-	var charList = generateCharacters(rows,cols,charSet);
-	buildGrid(charList);
-}
+// function fillGrid() {
+// 	var charList = generateCharacters(rows,cols,charSet);
+// 	buildGrid(charList);
+// }
 
 
 //ASCII Printable characters: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
@@ -324,301 +242,71 @@ function randomString(len, charSet) {
     return randomString;
 }
 
-function togglePs() {
-    var x = document.getElementById("password");
-    if (x.type === "password") {
-        x.type = "text";
-    } else {
-        x.type = "password";
-    }
-}
 
-function copyPs() {
-	var x = document.getElementById("password");
-	var open = false;
-	if(x.type === 'password') {open=true; togglePs();}
+function animate(cell, steps, duration) {
+	function changeCell(timestamp, cell, steps, duration){
+	    //if browser doesn't support requestAnimationFrame, generate our own timestamp using Date:
+	    var timestamp = timestamp || new Date().getTime();
+	    var runtime = timestamp - starttime;
+	    var progress = runtime / duration;
+	    progress = Math.min(progress, 1);
+	    cell.textContent = String.fromCharCode(32+steps*progress);
 
-	x.select();
-	document.execCommand("Copy");
-	if(open) {togglePs();}
-}
-
-function clearPs() {
-    var ps = document.getElementById('password');
-    ps.value = '';
-    //Remove all highlighted classes
-    //https://stackoverflow.com/questions/22754315
-    var hls = Array.from(document.getElementsByClassName('clicked'));
-    hls.map(function(el){el.className = '';});
-}
-
-function clearAll() {
-	buildGrid(st.blankList);
-	clearPs();
-	var el = document.getElementById('seed');
-	el.value = '';
-}
-
-//Is this good, or does it make it seem less fragile?  
-//It's all for show. . . although not having to rebuild the html each
-//time is nice.  
-function d3test() {
-	var charList = generateCharacters(rows,cols,charSet);
-	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
-	//console.log(joinedList);
-	var td = d3.selectAll('td')
-		.data(joinedList)
-		//.enter()
-		//.append('td')
-		.text(function(d) {return d;})
-		.transition()
-		.duration(1200)
-		.ease(d3.easeLinear)
-		.tween("text", function(d) {
-			//https://stackoverflow.com/questions/45831942/tweening-numbers-in-d3-v4-not-working-anymore-like-in-v3
-			var node = this;
-			//var i = d3.interpolate(0, joinedList.length);
-			var i = d3.interpolate(33, d.charCodeAt(0));
-			//var i = d3.interpolate(0, 100);
-			//console.log(i(0.5));
-			return function(t) {
-				//d3.select(this).text(joinedList[i(t)]);
-				//d3.select(node).text(String.fromCharCode(Math.round(i(t))));
-				d3.select(node).text(String.fromCharCode(i(t)));
-			};
-		});
-		
-		//https://bl.ocks.org/bricedev/a0c5ef180272fac3aea6
-		//https://github.com/d3/d3-interpolate
-		//https://github.com/d3/d3-interpolate#interpolateString
+	    if (runtime < duration){ // if duration not met yet
+	        requestAnimationFrame(function(timestamp){ // call requestAnimationFrame again with parameters
+	            changeCell(timestamp, cell, steps, duration);
+	        });
+	    }
+	}
+	//http://www.javascriptkit.com/javatutors/requestanimationframe.shtml
+	var starttime;
+	 
+	requestAnimationFrame(function(timestamp){
+		//if browser doesn't support requestAnimationFrame, 
+		//generate our own timestamp using Date
+	    starttime = timestamp || new Date().getTime(); 
+	    changeCell(timestamp, cell, steps, duration);
+	});
 }
 
 
-/*
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function processArray(items, process) {
-    var todo = items.concat();
-
-    setTimeout(function() {
-        process(todo.shift());
-        if(todo.length > 0) {
-            setTimeout(arguments.callee, 25);
-        }
-    }, 25);
-}
-
-
-async function each(items, fn) {
-
-    if (items && items.length) {
-      await Promise.all(
-        items.map(async function(item, i, arr) { await fn(item, i, arr); }));
-    }
-};
-*/
-
-//async function cycleChars()
 //https://stackoverflow.com/questions/5226285
-function cycleChars() {
-	var charList = generateCharacters(rows,cols,charSet);
+function populateGrid() {
+	var charList = generateCharacters(rows,cols,st.charSet);
+	st.charlist = charList;
 	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
 
 	var cells = Array.from(document.getElementsByTagName('td'));
-	//console.log(cells);
-
-	// cells.forEach(function(cell, i) {
-	// 	var num = 32;
-	// 	var endNum = joinedList[i].charCodeAt(0);
-
-	// 	/* Other attempt at sleep*/
-	// 	var steps = endNum - num;
-	// 	var delay = 1; //1000/steps;
-	// 	//console.log(steps);
-		
-	// 	async function changeContent(node, j) {  //node, j
-	// 		//node.innerHTML = String.fromCharCode(num+j);
-	// 		node.innerHTML = String.fromCharCode(num+j);
-	// 	}
-
-	// 	function doSetTimeout(j, cell, delay) {
-	// 		//setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay*j);
-	// 		setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay); //delay*j
-	// 	}
-
-	// 	//Can't quite get this working yet, not sure why.
-	// 	//This is why: https://stackoverflow.com/questions/5226285 
-	// 	for (var j=0; j<steps; j++) {
-	// 		//node = cell;
-	// 		//setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay*j);
-	// 		//setTimeout(changeContent.bind(cell, j), delay*j);
-	// 		//Works, with this, why?
-	// 		setTimeout(changeContent.bind(null, cell, j), delay*j);  //delay*j
-	// 		//doSetTimeout(j, cell, delay);
-	// 	}
-
-	// 	//Creates unique function for each, calls immediately
-	// 	//async function()
-	// 	// (async function(){
-	// 	// 	while(num <= endNum) {
-	// 	// 		cell.innerHTML = String.fromCharCode(num);
-	// 	// 		num +=1;
-	// 	// 		//sleep(10);
-	// 	// 	}
-	// 	// })();
-	// });
-
-	//Trying for loop
-	// for (var i=0; i<cells.length; i++) {
-	// //trying async:
-	// //Works, but they are still executed sequentially. . .
-	// //await each(cells, function(cell, i, arr) {
-	// 	var num = 32;
-	// 	var endNum = joinedList[i].charCodeAt(0);
-	// 	var cell = cells[i];
-
-	// 	/* Other attempt at sleep*/
-	// 	var steps = endNum - num;
-	// 	var delay = 100; //1000/steps;
-	// 	//console.log(steps);
-		
-	// 	function changeContent(node, j) {  //node, j
-	// 		//node.innerHTML = String.fromCharCode(num+j);
-	// 		//node.innerHTML = String.fromCharCode(num+j);
-	// 		node.textContent = String.fromCharCode(num+j);
-	// 		//console.log(node);
-	// 		//setTimeout(function(node,j){ node.textContent = String.fromCharCode(num+j)}, delay*j);
-	// 	}
-
-	// 	function doSetTimeout(j, cell, delay) {
-	// 		//setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay*j);
-	// 		setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay); //delay*j
-	// 	}
-
-	// 	//Can't quite get this working yet, not sure why.
-	// 	//This is why: https://stackoverflow.com/questions/5226285 
-	// 	for (var j=0; j<steps; j++) {
-	// 		//node = cell;
-	// 		//setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay*j);
-	// 		//setTimeout(changeContent.bind(cell, j), delay*j);
-	// 		//Works, with this, why?
-	// 		(function(cell,j,delay) {
-	// 			//setTimeout(function(cell,j,num){cell.textContent = String.fromCharCode(num+j);}, delay*j);
-	// 			setTimeout(changeContent.bind(null,cell,j), delay);
-	// 		})(cell,j,delay,num);
-
-	// 		//setTimeout(changeContent.bind(null, cell, j), delay*j);  //delay*j
-	// 		//changeContent(cells[i],j);
-	// 		//doSetTimeout(j, cell, delay);
-	// 	}
-	// };  //);
-
-
-	//Trying two for loops, that will access each cell
-	//This kinda works, but not really.  
-	// var time = 100;
-	// var periods = 5;
-	// var charNum = 32;
-
-	// function changeCell(cell,cellChar) {
-	// 	cell.innerHTML = cellChar;
-	// };
-
-	// for (var p=1; p<=periods; p++) {
-	// 	//charNum += 1;
-	// 	//setTimeout(function () {
-	// 		for (var i=0; i<cells.length; i++) {
-	// 			var cell = cells[i];
-	// 			var endNum = joinedList[i].charCodeAt(0);
-	// 			//console.log(endNum);
-	// 			var currentNum = 32 + p*(endNum-32)/periods;
-	// 			var cellChar = String.fromCharCode(currentNum);
-
-	// 			// if (currentNum > endNum) {
-	// 			// 	var cellChar = String.fromCharCode(endNum);
-	// 			// }else {
-	// 			// 	var cellChar = String.fromCharCode(currentNum);
-	// 			// }
-	// 			//cell.innerHTML = cellChar;
-
-	// 			setTimeout(changeCell.bind(null,cell,cellChar), 0.000001*i);  //p*0.01
-	// 		}
-	// 	//}, 1000);
-	// }
 
 	//Using requestAnimationFrame
 	for (var i=0; i<cells.length; i++) {
 
-		//if (i<10) (console.log(i));
-
 		var num = 32;
 		var endNum = joinedList[i].charCodeAt(0);
 		var cell = cells[i];
-
-		/* Other attempt at sleep*/
 		var steps = endNum - num;
-		var duration = 800; //1000/steps;
+		var duration = 500; 
 
 		//https://stackoverflow.com/questions/45829536/requestanimationframecallback-with-for-loop-issue
-		(function(cell,steps,time) {
-
-			function changeCell(timestamp, cell, steps, duration){
-			    //if browser doesn't support requestAnimationFrame, generate our own timestamp using Date:
-			    var timestamp = timestamp || new Date().getTime();
-			    var runtime = timestamp - starttime;
-			    var progress = runtime / duration;
-			    progress = Math.min(progress, 1);
-			    //el.style.left = (dist * progress).toFixed(2) + 'px'
-			    cell.textContent = String.fromCharCode(32+steps*progress);
-
-			    if (runtime < duration){ // if duration not met yet
-			        requestAnimationFrame(function(timestamp){ // call requestAnimationFrame again with parameters
-			            changeCell(timestamp, cell, steps, duration);
-			        });
-			    }
-			}
-			//http://www.javascriptkit.com/javatutors/requestanimationframe.shtml
-			var starttime;
-			 
-			requestAnimationFrame(function(timestamp){
-			    starttime = timestamp || new Date().getTime(); //if browser doesn't support requestAnimationFrame, generate our own timestamp using Date
-			    changeCell(timestamp, cell, steps, duration); // 400px over 1 second
-			});
+		(function(cell,steps,duration) {
+			animate(cell,steps,duration);
 		})(cell,steps,duration);
 	}
 
-
-	// function start(period){
-	//   if(period < 100){
-	//     setTimeout(function(){
-	//       period++;
-	//       console.log(period);
-	//       start(period);
-	//     }, 1);
-	//   }
-	// }
-
 }
-// function start(period){
-//   if(period < 100){
-//     setTimeout(function(){
-//       period++;
-//       console.log(period);
-//       start(period);
-//     }, 0.01);
-//   }
-// }
 
-// counter = 0;
-// speed = 100
-
-// setInterval(function () {
-//   counter++;
-//   console.log(counter);
-// }, speed)
-
+function generateCharacters(rows, cols, charset) {
+	//Using seedrandom.js
+	//https://github.com/davidbau/seedrandom
+	//MIT License
+	var seed = document.getElementById('seed').value;
+	Math.seedrandom(seed);
+	var charList = [];
+	for (var i=0; i<cols; i++) {
+		charList.push(randomString(26, charset).split(''));
+	}
+	return charList
+}
 
 
 
@@ -631,7 +319,6 @@ function generatePw(len,strategy,start) {
 }
 
 function handleDir(dir) {
-
 	// Could be N, S, E, W, NE, NW, SE, SW
 	// [x, y, where South = +y, East = +x 
 	// for operating on an array of arrays
@@ -653,11 +340,7 @@ function handleDir(dir) {
 function lineMatrix(x, y, dir,len) {
 	var matrix = generateCharacters(st.rows,st.cols,charSet);
 
-	//var len = 12
-	//var x = 12;  //Get these from click, 
-	//var y = 12;
-	//In form, only allow NE, SE, NW, SW for diagonal
-	//var dir = 'NE';
+
 	var inc = handleDir(dir);
 	var xinc = inc[0];
 	var yinc = inc[1];
@@ -682,39 +365,20 @@ function lineMatrix(x, y, dir,len) {
 
 	}
 	function callback(pw, ids) {
-		console.log(pw.length)
-		console.log(pw);  //This logs actual pw
-		console.log(ids);
-		// ids.forEach(function(id) {
-		// 	var el = document.getElementById(id);
-		// 	el.className = 'clicked';
-		// });
 
-		function changeClass(id) {  //node, j
+		function changeClass(id) { 
 			var el = document.getElementById(id);
 			el.className = 'clicked';
 		}
 
 		for (var j=0; j<ids.length; j++) {
-			//node = cell;
-			//setTimeout(function(j) {cell.innerHTML = String.fromCharCode(num+j);}, delay*j);
-			//setTimeout(changeContent.bind(cell, j), delay*j);
-			//Works, with this, why?
 			var delay = 50;
 			setTimeout(changeClass.bind(null, ids[j]), delay*j);  //delay*j
-			//doSetTimeout(j, cell, delay);
 		}
-		//console.log(i);
-		// d3.selectAll('td')
-		// 	.filter(function(d) {console.log(d.id); return ids.indexOf(d.id) >= 0;})
-		// 	.attr('class', 'clicked')
-		// 	.transition()  //.duration(2000);
-		// 	.duration(function(d) {return ids.indexOf(d.id);});
 
 		var el = document.getElementById('password');
 		el.value = pw;
 	}
-	//console.log(pw);  //This logs undefined because recursion hasn't completed yet. 
 }
 
 function handleEdge(x, y, pw, ids, len, matrix, callback) {
@@ -759,6 +423,43 @@ function handleEdge(x, y, pw, ids, len, matrix, callback) {
 
 }
 
+function togglePs() {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+function copyPs() {
+	var x = document.getElementById("password");
+	var open = false;
+	if(x.type === 'password') {open=true; togglePs();}
+
+	x.select();
+	document.execCommand("Copy");
+	if(open) {togglePs();}
+}
+
+function clearPs() {
+    var ps = document.getElementById('password');
+    ps.value = '';
+    //Remove all highlighted classes
+    //https://stackoverflow.com/questions/22754315
+    var hls = Array.from(document.getElementsByClassName('clicked'));
+    hls.map(function(el){el.className = '';});
+}
+
+function clearAll() {
+	buildGrid(st.blankList);
+	clearPs();
+	var el = document.getElementById('seed');
+	el.value = '';
+}
+
+
+
 passchars = {
 	V: "AEIOU",
 	C: "BCDFGHJKLMNPQRSTVWXYZ",
@@ -776,7 +477,7 @@ passchars = {
 st = {
 	'rows': 26,  //Either this, or zero index rows/columns
 	'cols': 26,
-	'charSet': ' ', //Get from form eventually?
+	'charSet': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<', //Get from form eventually?
 	'blankList': generateCharacters(26,26,' '),
 	'charList': []
 };
@@ -786,7 +487,7 @@ var rows = 26;
 var cols = 26;
 var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<';
 var emptyChars = ' '
-var charList = generateCharacters(rows,cols,emptyChars);
+//var charList = generateCharacters(rows,cols,emptyChars);
 
 buildGrid(st.blankList);
 
@@ -798,6 +499,45 @@ buildGrid(st.blankList);
 //https://zurb.com/playground/playground/responsive-tables/index.html
 //downloaded as responsive-tables.js/.css
 //swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
+
+
+
+
+
+
+//Is this good, or does it make it seem less fragile?  
+//It's all for show. . . although not having to rebuild the html each
+//time is nice.  
+function d3test() {
+	var charList = generateCharacters(rows,cols,charSet);
+	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
+	//console.log(joinedList);
+	var td = d3.selectAll('td')
+		.data(joinedList)
+		//.enter()
+		//.append('td')
+		.text(function(d) {return d;})
+		.transition()
+		.duration(1200)
+		.ease(d3.easeLinear)
+		.tween("text", function(d) {
+			//https://stackoverflow.com/questions/45831942/tweening-numbers-in-d3-v4-not-working-anymore-like-in-v3
+			var node = this;
+			//var i = d3.interpolate(0, joinedList.length);
+			var i = d3.interpolate(33, d.charCodeAt(0));
+			//var i = d3.interpolate(0, 100);
+			//console.log(i(0.5));
+			return function(t) {
+				//d3.select(this).text(joinedList[i(t)]);
+				//d3.select(node).text(String.fromCharCode(Math.round(i(t))));
+				d3.select(node).text(String.fromCharCode(i(t)));
+			};
+		});
+		
+		//https://bl.ocks.org/bricedev/a0c5ef180272fac3aea6
+		//https://github.com/d3/d3-interpolate
+		//https://github.com/d3/d3-interpolate#interpolateString
+}
 
 
 
