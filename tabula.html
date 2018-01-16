@@ -20,6 +20,7 @@ body {
     /*font-family: monospace !important;*/
     font-size:14px;
     font-family:sans-serif;
+    line-height:1.5;
 }
 
 /*https://css-tricks.com/simple-css-row-column-highlighting/*/
@@ -61,6 +62,9 @@ th {
 	background-color:#f2f2f2;
 	border:1px solid #ccc;
 	/*padding:3px 3px;*/
+}
+hr {
+background-color: #ccc; height: 1px; border: 0;
 }
 .wrapper {
 /*	width:700px;*/
@@ -118,17 +122,37 @@ th {
 <div class="wrapper">
 <div class="center">
 	<div id='input'>
+		<!-- <h3>Input</h3> -->
+		<strong>Input</strong>
+		<hr>
 		<!-- Should the master be password protected too?-->
 		Master: <input id="seed" type="password" size="70" value="CorrectHorseBatteryStaple"/>
 		<input type="checkbox" onclick="toggleSe();">Show
 		<input id="click" type="button" value="Create" onclick="populateGrid();"/>  <!--d3test();-->
 		<button onclick="clearAll();">Clear</button> 
-		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> <br>
+		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> 
+		<!-- <br> -->
+		<hr>
 	</div>
 
 	<div id="tabula"></div>
 
 	<div id="output">
+		<strong>Options</strong>
+		<hr>
+		Method:
+		<select id="method" onchange="renderDirections();" onfocus="this.selectedIndex = -1;">
+				<option value="manual" selected="selected">Manual</option>
+				<option value="line">Line</option>
+				<option value="step">Step</option>
+				<option value="spiral">Spiral</option>
+		</select>
+		<div id='dir'>
+		</div>
+		Length: <input id="length" type="text" size="3" value="16"/>
+		<br>
+		<strong>Results</strong>
+		<hr>
 		Output: <input type="password" size="70" value="" id="password">
 		<input type="checkbox" onclick="togglePs();">Show 
 		<button onclick="copyPs()">Copy</button> 
@@ -184,6 +208,47 @@ buildGrid(st.blankList);
 //swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
 //TODO: Finalize charset, because changing that will change the output
 //of all grids generated with the charSet
+
+
+function renderDirections() {
+    var meth = document.getElementById('method');
+    var method = meth.options[meth.selectedIndex].value;
+
+    var dir = document.getElementById('dir');
+
+	var options = {
+		'cardinal': ['N', 'S', 'E', 'W'],
+		'angle': ['NE', 'NW', 'SE', 'SW']
+	}
+
+	if (method === 'line') {
+		var sel = document.createElement('select');
+		sel.id = 'direction';
+		var opts = options.cardinal.concat(options.angle);
+		console.log(opts);
+		opts.forEach(function(opt) {
+			var el = document.createElement('option');
+			el.value = opt;
+			el.textContent = opt;
+			sel.appendChild(el);
+		});
+		dir.innerHTML = 'Direction: ' + sel.outerHTML
+	} else if (method === 'step') {
+		var sel = document.createElement('select');
+		sel.id = 'direction';
+		var opts = options.angle;
+		opts.forEach(function(opt) {
+			var el = document.createElement('option');
+			el.value = opt;
+			el.textContent = opt;
+			sel.appendChild(el);
+		});
+		dir.innerHTML = 'Direction: ' + sel.outerHTML;
+	} else {
+		dir.innerHTML = '';
+	}
+	//Otherwise, do nothing.  
+}
 
 
 
@@ -250,6 +315,7 @@ function clickableGrid(rows, cols, charList, callback){
 //and call the clickableGrid buildGrid instead, more descriptive.  
 function buildGrid(charList) {
 
+	//Reset pw
 	document.getElementById('password').value = '';
 
 
@@ -259,32 +325,36 @@ function buildGrid(charList) {
 	    // console.log("You clicked on col:",col);
 	    // console.log("You clicked on item #:",i);
 
-	    
-	    el.className='clicked';
+	    var meth = document.getElementById('method');
+	    var method = meth.options[meth.selectedIndex].value;
 
-	    //Uncomment to remove coloring of all but current click:
-	    // if (lastClicked) lastClicked.className='';
-	    // lastClicked = el;
+	    if (method === 'manual') {
+		    //Uncomment to remove coloring of all but current click:
+		    // if (lastClicked) lastClicked.className='';
+		    // lastClicked = el;
+		    var ps = document.getElementById('password');
+		    //ps.value = ps.value += str;
+		    ps.value = ps.value += el.textContent;
+		    el.className='clicked';
+	    } else {
+	    	var len = document.getElementById('length');
+	    	var length = Number(len.value);
 
-	    var ps = document.getElementById('password');
-
-	    //ps.value = ps.value += str;
-	    ps.value = ps.value += el.textContent;
-
-	    //Todo: this is where you can follow predefined patters
-	    //call a function like followPattern(row,col,i,str); that grabs the 
-	    //pattern from a form and follows, if not 'none'
-
+	    	//TODO: eventually, available directions need to change based on method
+	    	//e.g. hide if method === spiral,
+	    	//e.g. step can't have N, S E W as options 
+	    	var dir = document.getElementById('direction');
+	    	var direction = dir.options[dir.selectedIndex].value;
+	    	//x,y,len,dir,method;
+	    	generatePw(col,row,length,direction,method);
+	    }
 	}
 
 	//var lastClicked; //Not needed currently
-	var grid = clickableGrid(rows, cols, charList, clicked);
-
-
+	var grid = clickableGrid(st.rows, st.cols, charList, clicked);
 	var el = document.getElementById('tabula');
 	el.innerHTML = '';
 	el.appendChild(grid);
-
 }
 
 // function fillGrid() {
@@ -336,6 +406,9 @@ function animateCell(cell, steps, duration) {
 
 //https://stackoverflow.com/questions/5226285
 function populateGrid() {
+
+	clearPs();
+
 	var charList = generateCharacters(rows,cols,st.charSet);
 	st.charList = charList;
 	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);//[].concat(charList); //flatten
@@ -394,6 +467,9 @@ function generatePw(x,y,len,dir,method) {
 			break;
 		case 'spiral':
 			break;
+		case 'step':
+			return highlightPs(stepMatrix(x,y,dir,len));
+			break;
 	}
 	
 	//return highlightPs()
@@ -441,10 +517,10 @@ function handleDir(dir) {
 //Actually, just name this line, then restrict
 //the directions that can be passed in for diagonal
 function lineMatrix(x, y, dir,len) {
-	var matrix = generateCharacters(st.rows,st.cols,charSet);
-	//var matrix = st.charList;
+	//var matrix = generateCharacters(st.rows,st.cols,charSet);
+	var matrix = st.charList;
 	var inc = handleDir(dir);
-	console.log(inc);
+	//console.log(inc);
 	//return;
 	var xinc = inc[0];
 	var yinc = inc[1];
@@ -483,33 +559,52 @@ function lineMatrix(x, y, dir,len) {
 		//console.log(pw.length);
 		//callback(pw,ids);
 	}
+	//If recursion isn't entered:
+	return {pw: pw, ids: ids};
+}
 
+function stepMatrix(x, y, dir, len) {
+	var matrix = st.charList;
+	var inc = handleDir(dir);
+	//console.log(inc);
+	//return;
+	var xinc = inc[0];
+	var yinc = inc[1];
+	var pw = '';
+	var ids = [];
+	var across = true;
+
+	while (pw.length < len) {
+
+		//Recurse if on edge
+		if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+			(x === 0 && x + xinc < 0) || 
+			(y === st.rows-1 && y + yinc > st.rows-1) || 
+			(y === 0 && y + yinc < 0)) {  
+
+			return handleEdge(x,y,pw,ids,len,matrix);
+		}
+
+		pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+		ids.push('c' + String(x) + ',' + String(y))
+
+		if (across) {
+			x += xinc;
+			across = false;
+		} else {
+			y += yinc;
+			across = true;
+		}
+		
+		//console.log(pw);
+		//console.log(pw.length);
+		//callback(pw,ids);
+	}
+	//If recursion isn't entered:
 	return {pw: pw, ids: ids};
 
-
-	//Can't figure out how to handle this, because either I need return values from the 
-	//recursion, or it never enters the recursion and I need this callback.  
-	//callback(pw,ids);
-
-	//Pull this callback out, and call it highlightCells, and use for all functions
-	// function callback(pw, ids) {
-	// 	console.log('eneter callback');
-
-	// 	console.log(ids);
-	// 	function changeClass(id) { 
-	// 		var el = document.getElementById(id);
-	// 		el.className = 'clicked';
-	// 	}
-
-	// 	for (var j=0; j<ids.length; j++) {
-	// 		var delay = 50;
-	// 		setTimeout(changeClass.bind(null, ids[j]), delay*j);  //delay*j
-	// 	}
-
-	// 	var el = document.getElementById('password');
-	// 	el.value = pw;
-	// }
 }
+
 
 function handleEdge(x, y, pw, ids, len, matrix, callback) {
 	//Always moves clockwise when it hits an edge
@@ -520,7 +615,7 @@ function handleEdge(x, y, pw, ids, len, matrix, callback) {
 		return {pw: pw, ids: ids};
 	}
 
-	console.log('enter recurse');
+	//console.log('enter recurse');
 
 	//https://stackoverflow.com/questions/33513358
 	if (x === y) {  //You're at a SE, NW corner 
@@ -638,6 +733,73 @@ function d3test() {
 		//https://github.com/d3/d3-interpolate
 		//https://github.com/d3/d3-interpolate#interpolateString
 }
+
+
+const test1 = [
+    [1]
+];
+const test2 = [
+    [1, 2],
+    [3, 4]
+];
+const test3 = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+const test4 = [
+    [1,2,3,4],
+    [5,6,7,8],
+    [9,1,2,3],
+    [4,5,6,7]
+];
+const test5 = [
+    [1,2,3,4,5],
+    [6,7,8,9,0],
+    [1,2,3,4,5],
+    [6,7,8,9,0],
+    [1,2,3,4,5]
+];
+
+// assume a square matrix
+const spiralTraversal = (matrix, cb) => {
+    let cycles = matrix.length;
+    for (let cycle = 0; cycle < cycles; cycle++) {
+        traverseCycle(matrix, cycle, cb);
+    }
+};
+
+const traverseCycle = (matrix, cycle, cb) => {
+    let indexedSize = matrix.length - 1;
+
+    // we are at the midpoint of a odd sized matrix
+    if (cycle + 0.5  === matrix.length/2) {
+        cb(matrix[cycle][cycle]);
+        return;
+    }
+    // going right
+    for (let row = cycle, col = 0 + cycle; col < indexedSize - cycle; col++) {
+        cb(matrix[row][col]);
+    }
+    // going down
+    for (let row = cycle, col = indexedSize - cycle; row < indexedSize - cycle; row++) {
+        cb(matrix[row][col]);
+    }
+    // going left
+    for (let row = indexedSize - cycle, col = indexedSize - cycle; col > cycle; col--) {
+        cb(matrix[row][col]);
+    }
+    // going up
+    for (let row = indexedSize - cycle, col = cycle; row > cycle; row--) {
+        cb(matrix[row][col]);
+    }
+};
+
+var res = [];
+function results(a) {
+	res.push(a);
+}
+
 
 
 
