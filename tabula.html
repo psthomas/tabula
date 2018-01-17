@@ -20,15 +20,43 @@ body {
     /*font-family: monospace !important;*/
     font-size:14px;
     font-family:sans-serif;
-    line-height:1.6;
+    /*line-height:1.4;*/
 }
 
 /*https://css-tricks.com/simple-css-row-column-highlighting/*/
+/*https://stackoverflow.com/questions/17119594*/
 table {
-  overflow: hidden;
-  border:1px solid #ccc;
+/*	overflow-y: hidden;
+	overflow-x: auto;*/
+	/*width:100%;*/
+	/*display: block;*/
+	overflow:hidden;
+	/*  border:2px solid #ccc;*/
+	border:solid #ccc; 
+	border-width: 1px 2px 2px 1px; /*To deal with hidden border*/
+	/*outline:1px solid #ccc;*/
+	border-collapse: collapse;
 }
-
+/*table tr:nth-child(even) {
+    background-color:lightgray;
+}*/
+/*table th {*/
+th {
+	background-color:#f2f2f2;
+	border:1px solid #ccc;
+	/*padding:3px 3px;*/
+	padding: 1px 6px; 
+	text-align: left;
+	font-weight: bold;
+}
+hr {
+	background-color: #ddd; 
+	height: 1px; 
+	/*border: 0;*/
+}
+table tr {
+	border:1px solid #ccc;
+}
 tr:hover {
   background-color: #f2f2f2;;
 }
@@ -47,34 +75,20 @@ th:hover::after {
   z-index: -1;
 }
 
-
-/*table tr:nth-child(even) {
-    background-color:lightgray;
-}*/
-table tr {
-	border:1px solid #ccc;
-}
-table tr:nth-child(odd) {
-    /*background-color:#f2f2f2;*/
-}
-/*table th {*/
-th {
-	background-color:#f2f2f2;
-	border:1px solid #ccc;
-	/*padding:3px 3px;*/
-}
-hr {
-	background-color: #ddd; height: 1px; border: 0;
-}
 input {
 	font-family: Monaco, monospace;
 	margin: 5px 2px;
 }
-
+h3 {
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 0.75em;
+	margin-top: 1.5em;
+}
 .wrapper {
 /*	width:700px;*/
-	/*margin: 40px auto;*/
-	margin:50px 0px;
+	margin: 40px auto;
+	max-width:725px;
+	/*margin:50px 0px;*/
 	text-align:center;
 }
 .center {
@@ -82,17 +96,19 @@ input {
 }
 #input {
 	text-align:left;
-	margin: 20px auto;
+	margin: 12px auto;
+	line-height:1.6;
 }
 #output {
 	text-align:left;
-	/*margin: 20px auto;*/
+	margin: 12px auto;
+	line-height:1.6;
 }
 
 .grid { 
 	/*margin:1em auto;*/ 
-	border-collapse:collapse;
-	font-family:  Monaco,monospace;
+	/*border-collapse: collapse;*/
+	font-family:  Monaco, monospace;
 }
 .grid td {
     cursor:pointer;
@@ -108,6 +124,32 @@ input {
     font-weight:bold; 
     /*color:red;*/
 }
+
+
+/*table settings incorporated above*/
+/*table th { font-weight: bold; }*/
+/*table td, table th*/
+/*table th { padding: 1px 6px; text-align: left;}*/
+
+/* Mobile */
+/*@media only screen and (max-width: 767px) {
+	
+	table.responsive { margin-bottom: 0; }
+	
+	.pinned { position: absolute; left: 0; top: 0; background: #fff; width: 35%; overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc; }
+	.pinned table { border-right: none; border-left: none; width: 100%; }
+	.pinned table th, .pinned table td { white-space: nowrap; }
+	.pinned td:last-child { border-bottom: 0; }
+	
+	div.table-wrapper { position: relative; margin-bottom: 20px; overflow: hidden; border-right: 1px solid #ccc; }
+	div.table-wrapper div.scrollable table { margin-left: 35%; }
+	div.table-wrapper div.scrollable { overflow: scroll; overflow-y: hidden; }	
+	
+	table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
+	table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
+	
+}*/
+
 /*#input {margin:1em auto;}*/
 </style>
 
@@ -125,27 +167,17 @@ input {
 
 
 <div class="wrapper">
+	<h1>Tabula</h1>
 <div class="center">
 	<div id='input'>
-		<!-- <h3>Input</h3> -->
-		<strong>Input</strong>
-		<hr>
-		<!-- Should the master be password protected too?-->
+		<h3>Master Password</h3>
+		<p>Click <code>create</code> to generate a unique table of characters based on your master password.</p>
 		Master: <input id="seed" type="password" size="70" value="CorrectHorseBatteryStaple"/>
 		<input type="checkbox" onclick="toggleSe();">Show
 		<input id="click" type="button" value="Create" onclick="populateGrid();"/>  <!--d3test();-->
 		<button onclick="clearAll();">Clear</button> 
-		<!-- <input id="click" type="button" value="Create" onclick="fillGrid();"/> --> 
-		<!-- <br> -->
-		<!-- <hr> -->
-	</div>
-
-	<div id="tabula"></div>
-	<br>
-
-	<div id="output">
-		<strong>Options</strong>
-		<hr>
+		<h3>Options</h3>
+		<p> Next, set the options for the pattern that is followed when creating your password.  Select <code>manual</code> if you'd like to choose characters based on your own pattern.  Next, click a memorable starting cell to generate a password.</p>
 		Method:
 		<select id="method" onchange="renderDirections();" onfocus="this.selectedIndex = -1;">
 				<option value="manual" selected="selected">Manual</option>
@@ -155,15 +187,29 @@ input {
 		</select>
 		<div id='dir'>
 		</div>
-		Length: <input id="length" type="text" size="3" value="16"/>
-		<br>
-		<br>
-		<strong>Results</strong>
-		<hr>
+		Length: <input id="length" type="text" size="3" value="16"/> <br>
+	<h3>Tabula</h3>
+	</div>
+	<div id="tabula"></div>
+
+	<div id="output">
+		<h3>Results</h3>
+<!-- 		<strong>Results</strong>
+		<hr> -->
 		Output: <input type="password" size="70" value="" id="password">
 		<input type="checkbox" onclick="togglePs();">Show 
 		<button onclick="copyPs()">Copy</button> 
 		<button onclick="clearPs();">Clear</button> <br>
+		<h3>Directions</h3>
+<!-- 		<strong>Directions</strong>
+		<hr> -->
+		<p><ol>  <!-- This will create the same grid of characters that is unique to your password anytime, whatever computer you're on. -->
+			<!-- <li>Create a grid by entering your unique Master Password and clicking <code>create</code> above.</li> -->
+			<li>Enter your unique master password and click <code>create</code> above.  This creates a grid of characters that is unique to your password.  This same grid will show up whenever you enter your master password in the future, on any device.</li>
+			<li>Set the desired <code>options</code>, choosing to either manually select cells or automate the process with a pattern.</li>
+			<li>Choose a starting cell based on something memorable about the intended site.  For example, maybe your <strong>A</strong>mazo<strong>N</strong>.com password would start at the <code><strong>[A,N]</strong></code> grid location.  Click this cell to begin. </li>
+			<li>In the future, remember your master password and your site-based technique, and you can generate any password you need without storing it anywhere!</li>
+		</ol></p>
 	</div>
 	<!-- <input type="password" name="password" id="myPassword" size="70" /> -->
 	<!-- <img src="theicon" onmouseover="mouseoverPass();" onmouseout="mouseoutPass();" /> -->
@@ -206,7 +252,7 @@ var emptyChars = ' '
 appendGrid(st.blankList);
 
 
-//TODO: pull the character generating process out & put them in a data
+//DONE: pull the character generating process out & put them in a data
 // structure so they can be iterated over.  List of list?
 //TODO: figure out how to create responsive tables for mobile. . . if you just
 //go with distributing the HTML page as the cross platform idea
@@ -215,6 +261,7 @@ appendGrid(st.blankList);
 //swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
 //TODO: Finalize charset, because changing that will change the output
 //of all grids generated with the charSet
+//TODO: charaset dropdown selector?  
 
 
 function renderDirections() {
@@ -281,7 +328,7 @@ function generateHeader(alpha) {
 function buildGrid(rows, cols, charList, callback){
     var i=0;
     var grid = document.createElement('table');
-    grid.className = 'grid';
+    grid.className = 'grid responsive';  //Add responsive class
 
     var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     var header = generateHeader(alpha);
@@ -344,23 +391,6 @@ function clicked(el,row,col,i,str) {
 			break;
 
 	}
-
-    // if (method === 'manual') {
-	   //  //Uncomment to remove coloring of all but current click:
-	   //  // if (lastClicked) lastClicked.className='';
-	   //  // lastClicked = el;
-	   //  var ps = document.getElementById('password');
-	   //  ps.value = ps.value += el.textContent;
-	   //  el.className='clicked';
-    // } else if (method==='spiral') {
-    // 	generatePw(col,row,length,method);
-
-    // } else {
-    // 	var dir = document.getElementById('direction');
-    // 	var direction = dir.options[dir.selectedIndex].value;
-    // 	//x,y,len,dir,method;
-    // 	generatePw(col,row,length,direction,method);
-    // }
 }
 
 
@@ -494,7 +524,7 @@ function generateCharacters(rows, cols, charset) {
 function highlightPs(obj) {
 	// console.log(pw);
 	// console.log(ids);
-	console.log(obj);
+	//console.log(obj);
 	var ids = obj.ids;
 	var pw = obj.pw;
 	function changeClass(id) { 
@@ -524,12 +554,11 @@ function handleDir(dir) {
 
 }
 
-//Add to event handler a global setting based on form:
-//if technique === 'manual', just append selection,
-//otherwise, call function for the form setting, e.g. diagonal('NE');
 
-//Actually, just name this line, then restrict
-//the directions that can be passed in for diagonal
+
+/* Grid Traversing Functions */
+
+
 function lineMatrix(x, y, dir,len) {
 	//var matrix = generateCharacters(st.rows,st.cols,charSet);
 	var matrix = st.charList;
@@ -569,7 +598,7 @@ function lineMatrix(x, y, dir,len) {
 		ids.push('c' + String(x) + ',' + String(y))
 		x += xinc;
 		y += yinc;
-		console.log(pw);
+		//console.log(pw);
 		//console.log(pw.length);
 		//callback(pw,ids);
 	}
@@ -745,7 +774,6 @@ function handleEdge(x, y, pw, ids, len, matrix, callback) {
 	if (x === y) {  //You're at a SE, NW corner 
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
-		console.log(pw);
 		if (x === 0) {
 			return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
 		} else if (x === 25) {
@@ -754,27 +782,24 @@ function handleEdge(x, y, pw, ids, len, matrix, callback) {
 	} else if (x >= st.cols-1) {  
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
-		console.log(pw);
 		return handleEdge(x, y+1, pw, ids, len, matrix); //Move down
 	} else if (x === 0) {
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
-		console.log(pw);
 		return handleEdge(x, y-1, pw, ids, len, matrix); //Move up
 	} else if (y >= st.cols-1) {
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
-		console.log(pw);
 		return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
 	} else if (y === 0) {
 		pw += matrix[y][x];
 		ids.push('c' + String(x) + ',' + String(y));
-		console.log(pw);
 		return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
 	}
-
-
 }
+
+
+/* Helper Functions */
 
 function toggleSe() {
     var x = document.getElementById("seed");
@@ -859,74 +884,59 @@ function d3test() {
 }
 
 
-const test1 = [
-    [1]
-];
-const test2 = [
-    [1, 2],
-    [3, 4]
-];
-const test3 = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-];
-const test4 = [
-    [1,2,3,4],
-    [5,6,7,8],
-    [9,1,2,3],
-    [4,5,6,7]
-];
-const test5 = [
-    [1,2,3,4,5],
-    [6,7,8,9,0],
-    [1,2,3,4,5],
-    [6,7,8,9,0],
-    [1,2,3,4,5]
-];
+/*Code for responsive tables*/
+/*source: https://zurb.com/playground/projects/responsive-tables/index.html */
+/*modified to remove jQuery */
 
-// assume a square matrix
-const spiralTraversal = (matrix, cb) => {
-    let cycles = matrix.length;
-    for (let cycle = 0; cycle < cycles; cycle++) {
-        traverseCycle(matrix, cycle, cb);
-    }
-};
+//$(document).ready(function() {
+//https://stackoverflow.com/questions/799981
+// document.addEventListener("DOMContentLoaded", function(event) { 
+  
+//     var switched = false;
+//     var updateTables = function() {
+//         if ((window.innerWidth < 767) && !switched) {
+//             switched = true;
+//             document.getElementsByClassName("responsive").each(function(i, element) {
+//                 splitTable(element);
+//             });
+//             return true;
+//         } else if (switched && (window.innerWidth > 767)) {
+//             switched = false;
+//             document.getElementsByClassName("responsive").each(function(i, element) {
+//                 unsplitTable($(element));
+//             });
+//         }
+//     };
+//     // $(window).load(updateTables);
+//     // $(window).bind("resize", updateTables);
+//     window.onload(updateTables);
+//     window.bind("resize", updateTables);
 
-const traverseCycle = (matrix, cycle, cb) => {
-    let indexedSize = matrix.length - 1;
+//     function splitTable(original) {
+//     	//original.wrap("<div class='table-wrapper' />");
+//     	//https://stackoverflow.com/questions/6838104
+// 		org_html = original.innerHTML;
+// 		new_html = "<div class='table-wrapper' />" + org_html + "</div>";
+// 		original.innerHTML = new_html;
 
-    // we are at the midpoint of a odd sized matrix
-    if (cycle + 0.5  === matrix.length/2) {
-        cb(matrix[cycle][cycle]);
-        return;
-    }
-    // going right
-    for (let row = cycle, col = 0 + cycle; col < indexedSize - cycle; col++) {
-        cb(matrix[row][col]);
-    }
-    // going down
-    for (let row = cycle, col = indexedSize - cycle; row < indexedSize - cycle; row++) {
-        cb(matrix[row][col]);
-    }
-    // going left
-    for (let row = indexedSize - cycle, col = indexedSize - cycle; col > cycle; col--) {
-        cb(matrix[row][col]);
-    }
-    // going up
-    for (let row = indexedSize - cycle, col = cycle; row > cycle; row--) {
-        cb(matrix[row][col]);
-    }
-};
+//         //var copy = original.clone();
+//         var copy = original.cloneNode(true);
 
-var res = [];
-function results(a) {
-	res.push(a);
-}
+//         copy.find("td:not(:first-child), th:not(:first-child)").css("display", "none");
+//         copy.querySelector("td:not(:first-child), th:not(:first-child)") !== null
 
+//         copy.removeClass("responsive");
+//         original.closest(".table-wrapper").append(copy);
+//         copy.wrap("<div class='pinned' />");
+//         original.wrap("<div class='scrollable' />");
+//     }
 
-
-
+//     function unsplitTable(original) {
+//         original.closest(".table-wrapper").find(".pinned").remove();
+//         original.unwrap();
+//         original.unwrap();
+//     }
+// });
 
 
 
