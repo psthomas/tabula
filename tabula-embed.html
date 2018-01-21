@@ -1,0 +1,1093 @@
+<!doctype html>
+<head>
+<title>Tabula</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+
+<style>
+/*Simple CSS Reset*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/*https://webdesignerhut.com/responsive-layout-with-html-and-css/
+Alternate: https://codepen.io/johnstonian/pen/guhid*/
+body {
+    line-height: 1.5; /*1*/
+    font-family:sans-serif;
+    color:rgba(40,40,40,0.9);
+}
+#container{
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+header {
+    width: 94%;
+    padding: 3% 3% 1% 3%;
+}
+header #title {
+    font-size: 55px;
+    font-weight:bold;
+}
+nav {
+    width: 97%;
+    padding: 0 1.5% 0 1.5%;
+}
+nav ul li {
+    display: inline-block;
+    padding: 15px 1.5% 15px 1.5% ;
+}
+nav ul li a {
+    text-decoration: none;
+    /*color: #ffffff;*/
+    font-size: 1.2em;
+}
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+#content {
+    float: left;
+    padding: 0% 3%;  /*2% 3% 0% 3%*/
+    width: 64%;
+}
+.intro {
+    /*float: left;*/
+    padding: 1% 3% 0% 3%; /*2% 3%*/
+    width: 64%;
+}
+aside {
+    float: right;
+    padding: 0% 3%;
+    width: 24%;
+    font-size:15px;
+    line-height:1.7; /*1.7*/
+    /*background-color: #eee;*/
+}
+aside h3 {
+    line-height:1.5;
+}
+footer{
+    width: 94%;
+    padding: 3%;
+}
+
+@media all and (max-width : 768px) {
+    header {
+        text-align: center;
+    }
+    nav {
+        text-align: center;
+    }
+    #content {
+        width: 94%;
+        padding: 0% 3%;
+    }
+    .intro {
+        width: 94%;
+        padding: 0% 3%;
+    }
+    #sidebar {
+        width: 94%;
+        padding: 0% 3%;
+        /*border-top: 3px solid #E64A19;*/
+    }
+}
+@media all and (max-width : 330px) {
+    nav ul li {
+        display:block;
+        width: 94%;
+    }
+}
+/* Turn off hovering on mobile,
+was preventing click events */
+@media all and (min-width: 700px) {
+    /*Hovering*/
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+    td:hover::after { 
+        background-color: #f2f2f2;
+        content: '';  
+        height: 10000px;    
+        left: 0;
+        position: absolute;  
+        top: -5000px;
+        width: 100%;
+        z-index: -1;        
+    }
+}
+/*Printing just shows table*/
+/*https://stackoverflow.com/questions/468881*/
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print, #print * {
+        visibility: visible;
+    }
+    #print {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
+h3 {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0.75em;
+    margin-top: 1.5em;  /*2em 1.5em 1em*/
+    padding-bottom:0.2em;
+    font-weight:bold;
+    font-size:1.15rem;
+}
+h4 {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0.75em;
+    margin-top: 1em;  /*2em 1.5em 0.75*/
+    padding-bottom:0.3em;
+    font-weight:bold;
+    font-size:1.075rem;
+}
+strong {
+    font-weight:bold;
+}
+input {
+    margin:0.3em;
+}
+input[type=password], input[type=text] {
+    font-family: Monaco, monospace;
+    width:95%;
+}
+p {
+    margin:1em 0em;
+}
+button {
+    cursor:pointer;
+    padding: 0.2em 0.5em;
+}
+a {
+    color:rgba(40,40,40,0.9);
+}
+p {
+    line-height:1.5;
+    word-wrap:break-word;
+}
+code {
+    font-family:Monaco, monospace;
+}
+em {
+    font-style:italic;
+}
+
+
+/* tables */
+/*https://css-tricks.com/simple-css-row-column-highlighting/*/
+/*https://stackoverflow.com/questions/17119594*/
+table {
+    display: table;
+    width:100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin:1.2em auto;
+    overflow: hidden;
+    border-style: hidden;
+}
+/*https://stackoverflow.com/questions/1257430*/
+table td, table th {
+    border: 1px solid #999; /*#ccc*/
+}
+th {
+    /*background-color:#f2f2f2;*/
+    border:1px solid #ccc;
+    padding:1px 0px;
+    font-size:14px; 
+    font-weight: 900; /*bold;*/
+}
+table tr {
+    border:1px solid #ccc;
+}
+td, th {
+    position: relative;
+}
+.grid { 
+    font-family:  Monaco, monospace;
+}
+.grid td {
+    cursor:pointer;
+    width:23px; height:20px;  /*30, 30*/
+    border:1px solid #ccc;
+    text-align:center;
+    font-size:12px; /*13px*/
+}
+.grid td.clicked {
+    background-color:#ACCEF7; 
+    font-weight:bold; 
+}
+</style>
+
+
+
+</head>
+<body>
+<div id="container">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+
+        <div class='input'> 
+            <h3>1. Create a Table</h3>
+            <form onsubmit="return false;">
+            Master Password: <br>
+            <input id="seed" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
+            <input type="checkbox" onclick="toggleSe();">Show <br>
+
+            Character Set: <br>
+            <select id="characters" onchange="chooseCharacters();"> <!--onfocus="this.selectedIndex = -1;"-->
+                <option value="advanced" selected="selected">Letters, Numbers, Advanced Symbols</option>
+                <option value="standard">Letters, Numbers, Symbols</option>
+                <option value="alphanumeric">Letters, Numbers</option>
+                <option value="letters">Letters</option>
+                <option value="numbers">Numbers</option>
+            </select> <br>
+            <button class="button" onclick="populateGrid();">Create</button>
+            <button type="button" class="button" onclick="clearAll();">Clear</button> 
+            <button type="button" class="button" onClick="window.print();">Print</button> <br>
+            </form>
+        </div>
+
+        <div class="input">
+            <h3>2. Choose a Pattern</h3>
+            Pattern:
+            <select id="method" onchange="renderDirections();"> <!--onfocus="this.selectedIndex = -1;"-->
+                    <option value="manual">Manual</option>
+                    <option value="line">Line</option>
+                    <option value="step" selected="selected">Step</option>
+                    <option value="spiral">Spiral</option>
+            </select> <br>
+            <div id='dir'></div>
+            Length: <input id="length" type="text" style="width:25px"  value="16"/>
+        </div>
+
+        <div class="input">
+            <h3>3. Click a Cell</h3>
+            Click a memorable cell to start the password.  For example, choose coordinates [A,N] for <strong>a</strong>mazo<strong>n</strong>.com. <br>
+        </div>
+
+        <div class="output">
+            <h3>4. View the Results</h3>
+            <input type="password" value="" id="password"> <br><!--size="70" -->
+            <input type="checkbox" onclick="togglePs();">Show 
+            <button type="button" class="button" onclick="copyPs()">Copy</button>
+            <button type="button" class="button" onclick="clearPs();">Clear</button>
+        </div>
+        <br>
+        <div  style="font-size:0.95em;">© 2018 Philip Thomas, <a href="https://github.com">source</a>, <a href="https://pstblog.com">author</a>.</div>
+    </aside>
+
+    <!-- Table Content area -->
+    <section id="content">
+        <h3 >Table</h3>
+        <div id="print">
+            <div id="tabula">
+            </div>
+        </div>
+    </section>
+
+</div>
+
+
+<script>
+/*
+Copyright 2014 David Bau.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
+
+(function (pool, math) {
+//
+// The following constants are related to IEEE 754 limits.
+//
+var global = this,
+    width = 256,        // each RC4 output is 0 <= x < 256
+    chunks = 6,         // at least six RC4 outputs for each double
+    digits = 52,        // there are 52 significant digits in a double
+    rngname = 'random', // rngname: name for Math.random and Math.seedrandom
+    startdenom = math.pow(width, chunks),
+    significance = math.pow(2, digits),
+    overflow = significance * 2,
+    mask = width - 1,
+    nodecrypto;         // node.js crypto module, initialized at the bottom.
+
+//
+// seedrandom()
+// This is the seedrandom function described above.
+//
+function seedrandom(seed, options, callback) {
+  var key = [];
+  options = (options == true) ? { entropy: true } : (options || {});
+
+  // Flatten the seed string or build one from local entropy if needed.
+  var shortseed = mixkey(flatten(
+    options.entropy ? [seed, tostring(pool)] :
+    (seed == null) ? autoseed() : seed, 3), key);
+
+  // Use the seed to initialize an ARC4 generator.
+  var arc4 = new ARC4(key);
+
+  // This function returns a random double in [0, 1) that contains
+  // randomness in every bit of the mantissa of the IEEE 754 value.
+  var prng = function() {
+    var n = arc4.g(chunks),             // Start with a numerator n < 2 ^ 48
+        d = startdenom,                 //   and denominator d = 2 ^ 48.
+        x = 0;                          //   and no 'extra last byte'.
+    while (n < significance) {          // Fill up all significant digits by
+      n = (n + x) * width;              //   shifting numerator and
+      d *= width;                       //   denominator and generating a
+      x = arc4.g(1);                    //   new least-significant-byte.
+    }
+    while (n >= overflow) {             // To avoid rounding up, before adding
+      n /= 2;                           //   last byte, shift everything
+      d /= 2;                           //   right using integer math until
+      x >>>= 1;                         //   we have exactly the desired bits.
+    }
+    return (n + x) / d;                 // Form the number within [0, 1).
+  };
+
+  prng.int32 = function() { return arc4.g(4) | 0; }
+  prng.quick = function() { return arc4.g(4) / 0x100000000; }
+  prng.double = prng;
+
+  // Mix the randomness into accumulated entropy.
+  mixkey(tostring(arc4.S), pool);
+
+  // Calling convention: what to return as a function of prng, seed, is_math.
+  return (options.pass || callback ||
+      function(prng, seed, is_math_call, state) {
+        if (state) {
+          // Load the arc4 state from the given state if it has an S array.
+          if (state.S) { copy(state, arc4); }
+          // Only provide the .state method if requested via options.state.
+          prng.state = function() { return copy(arc4, {}); }
+        }
+
+        // If called as a method of Math (Math.seedrandom()), mutate
+        // Math.random because that is how seedrandom.js has worked since v1.0.
+        if (is_math_call) { math[rngname] = prng; return seed; }
+
+        // Otherwise, it is a newer calling convention, so return the
+        // prng directly.
+        else return prng;
+      })(
+  prng,
+  shortseed,
+  'global' in options ? options.global : (this == math),
+  options.state);
+}
+math['seed' + rngname] = seedrandom;
+
+//
+// ARC4
+//
+// An ARC4 implementation.  The constructor takes a key in the form of
+// an array of at most (width) integers that should be 0 <= x < (width).
+//
+// The g(count) method returns a pseudorandom integer that concatenates
+// the next (count) outputs from ARC4.  Its return value is a number x
+// that is in the range 0 <= x < (width ^ count).
+//
+function ARC4(key) {
+  var t, keylen = key.length,
+      me = this, i = 0, j = me.i = me.j = 0, s = me.S = [];
+
+  // The empty key [] is treated as [0].
+  if (!keylen) { key = [keylen++]; }
+
+  // Set up S using the standard key scheduling algorithm.
+  while (i < width) {
+    s[i] = i++;
+  }
+  for (i = 0; i < width; i++) {
+    s[i] = s[j = mask & (j + key[i % keylen] + (t = s[i]))];
+    s[j] = t;
+  }
+
+  // The "g" method returns the next (count) outputs as one number.
+  (me.g = function(count) {
+    // Using instance members instead of closure state nearly doubles speed.
+    var t, r = 0,
+        i = me.i, j = me.j, s = me.S;
+    while (count--) {
+      t = s[i = mask & (i + 1)];
+      r = r * width + s[mask & ((s[i] = s[j = mask & (j + t)]) + (s[j] = t))];
+    }
+    me.i = i; me.j = j;
+    return r;
+    // For robust unpredictability, the function call below automatically
+    // discards an initial batch of values.  This is called RC4-drop[256].
+    // See http://google.com/search?q=rsa+fluhrer+response&btnI
+  })(width);
+}
+
+//
+// copy()
+// Copies internal state of ARC4 to or from a plain object.
+//
+function copy(f, t) {
+  t.i = f.i;
+  t.j = f.j;
+  t.S = f.S.slice();
+  return t;
+};
+
+//
+// flatten()
+// Converts an object tree to nested arrays of strings.
+//
+function flatten(obj, depth) {
+  var result = [], typ = (typeof obj), prop;
+  if (depth && typ == 'object') {
+    for (prop in obj) {
+      try { result.push(flatten(obj[prop], depth - 1)); } catch (e) {}
+    }
+  }
+  return (result.length ? result : typ == 'string' ? obj : obj + '\0');
+}
+
+//
+// mixkey()
+// Mixes a string seed into a key that is an array of integers, and
+// returns a shortened string seed that is equivalent to the result key.
+//
+function mixkey(seed, key) {
+  var stringseed = seed + '', smear, j = 0;
+  while (j < stringseed.length) {
+    key[mask & j] =
+      mask & ((smear ^= key[mask & j] * 19) + stringseed.charCodeAt(j++));
+  }
+  return tostring(key);
+}
+
+//
+// autoseed()
+// Returns an object for autoseeding, using window.crypto and Node crypto
+// module if available.
+//
+function autoseed() {
+  try {
+    var out;
+    if (nodecrypto && (out = nodecrypto.randomBytes)) {
+      // The use of 'out' to remember randomBytes makes tight minified code.
+      out = out(width);
+    } else {
+      out = new Uint8Array(width);
+      (global.crypto || global.msCrypto).getRandomValues(out);
+    }
+    return tostring(out);
+  } catch (e) {
+    var browser = global.navigator,
+        plugins = browser && browser.plugins;
+    return [+new Date, global, plugins, global.screen, tostring(pool)];
+  }
+}
+
+//
+// tostring()
+// Converts an array of charcodes to a string
+//
+function tostring(a) {
+  return String.fromCharCode.apply(0, a);
+}
+
+//
+// When seedrandom.js is loaded, we immediately mix a few bits
+// from the built-in RNG into the entropy pool.  Because we do
+// not want to interfere with deterministic PRNG state later,
+// seedrandom will not call math.random on its own again after
+// initialization.
+//
+mixkey(math.random(), pool);
+
+//
+// Nodejs and AMD support: export the implementation as a module using
+// either convention.
+//
+if ((typeof module) == 'object' && module.exports) {
+  module.exports = seedrandom;
+  // When in node.js, try using crypto package for autoseeding.
+  try {
+    nodecrypto = require('crypto');
+  } catch (ex) {}
+} else if ((typeof define) == 'function' && define.amd) {
+  define(function() { return seedrandom; });
+}
+
+// End anonymous scope, and pass initial values.
+})(
+  [],     // pool: entropy pool starts empty
+  Math    // math: package containing random, pow, and seedrandom
+);
+</script>
+
+
+
+<script>
+//Warning: changing these will change all dependent output tables
+var passchars = {
+    letters: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+    numbers: "0123456789",
+    advanced: "?,=[]_:+*'~;/.{}",
+    standard: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+    empty: " "
+};
+
+//Initial settings, build grid:
+var st = {
+    'rows': 26,  //Either this, or zero index rows/columns
+    'cols': 26,
+    'charset': passchars.standard + passchars.advanced,  //Initial selection
+    'blankList': generateCharacters(26,26,' '),
+    'charList': []
+};
+
+appendGrid(st.blankList);
+renderDirections();  //Inserts dropdown
+
+
+function appendGrid(charList) {
+    //Reset PW
+    document.getElementById('password').value = '';
+    var grid = buildGrid(st.rows, st.cols, charList, clicked);
+    var el = document.getElementById('tabula');
+    el.innerHTML = '';
+    el.appendChild(grid);
+}
+
+function clicked(el,row,col,i,str) {
+    var meth = document.getElementById('method');
+    var method = meth.options[meth.selectedIndex].value;
+    var len = document.getElementById('length');
+    var length = Number(len.value);
+
+    switch(method) {
+        case 'manual':
+            var ps = document.getElementById('password');
+            ps.value = ps.value += el.textContent;
+            el.className='clicked';
+            break;
+        case 'line':
+            clearPs();
+            var dir = document.getElementById('direction');
+            var direction = dir.options[dir.selectedIndex].value;
+            return highlightPs(lineMatrix(col,row,direction,length));
+            break;
+        case 'step':
+            clearPs();
+            var dir = document.getElementById('direction');
+            var direction = dir.options[dir.selectedIndex].value;
+            return highlightPs(stepMatrix(col,row,direction,length));
+            break;
+        case 'spiral':
+            clearPs();
+            return highlightPs(spiralMatrix(col,row,length));
+            break;
+
+    }
+}
+
+//source: https://stackoverflow.com/questions/9140101,
+//http://jsfiddle.net/6qkdP/2/     
+function buildGrid(rows, cols, charList, callback){
+    var i=0;
+    var grid = document.createElement('table');
+    grid.className = 'grid'; 
+
+    var alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    var header = generateHeader(alpha);
+    grid.appendChild(header);
+    
+    for (var r=0; r<rows; ++r){
+        var tr = grid.appendChild(document.createElement('tr'));
+        var rowList = charList[r];
+
+        //Add the row alphabet header
+        var h = document.createElement('th');
+        h.innerHTML = alpha[r];
+        tr.appendChild(h);
+
+        for (var c=0; c<cols; ++c){
+            var cell = tr.appendChild(document.createElement('td'));
+            ++i;
+            var str = rowList[c];
+            cell.innerHTML = str;
+            //x, y, where y is "negative"
+            cell.id = 'c' + String(c) +','+ String(r);  
+            cell.addEventListener('click',(function(el,r,c,i,str){
+                return function(){
+                    callback(el,r,c,i,str);
+                }
+            })(cell,r,c,i,str),false);
+        }
+    }
+    return grid;
+}
+
+function generateHeader(alpha) {
+    var header = document.createElement('thead');
+    var hrow = document.createElement('tr');
+    hrow.appendChild(document.createElement('th'));
+    for (var j=0; j<alpha.length; j++) {
+        var th = document.createElement('th');
+        th.innerHTML = alpha[j];
+        hrow.appendChild(th);
+    }
+    header.appendChild(hrow);
+    return header;
+}
+
+//https://stackoverflow.com/questions/5226285
+function populateGrid() {
+    clearPs();
+
+    var charList = generateCharacters(st.rows,st.cols,st.charset);
+    st.charList = charList;  //Sets Global
+    var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten
+    var cells = Array.from(document.getElementsByTagName('td'));
+
+    //Using requestAnimationFrame
+    for (var i=0; i<cells.length; i++) {
+        var num = 32;
+        var endNum = joinedList[i].charCodeAt(0);
+        var cell = cells[i];
+        var steps = endNum - num;
+        var duration = 750; 
+        //https://stackoverflow.com/questions/45829536
+        // (function(cell,steps,duration) {
+        //  animate(cell,steps,duration);
+        // })(cell,steps,duration);
+        // This function now is the closure:
+        animateCell(cell,steps,duration);
+    }
+
+}
+
+function animateCell(cell, steps, duration) {
+    function changeCell(timestamp, cell, steps, duration){
+        var timestamp = timestamp || new Date().getTime();
+        var runtime = timestamp - starttime;
+        var progress = runtime / duration;
+        progress = Math.min(progress, 1);
+        cell.textContent = String.fromCharCode(32+steps*progress);
+
+        if (runtime < duration){ // if duration not met yet
+            // Call requestAnimationFrame again with parameters
+            requestAnimationFrame(function(timestamp){ 
+                changeCell(timestamp, cell, steps, duration);
+            });
+        }
+    }
+    //http://www.javascriptkit.com/javatutors/requestanimationframe.shtml
+    var starttime;
+    requestAnimationFrame(function(timestamp){
+        //if browser doesn't support requestAnimationFrame, 
+        //generate our own timestamp using Date
+        starttime = timestamp || new Date().getTime(); 
+        changeCell(timestamp, cell, steps, duration);
+    });
+}
+
+function generateCharacters(rows, cols, charset) {
+    //Using seedrandom.js, https://github.com/davidbau/seedrandom
+    //MIT License
+    var seed = document.getElementById('seed').value;
+    Math.seedrandom(seed);
+    var charList = [];
+    for (var i=0; i<cols; i++) {
+        charList.push(randomString(cols, charset).split(''));
+    }
+    return charList
+}
+
+//https://stackoverflow.com/questions/1349404
+function randomString(len, charSet) {
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+        //Math.random here is the special seeded version from seedrandom.js
+        var randomPos = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPos,randomPos+1);
+    }
+    return randomString;
+}
+
+function highlightPs(obj) {
+    var ids = obj.ids;
+    var pw = obj.pw;
+    var delay = 50;
+
+    function changeClass(id) { 
+        var el = document.getElementById(id);
+        el.className = 'clicked';
+    }
+
+    for (var j=0; j<ids.length; j++) {
+        setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+    }
+    var ps = document.getElementById('password');
+    ps.value = pw;
+}
+
+function handleDir(dir) {
+    //[x, y], where South = +y, East = +x 
+    var allDir = {
+        'N': [0, -1], 'S': [0, 1], 'E':[1, 0], 'W':[-1, 0],
+        'NE':[1, -1], 'NW':[-1, -1], 'SE':[1, 1], 'SW':[-1, 1]
+    }
+    return allDir[dir];
+}
+
+/* Grid Traversal Functions */
+function lineMatrix(x, y, dir,len) {
+    var matrix = st.charList;
+    var inc = handleDir(dir);
+    var xinc = inc[0];
+    var yinc = inc[1];
+    var pw = '';
+    var ids = [];
+
+    while (pw.length < len) {
+        //Handle edge case
+        if ( (x === st.cols-1 && x + xinc > st.cols-1) || 
+             (x === 0 && x + xinc < 0) || 
+             (y === st.rows-1 && y + yinc > st.rows-1) || 
+             (y === 0 && y + yinc < 0)) {  
+
+            return handleEdge(x,y,pw,ids,len,matrix);
+        }
+        //From top left, x is across, y works down on outer arrays
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y))
+        x += xinc;
+        y += yinc;
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
+}
+
+function stepMatrix(x, y, dir, len) {
+    var matrix = st.charList;
+    var inc = handleDir(dir);
+    var xinc = inc[0];
+    var yinc = inc[1];
+    var pw = '';
+    var ids = [];
+    var across = true;
+
+    while (pw.length < len) {
+        //Recurse if hits edge
+        if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+            (x === 0 && x + xinc < 0) || 
+            (y === st.rows-1 && y + yinc > st.rows-1) || 
+            (y === 0 && y + yinc < 0)) {  
+
+            return handleEdge(x,y,pw,ids,len,matrix);
+        }
+
+        pw += matrix[y][x];  
+        ids.push('c' + String(x) + ',' + String(y))
+
+        if (across) {
+            x += xinc;
+            across = false;
+        } else {
+            y += yinc;
+            across = true;
+        }
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
+
+}
+
+function spiralMatrix(x,y,len) {
+    var matrix = st.charList; //Global matrix
+    var xinc = 1;
+    var yinc = -1;
+    var xlen = 1;
+    var ylen = 1;
+    var pw = '';
+    var ids = [];
+    var across = false;  //Start moving upwards
+
+    while (pw.length < len) {
+        //Alternates [Up, Right], [Down, Left] adding 1 cell length each time
+        if (across) {
+            for (var i=0; i<xlen; i++) {  //Iterate through full arm length
+                //Recurse if crossing edge
+                if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+                    (x === 0 && x + xinc < 0) || 
+                    (y === st.rows-1 && y + yinc > st.rows-1) || 
+                    (y === 0 && y + yinc < 0)) {  
+
+                    return handleEdge(x,y,pw,ids,len,matrix);
+                }
+                pw += matrix[y][x]; 
+                ids.push('c' + String(x) + ',' + String(y));
+                x += xinc; //Increment x in the current direction
+            }
+            xlen += 1;  //Increas arm length for next time
+            xinc = -xinc;  //Switch sign of the increment direction
+            across = false;  //Move in y direction next
+        } else {
+            for (var i = 0; i<ylen; i++) {
+                //Recurse if on edge
+                if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+                    (x === 0 && x + xinc < 0) || 
+                    (y === st.rows-1 && y + yinc > st.rows-1) || 
+                    (y === 0 && y + yinc < 0)) {  
+
+                    return handleEdge(x,y,pw,ids,len,matrix);
+                }
+                pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+                ids.push('c' + String(x) + ',' + String(y));
+                y += yinc; //Increment y in the current direction
+            }
+            ylen += 1;  //Increas arm length for next time
+            yinc = -yinc;  //Switch sign of the increment
+            across = true;  //Move in x direction next
+        }
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
+
+}
+
+//Needs some work, developed on accident while
+//making spiral.  Just needs a shift for star,
+//could also do galaxy style, where offsets in outward
+//motion.  This would be too hard to re-create manually, 
+//though, if it was needed.  
+function starMatrix(x,y,len) {
+    var matrix = st.charList; //Global matrix
+    var xinc = 1;
+    var yinc = -1;
+    var pw = '';
+    var ids = [];
+    var across = false;  //Start upwards
+
+    while (pw.length < len) {
+
+        //Recurse if on edge
+        if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+            (x === 0 && x + xinc < 0) || 
+            (y === st.rows-1 && y + yinc > st.rows-1) || 
+            (y === 0 && y + yinc < 0)) {  
+
+            return handleEdge(x,y,pw,ids,len,matrix);
+        }
+
+        pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+        ids.push('c' + String(x) + ',' + String(y))
+
+        //Alternates [Up, Right], [Down, Left] adding 1 cell length each time
+        if (across) {
+
+            // for (i<0; i<xinc; i++) {
+            //  pw += matri
+
+            // }
+            x += xinc;
+            xinc = xinc < 0 ? (-1*xinc + 1) : (-1*(xinc + 1)); //Flips sign, gets one longer
+            across = false;
+        } else {
+            y += yinc;
+            yinc = yinc < 0 ? (-1*yinc + 1) : (-1*(yinc + 1));; //Flips sign, gets one longer
+            across = true;
+        }
+        //console.log(pw);
+        //console.log(pw.length);
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
+
+}
+
+function handleEdge(x, y, pw, ids, len, matrix, callback) {
+    //Always moves clockwise when it hits an edge
+    if (pw.length === len) {
+        return {pw: pw, ids: ids};
+    }
+    //https://stackoverflow.com/questions/33513358
+    if (x === y) {  //You're at a SE, NW corner 
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        if (x === 0) {
+            return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
+        } else if (x === st.cols-1) {
+            return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
+        }
+    } else if (x >= st.cols-1) {  
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x, y+1, pw, ids, len, matrix); //Move down
+    } else if (x === 0) {
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x, y-1, pw, ids, len, matrix); //Move up
+    } else if (y >= st.cols-1) {
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
+    } else if (y === 0) {
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
+    }
+}
+
+
+/* UI and Helper Functions */
+function toggleSe() {
+    var x = document.getElementById("seed");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+function togglePs() {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+function copyPs() {
+    var x = document.getElementById("password");
+    var open = false;
+    if(x.type === 'password') {open=true; togglePs();}
+
+    x.select();
+    document.execCommand("Copy");
+    if(open) {togglePs();}
+}
+
+function clearPs() {
+    var ps = document.getElementById('password');
+    ps.value = '';
+    //Remove all highlighted classes
+    //https://stackoverflow.com/questions/22754315
+    var hls = Array.from(document.getElementsByClassName('clicked'));
+    hls.map(function(el){el.className = '';});
+}
+
+function clearAll() {
+    appendGrid(st.blankList);
+    clearPs();
+    var el = document.getElementById('seed');
+    el.value = '';
+}
+
+
+function renderDirections() {
+    var meth = document.getElementById('method');
+    var method = meth.options[meth.selectedIndex].value;
+    var dir = document.getElementById('dir');
+
+    var options = {
+        'cardinal': ['N', 'S', 'E', 'W'],
+        'angle': ['NE', 'NW', 'SE', 'SW']
+    }
+
+    if (method === 'line') {
+        var sel = document.createElement('select');
+        sel.id = 'direction';
+        var opts = options.cardinal.concat(options.angle);
+        opts.forEach(function(opt) {
+            var el = document.createElement('option');
+            el.value = opt;
+            el.textContent = opt;
+            sel.appendChild(el);
+        });
+        dir.innerHTML = 'Direction: ' + sel.outerHTML;
+    } else if (method === 'step') {
+        var sel = document.createElement('select');
+        sel.id = 'direction';
+        var opts = options.angle;
+        opts.forEach(function(opt) {
+            var el = document.createElement('option');
+            el.value = opt;
+            el.textContent = opt;
+            sel.appendChild(el);
+        });
+        dir.innerHTML = 'Direction: ' + sel.outerHTML;
+    } else {
+        //Clear any dropdown menu
+        dir.innerHTML = '';
+    } 
+}
+
+/*Warning: Changes to these will alter all password outputs*/
+function chooseCharacters() {
+    var sel = document.getElementById('characters');
+    var method = sel.options[sel.selectedIndex].value;
+    var chars;
+    switch(method) {
+        case 'advanced':
+            chars = passchars.standard + passchars.advanced;
+            break;
+        case 'standard':
+            chars = passchars.standard;
+            break;
+        case 'alphanumeric':
+            chars = passchars.letters + passchars.numbers;
+            break;
+        case 'letters':
+            chars = passchars.letters;
+            break;
+        case 'numbers':
+            chars = passchars.numbers;
+            break;
+    }
+    st.charset = chars;  //Set global object setting
+}
+
+// var passchars_old = {
+//  V: "AEIOU",
+//  C: "BCDFGHJKLMNPQRSTVWXYZ",
+//  v: "aeiou",
+//  c: "bcdfghjklmnpqrstvwxyz",
+//  A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
+//  a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+//  n: "0123456789",
+//  o: "@&%?,=[]_:-+*$#!'^~;()/.",
+//  x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+//  " ": " "
+// };
+
+</script>
+</body>
+</html>
