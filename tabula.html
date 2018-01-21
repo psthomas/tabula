@@ -329,7 +329,7 @@ td, th {
         <h3>Security</h3>
         <p>Security is important when it comes to passwords, so this page doesn't depend on any externally loaded scripts or make any requests (your master password is never sent anywhere).  As a result, you can still use this page when you're offline, or download the HTML file and use it locally.  Also, you could print out the generated table and only use the website in situations where you don't have access to a physical copy.</p>
         <p>Still, it would be ideal to never use a browser for this at all, so I've been looking at using <a href="https://facebook.github.io/react-native/">React Native</a> for a mobile app, or something like <a href="https://electronjs.org/">Electron</a> to create a cross-platform desktop app if people are interested, although that might be overly complicated for this application.</p>
-        <p>The current MD5 Hash of this page is available on <a href="https://github.com">GitHub</a></p>
+        <p>The current MD5 Hash of this page is available on <a href="https://github.com">GitHub</a>.</p>
     </section>
 
     <!-- Footer -->
@@ -592,6 +592,30 @@ if ((typeof module) == 'object' && module.exports) {
 
 
 <script>
+/*
+MIT License
+
+Copyright (c) 2018 Philip Thomas
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 //Warning: changing these will change all dependent output tables
 var passchars = {
     letters: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
