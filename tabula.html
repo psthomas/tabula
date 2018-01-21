@@ -1,172 +1,241 @@
-
 <!doctype html>
 <head>
+<title>Tabula</title>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="HandheldFriendly" content="True">
 <meta name="MobileOptimized" content="320">
 
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"> -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css"> -->
+<script src="./seedrandom.js"></script>
 
 <style>
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-/*html, body, div, span, applet, object, iframe,
-h1, h2, h3 {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}*/
-
-
+/*Simple CSS Reset*/
 * {
-/*    max-width: 900px;
-    margin: 40px auto;
-    /*Lucida console PC, Monaco Mac, chrome dev tools fonts
-    striped 0s, very clear symbol font*/
-    /*Not a huge fan of the font though, looks too "Playful", but I still need
-    one that clearly shows character distinctions. 
-    With: Monaco, No 0 slash: Courier New, Lucida Console, Terminal*/
-    /*font-family:  Monaco,monospace;*/
+    margin: 0;
+    padding: 0;
 }
-
 body {
-/*    max-width: 900px;
-    margin: 40px auto;*/
-    /*font-family: monospace !important; Trebuchet MS,*/
-/*    font-size:15px;  Georgia,*/
+    line-height: 1.5; /*1*/
     font-family:sans-serif;
-/*    margin:0px 0px;
-    padding:0px 0px;*/
-/*	margin: 40px auto;
-	max-width:725px;*/
-	/*padding:0px 15px;*/
-	display:block;
-	color:rgba(40,40,40,0.9);
-    /*line-height:1.4;*/
+    color:rgba(40,40,40,0.9);
 }
-.wrapper {
-	/*margin: 40px auto;*/
-	margin: 20px auto;
-	padding: 0px 0px 80px 0px;
+/*https://webdesignerhut.com/responsive-layout-with-html-and-css/
+Alternate: https://codepen.io/johnstonian/pen/guhid*/
+#container{
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+header {
+    width: 94%;
+    padding: 3% 3% 1% 3%;
+/*    background-color: #FF5722;*/
+}
+header #title {
+    font-size: 55px;
+    /*font-size:2em;*/
+    font-weight:bold;
+    /*color: #fff;*/
+}
+header p {
+    /*color: #fff;*/
+}
+nav {
+    width: 97%;
+/*    background-color: #E64A19;*/
+    padding: 0 1.5% 0 1.5%;
+}
+nav ul li {
+    display: inline-block;
+    padding: 15px 1.5% 15px 1.5% ;
+}
+nav ul li a {
+    text-decoration: none;
+    /*color: #ffffff;*/
+    font-size: 1.2em;
+}
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+#content {
+    float: left;
+    padding: 0% 3%;  /*2% 3% 0% 3%*/
+    width: 64%;
+}
+.intro {
+    /*float: left;*/
+    padding: 1% 3% 0% 3%; /*2% 3%*/
+    width: 64%;
+}
+aside {
+    float: right;
+    padding: 0% 3%;
+    width: 24%;
+    font-size:15px;
+    line-height:1.7; /*1.7*/
+    /*background-color: #eee;*/
+}
+aside h3 {
+    line-height:1.5;
+}
+footer{
+    width: 94%;
+    padding: 3%;
+/*    background-color: #FF5722;
+    border-top: 5px solid #E64A19;*/
+    /*color: #fff;*/
+    /*text-align: center;*/
+}
 
-	max-width:775px;  /*725*/
-/*	width:700px;*/
-/*	margin: 40px auto;
-	max-width:725px;*/
-	/*margin:50px 0px;*/
-	/*text-align:center;*/
+@media all and (max-width : 768px) {
+    header {
+        text-align: center;
+    }
+    nav {
+        text-align: center;
+    }
+    #content {
+        width: 94%;
+        padding: 0% 3%;
+    }
+    .intro {
+        width: 94%;
+        padding: 0% 3%;
+    }
+    #sidebar {
+        width: 94%;
+        padding: 0% 3%;
+        /*border-top: 3px solid #E64A19;*/
+    }
 }
-/*.nav {
-	background: radial-gradient(circle at 50% 350%, #4D5D8C 0%, #3F4C73 100%);
-	height: 200px;
-	color:#ccc;
-	position: relative;
-}*/
-#title {
-	font-size:2rem;
-	/*font-family: sans-serif;*/
-	text-align:center;
-	/*letter-spacing:-0.02em;*/
+@media all and (max-width : 330px) {
+    nav ul li {
+        display:block;
+        width: 94%;
+    }
 }
-#title h1 {
-	margin-bottom:0.25em;
-	margin-top:0.4em;
+/*Hovering was preventing click events 
+on mobile*/
+@media all and (min-width: 700px) {
+    /*Hovering*/
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+    td:hover::after { 
+        background-color: #f2f2f2;
+        content: '';  
+        height: 10000px;    
+        left: 0;
+        position: absolute;  
+        top: -5000px;
+        width: 100%;
+        z-index: -1;        
+    }
 }
-#nav {
-	text-align:right;
-	color:#888;
-}
-#nav a {
-	color:#888;
-	text-decoration: none;
+/*https://stackoverflow.com/questions/468881*/
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print, #print * {
+        visibility: visible;
+    }
+    #print {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 }
 
-button {
-	cursor:pointer;
-/*	background-color:#f2f2f2; 
-	border:1px solid #ccc;
-	font-size: 95%;
-	cursor:pointer;
-	border-radius:2px;*/
+h3 {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0.75em;
+    margin-top: 1.5em;  /*2em 1.5em 1em*/
+    padding-bottom:0.2em;
+    font-weight:bold;
+    font-size:1.15rem;
+}
+h4 {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0.75em;
+    margin-top: 1em;  /*2em 1.5em 0.75*/
+    padding-bottom:0.3em;
+    font-weight:bold;
+    font-size:1.075rem;
+}
+strong {
+    font-weight:bold;
 }
 input {
-	font-family: Monaco, monospace;
-	max-width: 50%;
-/*	margin: 5px 2px;
-	font-size:80%;*/
-	/*width:50%;*/
-	/*border-radius:1px;*/
+    margin:0.3em;
 }
-a {
-	color:rgba(40,40,40,0.9);
+input[type=password], input[type=text] {
+    font-family: Monaco, monospace;
+    width:95%;
 }
 p {
-	line-height:1.5;
-	word-wrap:break-word;
+    margin:1em 0em;
+}
+button {
+    cursor:pointer;
+    padding: 0.2em 0.5em;
+}
+a {
+    color:rgba(40,40,40,0.9);
+}
+p {
+    line-height:1.5;
+    word-wrap:break-word;
 }
 code {
-	font-family:Monaco, monospace;
+    font-family:Monaco, monospace;
+}
+em {
+    font-style:italic;
 }
 
-/*input[type=button], input[type=submit], input[type=reset] {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 16px 32px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-}*/
 
+/* tables */
 
-button,
-input,
-optgroup,
-select,
-textarea {
-  /*font-family: sans-serif;*/ /* 1 */
-  /*font-size: 90%; *//*100% 1 */
-  /*line-height: 1.15;*/ /*1.15 1 */
-  /*margin: 0;*/ /* 2 */
+table {
+    display: table;
+    /*display:block;*/
+/*    border-collapse: separate;*/
+    /*border-spacing: 2px;*/
+/*    border-color: gray;*/
 }
 
 /*https://css-tricks.com/simple-css-row-column-highlighting/*/
 /*https://stackoverflow.com/questions/17119594*/
 table {
-/*	overflow-y: hidden;
-	overflow-x: auto;*/
-	/*width:100%;*/
-	/*display: block;*/
-	/*overflow:hidden;*/
-/*	width: 95%; 
-	overflow: hidden;
-	overflow-x: scroll;*/
-	/*  border:2px solid #ccc;*/
-	/*border:1px solid #ccc;*/
-/*	border:solid #ccc; 
-	border-width: 1px 2px 2px 1px;*/ /*To deal with hidden border*/
-	/*outline:1px solid #ccc;*/
+/*  overflow-y: hidden;
+    overflow-x: auto;*/
+    /*width:100%;*/
+    /*display: block;*/
+    /*overflow:hidden;*/
+/*  width: 95%; 
+    overflow: hidden;
+    overflow-x: scroll;*/
+    /*  border:2px solid #ccc;*/
+    /*border:1px solid #ccc;*/
+/*  border:solid #ccc; 
+    border-width: 1px 2px 2px 1px;*/ /*To deal with hidden border*/
+    /*outline:1px solid #ccc;*/
 
-	/*Fits width, but scrunched*/
-	/*allows user to see header and 
-	row columns better */
-	width:100%;
-	border-collapse: collapse;
-	table-layout: fixed;
-	/*Best, scrollable*/
-/*	overflow-x:auto;
-	display:block;
-	border-collapse: collapse;*/
-	/*Adding in column highlights*/
-	overflow: hidden;
-	border-style: hidden;
+    /*Fits width, but scrunched*/
+    /*allows user to see header and 
+    row columns better */
+    width:100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin:1.2em 0em;
+    /*Best, scrollable*/
+/*  overflow-x:auto;
+    display:block;
+    border-collapse: collapse;*/
+    /*Adding in column highlights*/
+    overflow: hidden;
+    border-style: hidden;
 }
 /*table tr:nth-child(odd) {
     background-color:#fcfcfc;
@@ -174,57 +243,37 @@ table {
 
 /*https://stackoverflow.com/questions/1257430*/
 table td, table th {
-    border: 1px solid #ccc;
+    border: 1px solid #999; /*#ccc*/
 }
 
 
 /*table th {*/
 th {
-	background-color:#f2f2f2;
-	border:1px solid #ccc;
-	/*padding: 1px 6px; */
-	/*text-align: left;*/
-	font-size:13px; /*14px*/
-	font-weight: bold;
-	/*padding:3px 3px;*/
+    /*background-color:#f2f2f2;*/
+    border:1px solid #ccc;
+    padding:1px 0px;
+    /*padding: 1px 6px; */
+    /*text-align: left;*/
+    font-size:14px; /*14px*/
+    font-weight: 900; /*bold;*/
+    /*padding:3px 3px;*/
 }
 hr {
-/*	background-color: #ddd; 
-	height: 1px; */
-	/*border: 0;*/
+/*  background-color: #ddd; 
+    height: 1px; */
+    /*border: 0;*/
 }
 table tr {
-	border:1px solid #ccc;
+    border:1px solid #ccc;
 }
 td, th {
-  position: relative;
+    position: relative;
 }
-
-/*Hovering was preventing click events 
-on mobile*/
-@media screen and (min-width: 700px) {
-	/*Hovering*/
-	tr:hover {
-	  background-color: #f2f2f2;
-	}
-	td:hover::after { 
-	    background-color: #f2f2f2;
-	    content: '';  
-	    height: 10000px;    
-	    left: 0;
-	    position: absolute;  
-	    top: -5000px;
-	    width: 100%;
-	    z-index: -1;        
-	}
-}
-
-
 
 .grid { 
-	/*margin:1em auto;*/ 
-	/*border-collapse: collapse;*/
-	font-family:  Monaco, monospace;
+    /*margin:1em auto;*/ 
+    /*border-collapse: collapse;*/
+    font-family:  Monaco, monospace;
 }
 .grid td {
     cursor:pointer;
@@ -242,282 +291,170 @@ on mobile*/
 }
 
 
-h3 {
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 1em;
-	margin-top: 2em; /*1.5*/
-	padding-bottom:0.3em;
-}
-.right {
-	float:right;
-}
-
-/*.center {
-	display:inline-block;
-}*/
-.input {
-/*	display: flex;
-	flex-wrap:wrap;*/
-/*	text-align:left;
-	margin: 12px auto;*/
-	/*line-height:1.6;*/
-	/*max-width:100%;*/
-/*	display: flex;  2. display flex to the rescue 
-	flex-direction: row;*/
-}
-#output {
-	text-align:left;
-	margin: 12px auto;
-/*	line-height:1.6;*/
-}
-
-#table-container {
-/*    position: relative;*/
-    /*width: 600px;*/
-/*    height: 100%;*/
-/*    height:400px;
-    overflow:auto;*/
-/*    border: 2px solid red;*/
-    /*display: inline-block;*/
-    /*overflow:auto;*/
-/*    overflow-y:visible;*/
-}
-
-/*tr th:first-child {
-    position: fixed;
-    left: 5px
-}*/
-
-/*https://stackoverflow.com/questions/468881*/
-@media print {
-	body * {
-		visibility: hidden;
-	}
-	#print, #print * {
-		visibility: visible;
-	}
-	#print {
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
-}
 
 
-
-
-/*th {
-	position: -webkit-sticky;
-	position: -moz-sticky;
-	position: -ms-sticky;
-	position: -o-sticky;
-	position: sticky;
-	top: 0;
-}*/
-
-
-
-
-/*table settings incorporated above*/
-/*table th { font-weight: bold; }*/
-/*table td, table th*/
-/*table th { padding: 1px 6px; text-align: left;}*/
-
-/*Code for responsive tables*/
-/*source: https://zurb.com/playground/projects/responsive-tables/index.html */
-
-/* Mobile */
-/*@media only screen and (max-width: 767px) {
-	
-	table.responsive { margin-bottom: 0; }
-	
-	.pinned { position: absolute; left: 0; top: 0; background: #fff; width: 35%; overflow: hidden; overflow-x: scroll; border-right: 1px solid #ccc; border-left: 1px solid #ccc; }
-	.pinned table { border-right: none; border-left: none; width: 100%; }
-	.pinned table th, .pinned table td { white-space: nowrap; }
-	.pinned td:last-child { border-bottom: 0; }
-	
-	div.table-wrapper { position: relative; margin-bottom: 20px; overflow: hidden; border-right: 1px solid #ccc; }
-	div.table-wrapper div.scrollable table { margin-left: 35%; }
-	div.table-wrapper div.scrollable { overflow: scroll; overflow-y: hidden; }	
-	
-	table.responsive td, table.responsive th { position: relative; white-space: nowrap; overflow: hidden; }
-	table.responsive th:first-child, table.responsive td:first-child, table.responsive td:first-child, table.responsive.pinned td { display: none; }
-	
-}*/
-
-
-/*#input {margin:1em auto;}*/
 </style>
 
 
 
-
-
-
-
-<!-- <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" 
-integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous"> -->
-
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script> -->
-<script src="./seedrandom.js"></script>
-
-<!--experiment with d3-->
-<!-- <script src="./d3.v4.js"></script> 
-
-<a href="https://xkcd.com/936/">-->
-
 </head>
-
 <body>
+<div id="container">
+    <!-- header -->
+    <header id="header">
+        <h1 id="title">Tabula</h1>
+        <em>A minimal, stateless password manager</em>
+    </header>
+    <!-- Navigation -->
+<!--     <nav id="menu" class="clearfix">
+        <ul>
+            <li><a href="./tabula-responsive.html#header">Home</a></li>
+            <li><a href="./tabula-responsive.html#about">About</a></li>
+            <li><a href="https://github.com">Source</a></li>
+        </ul>
+    </nav> -->
 
-<div class="wrapper">
-	<div id="nav"><a href="tabula.html#title">home</a> / <a href="tabula.html#about">about</a> / <a href="https://github.com">source</a></div>
-	<div id="title"><h1>Tabula</h1></div>
-	<p style="text-align:center"><em>A minimal, stateless password manager.</em></p>
-<!-- <div class="center"> -->
-	<!-- <div id='input'> -->
+    <!--Intro-->
+    <section class="intro">
+        <p><strong>What does it do?</strong> Tabula helps you create and remember strong passwords for each site without having to store them anywhere.</p>
+        <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate site-specific passwords by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  That way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
+        <!-- <p>Follow 4 steps to get started:</p> -->
+    </section>
 
-		<!--generate The code creates a random, yet consistent table of characters based on your master password.-->
-		<!-- Next, you choose a starting point and follow a pattern across the table from there to create a password. -->
-	<p> <strong>How it works:</strong> When you enter a master password below, a table of characters that's unique to your password is created.  This table is then used to generate passwords by picking a starting point and following a pattern across the grid.  When you need the password in the future, just regenerate this table using your master password, find the original starting point, and follow the pattern.  This way you can have strong passwords for every site without the risk of storing them anywhere. </p>
-	<p>There are two steps to this process:</p>
-	<!-- </div> -->
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        
+        <div class='input'>  <!-- style="max-width: 30%" -->
+            <h3>1. Create a Table</h3>
+            <form onsubmit="return false;">
+            Master Password: <br>
+            <input id="seed" type="password" /> <br> <!-- size="70" value="CorrectHorseBatteryStaple"-->
+            <input type="checkbox" onclick="toggleSe();">Show <br>
+            <!-- <input type="button" value="Create" onclick="populateGrid();"/>  --> <!--d3test();-->
+<!--             <button class="button" onclick="populateGrid();">Create</button>
+            <button type="button" class="button" onclick="clearAll();">Clear Table</button> 
+            <button type="button" class="button" onClick="window.print();">Print Table</button> <br> -->
+            <!-- <button type="button"onclick="clearAll();">Clear Table</button>  -->
+            <!-- </form> -->
 
-	<h3>1. Create a Table</h3>
+            Character Set: <br>
+            <select id="characters" onchange="chooseCharacters();"> <!--onfocus="this.selectedIndex = -1;"-->
+                <option value="advanced" selected="selected">Letters, Numbers, Advanced Symbols</option>
+                <option value="standard">Letters, Numbers, Symbols</option>
+                <option value="alphanumeric">Letters, Numbers</option>
+                <option value="letters">Letters</option>
+                <option value="numbers">Numbers</option>
+            </select> <br>
+            <button class="button" onclick="populateGrid();">Create</button>
+            <button type="button" class="button" onclick="clearAll();">Clear</button> 
+            <button type="button" class="button" onClick="window.print();">Print</button> <br>
+            </form>
+        <!-- </div> -->
+        </div>
 
-	<!-- <p>Enter a master password, select a character set, and click <strong>create</strong> to produce a unique table of characters derived from your inputs.</p> -->
-	<!-- <p>Enter a master password and click <strong>create</strong> to produce a table of characters.</p> -->
-	<!--This same table will be re-created whenever you enter these inputs in the future.-->
-	<div class='input'>  <!-- style="max-width: 30%" -->
-		<p>
-		Master Password: <input id="seed" type="password" size="70" /> <!--value="CorrectHorseBatteryStaple"-->
-		<input type="checkbox" onclick="toggleSe();">Show
-		<!-- <input type="button" value="Create" onclick="populateGrid();"/>  --> <!--d3test();-->
-		<button type="button" onclick="populateGrid();">Create</button>
-		<button type="button"onclick="clearAll();">Clear Table</button> 
-		</p>
+        <div class="input">
+            <h3>2. Choose a Pattern</h3>
+            Pattern:
+            <select id="method" onchange="renderDirections();"> <!--onfocus="this.selectedIndex = -1;"-->
+                    <option value="manual">Manual</option>
+                    <option value="line">Line</option>
+                    <option value="step" selected="selected">Step</option>
+                    <option value="spiral">Spiral</option>
+            </select> <br>
+            <div id='dir'></div>
+            Length: <input id="length" type="text" style="width:25px"  value="16"/> <!--size="3"-->
+        </div>
 
-		<p>Character Set:
-		<select id="characters" onchange="chooseCharacters();"> <!--onfocus="this.selectedIndex = -1;"-->
-			<option value="advanced" selected="selected">Letters, Numbers, Advanced Symbols</option>
-			<option value="standard">Letters, Numbers, Symbols</option>
-			<option value="alphanumeric">Letters, Numbers</option>
-			<option value="letters">Letters</option>
-			<option value="numbers">Numbers</option>
-		</select></p>
-	<!-- </div> -->
-	</div>
+        <div class="input">
+            <!-- <h3>Password Options</h3> 
+            If you'd like to create your own pattern, select <strong>manual</strong>.-->
+            <h3>3. Click a Cell</h3>
+            Click a memorable cell to start the password.  For example, choose coordinates [A,N] for <strong>a</strong>mazo<strong>n</strong>.com. <br>
+<!--             <p> Choose a pattern to follow when building each password.  Then click a memorable starting cell to generate a unique password for each site (e.g. start at coordinates A,N for <strong>a</strong>mazo<strong>n</strong>.com).</p> -->
 
-	<h3 >Table</h3>
-	<!-- <button type="button" onClick="window.print();" class="right">Print</button> <br> -->  <!-- "printDiv('tabula');"-->
-	<div id="print">
-		<div id="tabula"></div>
-	</div>
-	<p>
-	Output: <input type="password" size="70" value="" id="password">
-	<input type="checkbox" onclick="togglePs();">Show 
-	<button type="button" onclick="copyPs()">Copy</button> 
-	<button type="button" onclick="clearPs();" >Clear Selection</button>  <!--class="right"-->
-	<button type="button" onClick="window.print();">Print Table</button>
-	</p>
+<!--             <p> <strong>Note:</strong> this project is still in the early stages, so if you do use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output, you'll still have a backup.<p> -->
+        </div>
 
-	<div class="input">
-		<!-- <h3>Password Options</h3> 
-		If you'd like to create your own pattern, select <strong>manual</strong>.-->
-		<h3>2. Create a Password</h3>
-		<p> Choose a pattern to follow when building each password.  Then click a memorable starting cell to generate a unique password for each site (e.g. start at coordinates A,N for <strong>a</strong>mazo<strong>n</strong>.com).</p>
-		<p>Method:
-		<select id="method" onchange="renderDirections();"> <!--onfocus="this.selectedIndex = -1;"-->
-				<option value="manual">Manual</option>
-				<option value="line">Line</option>
-				<option value="step" selected="selected">Step</option>
-				<option value="spiral">Spiral</option>
-		</select></p>
-		<p><div id='dir'></div></p>
-		<p>Length: <input id="length" type="text" size="3" value="16"/> </p>
-		<p> <strong>Note:</strong> this project is still in the early stages, so if you do use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output, you'll still have a backup.<p>
-	</div>
+        <div class="output">
+            <h3>4. View the Results</h3>
+            <input type="password" value="" id="password"> <br><!--size="70" -->
+            <input type="checkbox" onclick="togglePs();">Show 
+            <button type="button" class="button" onclick="copyPs()">Copy</button>
+            <button type="button" class="button" onclick="clearPs();">Clear</button>
+        </div>
+        <!-- <h4> Table Controls </h4> -->
+        <!-- <button type="button" class="button" onclick="clearPs();" >Clear Selection</button> --> 
+        <!-- <button type="button" class="button" onclick="clearAll();">Clear Table</button> -->
+        <!-- <button type="button" class="button" onClick="window.print();">Print Table</button>  -->
+    </aside>
 
-
-
-
-<!-- 	<div id="output">
-		<h3>3. View Results</h3>
-		<p>
-		Output: <input type="password" size="70" value="" id="password">
-		<input type="checkbox" onclick="togglePs();">Show 
-		<button type="button" onclick="copyPs()">Copy</button> 
-		<button type="button" onclick="clearPs();">Clear Selection</button>
-		</p>
-		<p> ** Note: this project is still in the early stages, so if you do use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output, you'll still have a backup.<p>
-
-	</div> -->
-
-
-	<h3 id="about">About</h3>
-	<p> The name Tabula comes from a cryptographic tool called a <a href="https://en.wikipedia.org/wiki/Tabula_recta">tabula recta</a>, which is used to create cyphers.  I came across this concept while reading John Graham-Cumming's <a href="http://blog.jgc.org/2010/12/write-your-passwords-down.html">blog post</a> outlining how he uses a tabula to generate his own passwords.  I decided to make the technique more user friendly by allowing access on the web and automating a few steps, and this is the result.</p>
-	<!-- <p>The source code for this project is available on <a href="#">GitHub</a>.</p> -->
-	<!-- <h3>Details</h3> -->
-	<p>The table of characters is created by seeding a random number generator (<a href="https://github.com/davidbau/seedrandom">seedrandom.js</a>) with your master password.  The end result is a unique table that will be re-created whenever you enter your password in the future.  This makes it easy to have many strong, site-specific passwords while just remembering a master password and a pattern.</p>
-
-	<p>The source code for this project is available on <a href="#">GitHub</a>, and there are further details in my <a href="#">blog post</a> about the project if you're interested.</p>
+    <!-- Main Content area -->
+    <section id="content">
+        <h3 >Table</h3>
+        <!-- <button type="button" onClick="window.print();" class="right">Print</button> <br> -->  <!-- "printDiv('tabula');"-->
+        <div id="print">
+            <div id="tabula">
+            </div>
+        </div>
+<!--         <button type="button" class="button-float" onclick="clearPs();" >Clear Selection</button> 
+        <button type="button" class="button-float" onclick="clearAll();">Clear Table</button> 
+        <button type="button" class="button-float" onClick="window.print();">Print Table</button>  -->
+    </section>
 
 
-	<h3>Characters</h3>
-	<p>These are the characters available in each set:</p>
-	<p><strong>Letters, numbers, advanced symbols:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&amp;*()?,=[]_:+*'~;/.{}</code></p>
-	<p><strong>Letters, numbers, symbols:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&amp;*()</code></p>
-	<p><strong>Letters, numbers:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789</code></p>
-	<p><strong>Letters:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz</code></p>
-	<p><strong>Numbers:</strong> <code style="font-size:0.9em">0123456789</code></p>
+    <!-- Outro -->
+    <section class="intro clearfix">
+        <p> <strong>Note:</strong> This project is still in the early stages, so if you use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output, you'll still have a backup.<p>
+        <h3 id="about">About</h3>
+        <p> The name Tabula comes from a cryptographic tool called a <a href="https://en.wikipedia.org/wiki/Tabula_recta">tabula recta</a>, which is used to create cyphers.  I came across this concept while reading John Graham-Cumming's <a href="http://blog.jgc.org/2010/12/write-your-passwords-down.html">blog post</a> outlining how he uses a tabula to generate his own passwords.  I decided to make the technique more user friendly by allowing access on the web and automating a few steps, so this is the result.</p>
 
-<!-- 		<h3>FAQ</h3>
-	<p><strong>How do I change my password?</strong></p> -->
+        <p>The table of characters is created by seeding a random number generator (<a href="https://github.com/davidbau/seedrandom">seedrandom.js</a>) with your master password.  The end result is a unique table that will be re-created whenever you enter your master password in the future.  This makes it easy to have many strong, site-specific passwords while just remembering a master password and a pattern.</p>
 
-	<h3>Security</h3>
-	<p>Obviously, security is important when it comes to passwords, so this page doesn't depend on any externally loaded scripts or make any requests (your master password is never sent anywhere).  As a result, you can still use this page when you're offline, or download the HTML file and use it locally.  Also, you could print out the generated table and only use the website in situations where you don't have access to a physical copy.</p>
-	<p>Still, it would be ideal to never use a browser for this at all, so I've been looking at using <a href="https://facebook.github.io/react-native/">React Native</a> for a mobile app, or something like <a href="https://electronjs.org/">Electron</a> to create a cross-platform desktop app if people are interested, although that might be overly complicated for this application.</p>
-	<p>The current MD5 Hash of this page is 3513534534.</p>
+        <p>The source code for this project is available on <a href="#">GitHub</a>, and there are further details in my <a href="#">blog post</a> about the project if you're interested.</p>
 
-	<!-- 		<h3>Detailed Directions /or maybe just details</h3>
-		This means you can have extremely strong passwords without needing to store them anywhere!
-			<p>just go through bullet points of details, e.g. tabula recta, seeding the generator (js library), etc.  Also include print reference</p>
-			<p>Also note that this code is self-contained, the master password is never sent anywhere, no web requests.  Could even download and use offline.  MD5 hash, etc.</p> -->
-	<!-- 		<strong>Directions</strong>
-			<hr> -->
-			<!-- <p><ol>  --> <!-- This will create the same grid of characters that is unique to your password anytime, whatever computer you're on. -->
-				<!-- <li>Create a grid by entering your unique Master Password and clicking <code>create</code> above.</li> -->
-	<!-- 			<li>Enter your unique master password and click <code>create</code> above.  This creates a grid of characters that is unique to your password.  This same grid will show up whenever you enter your master password in the future, on any device.</li>
-				<li>Set the desired <code>options</code>, choosing to either manually select cells or automate the process with a pattern.</li>
-				<li>Choose a starting cell based on something memorable about the intended site.  For example, maybe your <strong>A</strong>mazo<strong>n</strong>.com password would start at the <code><strong>[A,N]</strong></code> grid location.  Click this cell to begin. </li>
-				<li>In the future, remember your master password and your site-based technique, and you can generate any password without storing it anywhere!</li>
-			</ol></p> -->
-	<!-- </div> -->
-	<!-- <input type="password" name="password" id="myPassword" size="70" /> -->
-	<!-- <img src="theicon" onmouseover="mouseoverPass();" onmouseout="mouseoutPass();" /> -->
-<!-- </div> -->
+        <h3>Characters</h3>
+        <p>These are the characters available in each set:</p>
+        <p><strong>Letters, numbers, advanced symbols:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&amp;*()?,=[]_:+*'~;/.{}</code></p>
+        <p><strong>Letters, numbers, symbols:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&amp;*()</code></p>
+        <p><strong>Letters, numbers:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789</code></p>
+        <p><strong>Letters:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz</code></p>
+        <p><strong>Numbers:</strong> <code style="font-size:0.9em">0123456789</code></p>
+
+    <!--        <h3>FAQ</h3>
+        <p><strong>How do I change my password?</strong></p> -->
+
+        <h3>Security</h3>
+        <p>Security is important when it comes to passwords, so this page doesn't depend on any externally loaded scripts or make any requests (your master password is never sent anywhere).  As a result, you can still use this page when you're offline, or download the HTML file and use it locally.  Also, you could print out the generated table and only use the website in situations where you don't have access to a physical copy.</p>
+        <p>Still, it would be ideal to never use a browser for this at all, so I've been looking at using <a href="https://facebook.github.io/react-native/">React Native</a> for a mobile app, or something like <a href="https://electronjs.org/">Electron</a> to create a cross-platform desktop app if people are interested, although that might be overly complicated for this application.</p>
+        <p>The current MD5 Hash of this page is available on <a href="https://github.com">GitHub</a></p>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="clearfix">
+        <div  style="font-size:0.95em;">© 2018 Philip Thomas, <a href="https://github.com">source</a>, <a href="https://pstblog.com">author</a>.</div>
+    </footer>
 </div>
 
 
-<!-- source: https://stackoverflow.com/questions/9140101,  http://jsfiddle.net/6qkdP/2/ -->
+
 <script>
 
 //Warning: changing these will change all output tables
 var passchars = {
-	letters: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
-	numbers: "0123456789",
-	advanced: "?,=[]_:+*'~;/.{}",
-	standard: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
-	empty: " "
+    letters: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+    numbers: "0123456789",
+    advanced: "?,=[]_:+*'~;/.{}",
+    standard: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+    empty: " "
 };
 
 //Initial settings, build grid:
 var st = {
-	'rows': 26,  //Either this, or zero index rows/columns
-	'cols': 26,
-	'charset': passchars.standard + passchars.advanced,  //Initial selection
-	'blankList': generateCharacters(26,26,' '),
-	'charList': []
+    'rows': 26,  //Either this, or zero index rows/columns
+    'cols': 26,
+    'charset': passchars.standard + passchars.advanced,  //Initial selection
+    'blankList': generateCharacters(26,26,' '),
+    'charList': []
 };
 
 appendGrid(st.blankList);
@@ -533,16 +470,16 @@ renderDirections();
 //var emptyChars = ' ';
 
 // var passchars_old = {
-// 	V: "AEIOU",
-// 	C: "BCDFGHJKLMNPQRSTVWXYZ",
-// 	v: "aeiou",
-// 	c: "bcdfghjklmnpqrstvwxyz",
-// 	A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
-// 	a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
-// 	n: "0123456789",
-// 	o: "@&%?,=[]_:-+*$#!'^~;()/.",
-// 	x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
-// 	" ": " "
+//  V: "AEIOU",
+//  C: "BCDFGHJKLMNPQRSTVWXYZ",
+//  v: "aeiou",
+//  c: "bcdfghjklmnpqrstvwxyz",
+//  A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
+//  a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+//  n: "0123456789",
+//  o: "@&%?,=[]_:-+*$#!'^~;()/.",
+//  x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+//  " ": " "
 // };
 
 //DONE: pull the character generating process out & put them in a data
@@ -562,15 +499,15 @@ renderDirections();
 //DONE: maybe call appendGrid, or addGrid()
 //and call the clickableGrid buildGrid instead, more descriptive.  
 function appendGrid(charList) {
-	//Reset pw
-	document.getElementById('password').value = '';
+    //Reset pw
+    document.getElementById('password').value = '';
 
-	//var lastClicked; //Not needed currently
-	var grid = buildGrid(st.rows, st.cols, charList, clicked);
-	var el = document.getElementById('tabula');
-	//var el = document.getElementById('table-container');
-	el.innerHTML = '';
-	el.appendChild(grid);
+    //var lastClicked; //Not needed currently
+    var grid = buildGrid(st.rows, st.cols, charList, clicked);
+    var el = document.getElementById('tabula');
+    //var el = document.getElementById('table-container');
+    el.innerHTML = '';
+    el.appendChild(grid);
 }
 
 function clicked(el,row,col,i,str) {
@@ -579,27 +516,30 @@ function clicked(el,row,col,i,str) {
     var len = document.getElementById('length');
     var length = Number(len.value);
 
-	switch(method) {
-		case 'manual':
-		    var ps = document.getElementById('password');
-		    ps.value = ps.value += el.textContent;
-		    el.className='clicked';
-		    break;
-		case 'line':
-	    	var dir = document.getElementById('direction');
-	    	var direction = dir.options[dir.selectedIndex].value;
-			return highlightPs(lineMatrix(col,row,direction,length));
-			break;
-		case 'step':
-	    	var dir = document.getElementById('direction');
-	    	var direction = dir.options[dir.selectedIndex].value;
-			return highlightPs(stepMatrix(col,row,direction,length));
-			break;
-		case 'spiral':
-			return highlightPs(spiralMatrix(col,row,length));
-			break;
+    switch(method) {
+        case 'manual':
+            var ps = document.getElementById('password');
+            ps.value = ps.value += el.textContent;
+            el.className='clicked';
+            break;
+        case 'line':
+            clearPs();
+            var dir = document.getElementById('direction');
+            var direction = dir.options[dir.selectedIndex].value;
+            return highlightPs(lineMatrix(col,row,direction,length));
+            break;
+        case 'step':
+            clearPs();
+            var dir = document.getElementById('direction');
+            var direction = dir.options[dir.selectedIndex].value;
+            return highlightPs(stepMatrix(col,row,direction,length));
+            break;
+        case 'spiral':
+            clearPs();
+            return highlightPs(spiralMatrix(col,row,length));
+            break;
 
-	}
+    }
 }
 
 //source: https://stackoverflow.com/questions/9140101,
@@ -644,9 +584,9 @@ function generateHeader(alpha) {
     var hrow = document.createElement('tr');
     hrow.appendChild(document.createElement('th'));
     for (var j=0; j<alpha.length; j++) {
-    	var th = document.createElement('th');
-    	th.innerHTML = alpha[j];
-    	hrow.appendChild(th);
+        var th = document.createElement('th');
+        th.innerHTML = alpha[j];
+        hrow.appendChild(th);
     }
     header.appendChild(hrow);
     return header;
@@ -655,66 +595,66 @@ function generateHeader(alpha) {
 
 //https://stackoverflow.com/questions/5226285
 function populateGrid() {
-	clearPs();
+    clearPs();
 
-	var charList = generateCharacters(st.rows,st.cols,st.charset);
-	st.charList = charList;  //Sets Global
-	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten
-	var cells = Array.from(document.getElementsByTagName('td'));
+    var charList = generateCharacters(st.rows,st.cols,st.charset);
+    st.charList = charList;  //Sets Global
+    var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten
+    var cells = Array.from(document.getElementsByTagName('td'));
 
-	//Using requestAnimationFrame
-	for (var i=0; i<cells.length; i++) {
-		var num = 32;
-		var endNum = joinedList[i].charCodeAt(0);
-		var cell = cells[i];
-		var steps = endNum - num;
-		var duration = 750; 
-		//https://stackoverflow.com/questions/45829536
-		// (function(cell,steps,duration) {
-		// 	animate(cell,steps,duration);
-		// })(cell,steps,duration);
-		// This function now is the closure:
-		animateCell(cell,steps,duration);
-	}
+    //Using requestAnimationFrame
+    for (var i=0; i<cells.length; i++) {
+        var num = 32;
+        var endNum = joinedList[i].charCodeAt(0);
+        var cell = cells[i];
+        var steps = endNum - num;
+        var duration = 750; 
+        //https://stackoverflow.com/questions/45829536
+        // (function(cell,steps,duration) {
+        //  animate(cell,steps,duration);
+        // })(cell,steps,duration);
+        // This function now is the closure:
+        animateCell(cell,steps,duration);
+    }
 
 }
 
 function animateCell(cell, steps, duration) {
-	function changeCell(timestamp, cell, steps, duration){
-	    var timestamp = timestamp || new Date().getTime();
-	    var runtime = timestamp - starttime;
-	    var progress = runtime / duration;
-	    progress = Math.min(progress, 1);
-	    cell.textContent = String.fromCharCode(32+steps*progress);
+    function changeCell(timestamp, cell, steps, duration){
+        var timestamp = timestamp || new Date().getTime();
+        var runtime = timestamp - starttime;
+        var progress = runtime / duration;
+        progress = Math.min(progress, 1);
+        cell.textContent = String.fromCharCode(32+steps*progress);
 
-	    if (runtime < duration){ // if duration not met yet
-	    	// Call requestAnimationFrame again with parameters
-	        requestAnimationFrame(function(timestamp){ 
-	            changeCell(timestamp, cell, steps, duration);
-	        });
-	    }
-	}
-	//http://www.javascriptkit.com/javatutors/requestanimationframe.shtml
-	var starttime;
-	requestAnimationFrame(function(timestamp){
-		//if browser doesn't support requestAnimationFrame, 
-		//generate our own timestamp using Date
-	    starttime = timestamp || new Date().getTime(); 
-	    changeCell(timestamp, cell, steps, duration);
-	});
+        if (runtime < duration){ // if duration not met yet
+            // Call requestAnimationFrame again with parameters
+            requestAnimationFrame(function(timestamp){ 
+                changeCell(timestamp, cell, steps, duration);
+            });
+        }
+    }
+    //http://www.javascriptkit.com/javatutors/requestanimationframe.shtml
+    var starttime;
+    requestAnimationFrame(function(timestamp){
+        //if browser doesn't support requestAnimationFrame, 
+        //generate our own timestamp using Date
+        starttime = timestamp || new Date().getTime(); 
+        changeCell(timestamp, cell, steps, duration);
+    });
 }
 
 function generateCharacters(rows, cols, charset) {
-	//Using seedrandom.js
-	//https://github.com/davidbau/seedrandom
-	//MIT License
-	var seed = document.getElementById('seed').value;
-	Math.seedrandom(seed);
-	var charList = [];
-	for (var i=0; i<cols; i++) {
-		charList.push(randomString(cols, charset).split(''));
-	}
-	return charList
+    //Using seedrandom.js
+    //https://github.com/davidbau/seedrandom
+    //MIT License
+    var seed = document.getElementById('seed').value;
+    Math.seedrandom(seed);
+    var charList = [];
+    for (var i=0; i<cols; i++) {
+        charList.push(randomString(cols, charset).split(''));
+    }
+    return charList
 }
 
 //ASCII Printable characters: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
@@ -722,7 +662,7 @@ function generateCharacters(rows, cols, charset) {
 function randomString(len, charSet) {
     var randomString = '';
     for (var i = 0; i < len; i++) {
-    	//Math.random here is the special seeded version from seedrandom.js
+        //Math.random here is the special seeded version from seedrandom.js
         var randomPos = Math.floor(Math.random() * charSet.length);
         randomString += charSet.substring(randomPos,randomPos+1);
     }
@@ -731,146 +671,146 @@ function randomString(len, charSet) {
 
 
 function highlightPs(obj) {
-	var ids = obj.ids;
-	var pw = obj.pw;
-	var delay = 50;
+    var ids = obj.ids;
+    var pw = obj.pw;
+    var delay = 50;
 
-	function changeClass(id) { 
-		var el = document.getElementById(id);
-		el.className = 'clicked';
-	}
+    function changeClass(id) { 
+        var el = document.getElementById(id);
+        el.className = 'clicked';
+    }
 
-	for (var j=0; j<ids.length; j++) {
-		setTimeout(changeClass.bind(null, ids[j]), delay*j); 
-	}
-	var ps = document.getElementById('password');
-	ps.value = pw;
+    for (var j=0; j<ids.length; j++) {
+        setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+    }
+    var ps = document.getElementById('password');
+    ps.value = pw;
 }
 
 function handleDir(dir) {
-	// [x, y], where South = +y, East = +x 
-	var allDir = {
-		'N': [0, -1], 'S': [0, 1], 'E':[1, 0], 'W':[-1, 0],
-		'NE':[1, -1], 'NW':[-1, -1], 'SE':[1, 1], 'SW':[-1, 1]
-	}
-	return allDir[dir];
+    // [x, y], where South = +y, East = +x 
+    var allDir = {
+        'N': [0, -1], 'S': [0, 1], 'E':[1, 0], 'W':[-1, 0],
+        'NE':[1, -1], 'NW':[-1, -1], 'SE':[1, 1], 'SW':[-1, 1]
+    }
+    return allDir[dir];
 }
 
 /* Grid Traversal Functions */
 
 function lineMatrix(x, y, dir,len) {
-	var matrix = st.charList;
-	var inc = handleDir(dir);
-	var xinc = inc[0];
-	var yinc = inc[1];
-	var pw = '';
-	var ids = [];
+    var matrix = st.charList;
+    var inc = handleDir(dir);
+    var xinc = inc[0];
+    var yinc = inc[1];
+    var pw = '';
+    var ids = [];
 
-	while (pw.length < len) {
-		//Handle edge case
-		if ( (x === st.cols-1 && x + xinc > st.cols-1) || 
-			 (x === 0 && x + xinc < 0) || 
-			 (y === st.rows-1 && y + yinc > st.rows-1) || 
-			 (y === 0 && y + yinc < 0)) {  
+    while (pw.length < len) {
+        //Handle edge case
+        if ( (x === st.cols-1 && x + xinc > st.cols-1) || 
+             (x === 0 && x + xinc < 0) || 
+             (y === st.rows-1 && y + yinc > st.rows-1) || 
+             (y === 0 && y + yinc < 0)) {  
 
-			return handleEdge(x,y,pw,ids,len,matrix);
-		}
-		//From top left, x is across, y works down on outer arrays
-		pw += matrix[y][x];
-		ids.push('c' + String(x) + ',' + String(y))
-		x += xinc;
-		y += yinc;
-	}
-	//If recursion isn't entered:
-	return {pw: pw, ids: ids};
+            return handleEdge(x,y,pw,ids,len,matrix);
+        }
+        //From top left, x is across, y works down on outer arrays
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y))
+        x += xinc;
+        y += yinc;
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
 }
 
 function stepMatrix(x, y, dir, len) {
-	var matrix = st.charList;
-	var inc = handleDir(dir);
-	var xinc = inc[0];
-	var yinc = inc[1];
-	var pw = '';
-	var ids = [];
-	var across = true;
+    var matrix = st.charList;
+    var inc = handleDir(dir);
+    var xinc = inc[0];
+    var yinc = inc[1];
+    var pw = '';
+    var ids = [];
+    var across = true;
 
-	while (pw.length < len) {
-		//Recurse if hits edge
-		if ((x === st.cols-1 && x + xinc > st.cols-1) || 
-			(x === 0 && x + xinc < 0) || 
-			(y === st.rows-1 && y + yinc > st.rows-1) || 
-			(y === 0 && y + yinc < 0)) {  
+    while (pw.length < len) {
+        //Recurse if hits edge
+        if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+            (x === 0 && x + xinc < 0) || 
+            (y === st.rows-1 && y + yinc > st.rows-1) || 
+            (y === 0 && y + yinc < 0)) {  
 
-			return handleEdge(x,y,pw,ids,len,matrix);
-		}
+            return handleEdge(x,y,pw,ids,len,matrix);
+        }
 
-		pw += matrix[y][x];  
-		ids.push('c' + String(x) + ',' + String(y))
+        pw += matrix[y][x];  
+        ids.push('c' + String(x) + ',' + String(y))
 
-		if (across) {
-			x += xinc;
-			across = false;
-		} else {
-			y += yinc;
-			across = true;
-		}
-	}
-	//If recursion isn't entered:
-	return {pw: pw, ids: ids};
+        if (across) {
+            x += xinc;
+            across = false;
+        } else {
+            y += yinc;
+            across = true;
+        }
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
 
 }
 
 function spiralMatrix(x,y,len) {
 
-	var matrix = st.charList; //Global matrix
-	var xinc = 1;
-	var yinc = -1;
-	var xlen = 1;
-	var ylen = 1;
-	var pw = '';
-	var ids = [];
-	var across = false;  //Start moving upwards
+    var matrix = st.charList; //Global matrix
+    var xinc = 1;
+    var yinc = -1;
+    var xlen = 1;
+    var ylen = 1;
+    var pw = '';
+    var ids = [];
+    var across = false;  //Start moving upwards
 
-	while (pw.length < len) {
-		//Alternates [Up, Right], [Down, Left] adding 1 cell length each time
-		if (across) {
-			for (var i=0; i<xlen; i++) {  //Iterate through full arm length
-				//Recurse if crossing edge
-				if ((x === st.cols-1 && x + xinc > st.cols-1) || 
-					(x === 0 && x + xinc < 0) || 
-					(y === st.rows-1 && y + yinc > st.rows-1) || 
-					(y === 0 && y + yinc < 0)) {  
+    while (pw.length < len) {
+        //Alternates [Up, Right], [Down, Left] adding 1 cell length each time
+        if (across) {
+            for (var i=0; i<xlen; i++) {  //Iterate through full arm length
+                //Recurse if crossing edge
+                if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+                    (x === 0 && x + xinc < 0) || 
+                    (y === st.rows-1 && y + yinc > st.rows-1) || 
+                    (y === 0 && y + yinc < 0)) {  
 
-					return handleEdge(x,y,pw,ids,len,matrix);
-				}
-				pw += matrix[y][x]; 
-				ids.push('c' + String(x) + ',' + String(y));
-				x += xinc; //Increment x in the current direction
-			}
-			xlen += 1;  //Increas arm length for next time
-			xinc = -xinc;  //Switch sign of the increment direction
-			across = false;  //Move in y direction next
-		} else {
-			for (var i = 0; i<ylen; i++) {
-				//Recurse if on edge
-				if ((x === st.cols-1 && x + xinc > st.cols-1) || 
-					(x === 0 && x + xinc < 0) || 
-					(y === st.rows-1 && y + yinc > st.rows-1) || 
-					(y === 0 && y + yinc < 0)) {  
+                    return handleEdge(x,y,pw,ids,len,matrix);
+                }
+                pw += matrix[y][x]; 
+                ids.push('c' + String(x) + ',' + String(y));
+                x += xinc; //Increment x in the current direction
+            }
+            xlen += 1;  //Increas arm length for next time
+            xinc = -xinc;  //Switch sign of the increment direction
+            across = false;  //Move in y direction next
+        } else {
+            for (var i = 0; i<ylen; i++) {
+                //Recurse if on edge
+                if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+                    (x === 0 && x + xinc < 0) || 
+                    (y === st.rows-1 && y + yinc > st.rows-1) || 
+                    (y === 0 && y + yinc < 0)) {  
 
-					return handleEdge(x,y,pw,ids,len,matrix);
-				}
-				pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
-				ids.push('c' + String(x) + ',' + String(y));
-				y += yinc; //Increment y in the current direction
-			}
-			ylen += 1;  //Increas arm length for next time
-			yinc = -yinc;  //Switch sign of the increment
-			across = true;  //Move in x direction next
-		}
-	}
-	//If recursion isn't entered:
-	return {pw: pw, ids: ids};
+                    return handleEdge(x,y,pw,ids,len,matrix);
+                }
+                pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+                ids.push('c' + String(x) + ',' + String(y));
+                y += yinc; //Increment y in the current direction
+            }
+            ylen += 1;  //Increas arm length for next time
+            yinc = -yinc;  //Switch sign of the increment
+            across = true;  //Move in x direction next
+        }
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
 
 }
 
@@ -882,82 +822,82 @@ function spiralMatrix(x,y,len) {
 //manually if it was needed.  
 function starMatrix(x,y,len) {
 
-	var matrix = st.charList; //Global matrix
-	var xinc = 1;
-	var yinc = -1;
-	var pw = '';
-	var ids = [];
-	var across = false;  //Start upwards
+    var matrix = st.charList; //Global matrix
+    var xinc = 1;
+    var yinc = -1;
+    var pw = '';
+    var ids = [];
+    var across = false;  //Start upwards
 
-	while (pw.length < len) {
+    while (pw.length < len) {
 
-		//Recurse if on edge
-		if ((x === st.cols-1 && x + xinc > st.cols-1) || 
-			(x === 0 && x + xinc < 0) || 
-			(y === st.rows-1 && y + yinc > st.rows-1) || 
-			(y === 0 && y + yinc < 0)) {  
+        //Recurse if on edge
+        if ((x === st.cols-1 && x + xinc > st.cols-1) || 
+            (x === 0 && x + xinc < 0) || 
+            (y === st.rows-1 && y + yinc > st.rows-1) || 
+            (y === 0 && y + yinc < 0)) {  
 
-			return handleEdge(x,y,pw,ids,len,matrix);
-		}
+            return handleEdge(x,y,pw,ids,len,matrix);
+        }
 
-		pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
-		ids.push('c' + String(x) + ',' + String(y))
+        pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
+        ids.push('c' + String(x) + ',' + String(y))
 
-		//Alternates [Up, Right], [Down, Left] adding 1 cell length each time
-		if (across) {
+        //Alternates [Up, Right], [Down, Left] adding 1 cell length each time
+        if (across) {
 
-			// for (i<0; i<xinc; i++) {
-			// 	pw += matri
+            // for (i<0; i<xinc; i++) {
+            //  pw += matri
 
-			// }
-			x += xinc;
-			xinc = xinc < 0 ? (-1*xinc + 1) : (-1*(xinc + 1)); //Flips sign, gets one longer
-			across = false;
-		} else {
-			y += yinc;
-			yinc = yinc < 0 ? (-1*yinc + 1) : (-1*(yinc + 1));; //Flips sign, gets one longer
-			across = true;
-		}
-		//console.log(pw);
-		//console.log(pw.length);
-	}
-	//If recursion isn't entered:
-	return {pw: pw, ids: ids};
+            // }
+            x += xinc;
+            xinc = xinc < 0 ? (-1*xinc + 1) : (-1*(xinc + 1)); //Flips sign, gets one longer
+            across = false;
+        } else {
+            y += yinc;
+            yinc = yinc < 0 ? (-1*yinc + 1) : (-1*(yinc + 1));; //Flips sign, gets one longer
+            across = true;
+        }
+        //console.log(pw);
+        //console.log(pw.length);
+    }
+    //If recursion isn't entered:
+    return {pw: pw, ids: ids};
 
 }
 
 
 function handleEdge(x, y, pw, ids, len, matrix, callback) {
-	//Always moves clockwise when it hits an edge
-	if (pw.length === len) {
-		return {pw: pw, ids: ids};
-	}
-	//https://stackoverflow.com/questions/33513358
-	if (x === y) {  //You're at a SE, NW corner 
-		pw += matrix[y][x];
-		ids.push('c' + String(x) + ',' + String(y));
-		if (x === 0) {
-			return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
-		} else if (x === st.cols-1) {
-			return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
-		}
-	} else if (x >= st.cols-1) {  
-		pw += matrix[y][x];
-		ids.push('c' + String(x) + ',' + String(y));
-		return handleEdge(x, y+1, pw, ids, len, matrix); //Move down
-	} else if (x === 0) {
-		pw += matrix[y][x];
-		ids.push('c' + String(x) + ',' + String(y));
-		return handleEdge(x, y-1, pw, ids, len, matrix); //Move up
-	} else if (y >= st.cols-1) {
-		pw += matrix[y][x];
-		ids.push('c' + String(x) + ',' + String(y));
-		return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
-	} else if (y === 0) {
-		pw += matrix[y][x];
-		ids.push('c' + String(x) + ',' + String(y));
-		return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
-	}
+    //Always moves clockwise when it hits an edge
+    if (pw.length === len) {
+        return {pw: pw, ids: ids};
+    }
+    //https://stackoverflow.com/questions/33513358
+    if (x === y) {  //You're at a SE, NW corner 
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        if (x === 0) {
+            return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
+        } else if (x === st.cols-1) {
+            return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
+        }
+    } else if (x >= st.cols-1) {  
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x, y+1, pw, ids, len, matrix); //Move down
+    } else if (x === 0) {
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x, y-1, pw, ids, len, matrix); //Move up
+    } else if (y >= st.cols-1) {
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x-1, y, pw, ids, len, matrix); //Move left
+    } else if (y === 0) {
+        pw += matrix[y][x];
+        ids.push('c' + String(x) + ',' + String(y));
+        return handleEdge(x+1, y, pw, ids, len, matrix); //Move right
+    }
 }
 
 
@@ -982,13 +922,13 @@ function togglePs() {
 }
 
 function copyPs() {
-	var x = document.getElementById("password");
-	var open = false;
-	if(x.type === 'password') {open=true; togglePs();}
+    var x = document.getElementById("password");
+    var open = false;
+    if(x.type === 'password') {open=true; togglePs();}
 
-	x.select();
-	document.execCommand("Copy");
-	if(open) {togglePs();}
+    x.select();
+    document.execCommand("Copy");
+    if(open) {togglePs();}
 }
 
 function clearPs() {
@@ -1001,10 +941,10 @@ function clearPs() {
 }
 
 function clearAll() {
-	appendGrid(st.blankList);
-	clearPs();
-	var el = document.getElementById('seed');
-	el.value = '';
+    appendGrid(st.blankList);
+    clearPs();
+    var el = document.getElementById('seed');
+    el.value = '';
 }
 
 
@@ -1013,37 +953,37 @@ function renderDirections() {
     var method = meth.options[meth.selectedIndex].value;
     var dir = document.getElementById('dir');
 
-	var options = {
-		'cardinal': ['N', 'S', 'E', 'W'],
-		'angle': ['NE', 'NW', 'SE', 'SW']
-	}
+    var options = {
+        'cardinal': ['N', 'S', 'E', 'W'],
+        'angle': ['NE', 'NW', 'SE', 'SW']
+    }
 
-	if (method === 'line') {
-		var sel = document.createElement('select');
-		sel.id = 'direction';
-		var opts = options.cardinal.concat(options.angle);
-		opts.forEach(function(opt) {
-			var el = document.createElement('option');
-			el.value = opt;
-			el.textContent = opt;
-			sel.appendChild(el);
-		});
-		dir.innerHTML = 'Direction: ' + sel.outerHTML;
-	} else if (method === 'step') {
-		var sel = document.createElement('select');
-		sel.id = 'direction';
-		var opts = options.angle;
-		opts.forEach(function(opt) {
-			var el = document.createElement('option');
-			el.value = opt;
-			el.textContent = opt;
-			sel.appendChild(el);
-		});
-		dir.innerHTML = 'Direction: ' + sel.outerHTML;
-	} else {
-		//Clear any dropdown menu
-		dir.innerHTML = '';
-	} 
+    if (method === 'line') {
+        var sel = document.createElement('select');
+        sel.id = 'direction';
+        var opts = options.cardinal.concat(options.angle);
+        opts.forEach(function(opt) {
+            var el = document.createElement('option');
+            el.value = opt;
+            el.textContent = opt;
+            sel.appendChild(el);
+        });
+        dir.innerHTML = 'Direction: ' + sel.outerHTML;
+    } else if (method === 'step') {
+        var sel = document.createElement('select');
+        sel.id = 'direction';
+        var opts = options.angle;
+        opts.forEach(function(opt) {
+            var el = document.createElement('option');
+            el.value = opt;
+            el.textContent = opt;
+            sel.appendChild(el);
+        });
+        dir.innerHTML = 'Direction: ' + sel.outerHTML;
+    } else {
+        //Clear any dropdown menu
+        dir.innerHTML = '';
+    } 
 }
 
 /*Warning: Changes to these will alter all password outputs*/
@@ -1052,21 +992,21 @@ function chooseCharacters() {
     var method = sel.options[sel.selectedIndex].value;
     var chars;
     switch(method) {
-    	case 'advanced':
-    		chars = passchars.standard + passchars.advanced;
-    		break;
-    	case 'standard':
-    		chars = passchars.standard;
-    		break;
-    	case 'alphanumeric':
-    		chars = passchars.letters + passchars.numbers;
-    		break;
-    	case 'letters':
-    		chars = passchars.letters;
-    		break;
-    	case 'numbers':
-    		chars = passchars.numbers;
-    		break;
+        case 'advanced':
+            chars = passchars.standard + passchars.advanced;
+            break;
+        case 'standard':
+            chars = passchars.standard;
+            break;
+        case 'alphanumeric':
+            chars = passchars.letters + passchars.numbers;
+            break;
+        case 'letters':
+            chars = passchars.letters;
+            break;
+        case 'numbers':
+            chars = passchars.numbers;
+            break;
     }
     st.charset = chars;  //Set global object setting
 }
@@ -1074,33 +1014,33 @@ function chooseCharacters() {
 
 //Experiment with d3, replaced above with pure js.   
 function d3test() {
-	var charList = generateCharacters(rows,cols,charSet);
-	var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten matrix
-	//console.log(joinedList);
-	var td = d3.selectAll('td')
-		.data(joinedList)
-		//.enter()
-		//.append('td')
-		.text(function(d) {return d;})
-		.transition()
-		.duration(1200)
-		.ease(d3.easeLinear)
-		.tween("text", function(d) {
-			//https://stackoverflow.com/questions/45831942/tweening-numbers-in-d3-v4-not-working-anymore-like-in-v3
-			var node = this;
-			//var i = d3.interpolate(0, joinedList.length);
-			var i = d3.interpolate(33, d.charCodeAt(0));
-			//var i = d3.interpolate(0, 100);
-			//console.log(i(0.5));
-			return function(t) {
-				//d3.select(this).text(joinedList[i(t)]);
-				//d3.select(node).text(String.fromCharCode(Math.round(i(t))));
-				d3.select(node).text(String.fromCharCode(i(t)));
-			};
-		});
-		//https://bl.ocks.org/bricedev/a0c5ef180272fac3aea6
-		//https://github.com/d3/d3-interpolate
-		//https://github.com/d3/d3-interpolate#interpolateString
+    var charList = generateCharacters(rows,cols,charSet);
+    var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten matrix
+    //console.log(joinedList);
+    var td = d3.selectAll('td')
+        .data(joinedList)
+        //.enter()
+        //.append('td')
+        .text(function(d) {return d;})
+        .transition()
+        .duration(1200)
+        .ease(d3.easeLinear)
+        .tween("text", function(d) {
+            //https://stackoverflow.com/questions/45831942/tweening-numbers-in-d3-v4-not-working-anymore-like-in-v3
+            var node = this;
+            //var i = d3.interpolate(0, joinedList.length);
+            var i = d3.interpolate(33, d.charCodeAt(0));
+            //var i = d3.interpolate(0, 100);
+            //console.log(i(0.5));
+            return function(t) {
+                //d3.select(this).text(joinedList[i(t)]);
+                //d3.select(node).text(String.fromCharCode(Math.round(i(t))));
+                d3.select(node).text(String.fromCharCode(i(t)));
+            };
+        });
+        //https://bl.ocks.org/bricedev/a0c5ef180272fac3aea6
+        //https://github.com/d3/d3-interpolate
+        //https://github.com/d3/d3-interpolate#interpolateString
 }
 
 
@@ -1145,11 +1085,11 @@ function d3test() {
 //     window.bind("resize", updateTables);
 
 //     function splitTable(original) {
-//     	//original.wrap("<div class='table-wrapper' />");
-//     	//https://stackoverflow.com/questions/6838104
-// 		org_html = original.innerHTML;
-// 		new_html = "<div class='table-wrapper' />" + org_html + "</div>";
-// 		original.innerHTML = new_html;
+//      //original.wrap("<div class='table-wrapper' />");
+//      //https://stackoverflow.com/questions/6838104
+//      org_html = original.innerHTML;
+//      new_html = "<div class='table-wrapper' />" + org_html + "</div>";
+//      original.innerHTML = new_html;
 
 //         //var copy = original.clone();
 //         var copy = original.cloneNode(true);
@@ -1206,46 +1146,102 @@ function d3test() {
 
 // /* Mobile */
 // @media only screen and (max-width: 767px) {
-// 	/*Source: stickyheader5.html*/
+//  /*Source: stickyheader5.html*/
 
-// 	#table-container {
-// 	    position: relative;
-// 	    width: 600px;
-// 	/*    height: 100%;*/
-// 	    height:400px;
-// 	    overflow:auto;
-// 	    border: 2px solid red;
-// 	    display: inline-block;
-// 	    /*overflow:auto;*/
-// 	/*    overflow-y:visible;*/
-// 	}
-// 	table {
-// 	    float: left;
-// 	    /*border-collapse: collapse;*/
-// 	/*    display: block; */
-// 	/*    height: 700px;
-// 	    overflow-y: scroll;*/
-// 	}
-// 	th {
-// 	    border: 1px solid black;
-// 	    padding: 10px;
-// 	    background-color:white;
-// 	}
-// 	td {
-// 	    border: 1px solid black;
-// 	    padding: 10px;
-// 	    margin: 0;
-// 	    white-space: nowrap;
-// 	    height: 100px;
-// 	}
-// 	.right {
-// 	    overflow: auto;
-// 	}
+//  #table-container {
+//      position: relative;
+//      width: 600px;
+//  /*    height: 100%;*/
+//      height:400px;
+//      overflow:auto;
+//      border: 2px solid red;
+//      display: inline-block;
+//      /*overflow:auto;*/
+//  /*    overflow-y:visible;*/
+//  }
+//  table {
+//      float: left;
+//      /*border-collapse: collapse;*/
+//  /*    display: block; */
+//  /*    height: 700px;
+//      overflow-y: scroll;*/
+//  }
+//  th {
+//      border: 1px solid black;
+//      padding: 10px;
+//      background-color:white;
+//  }
+//  td {
+//      border: 1px solid black;
+//      padding: 10px;
+//      margin: 0;
+//      white-space: nowrap;
+//      height: 100px;
+//  }
+//  .right {
+//      overflow: auto;
+//  }
 
 // }
 
 
+//Old css reset:
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+// html, body, div, span, applet, object, iframe,
+// h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+// a, abbr, acronym, address, big, cite, code,
+// del, dfn, em, img, ins, kbd, q, s, samp,
+// small, strike, strong, sub, sup, tt, var,
+// b, u, i, center,
+// dl, dt, dd, ol, ul, li,
+// fieldset, form, label, legend,
+// table, caption, tbody, tfoot, thead, tr, th, td,
+// article, aside, canvas, details, embed, 
+// figure, figcaption, footer, header, hgroup, 
+// menu, nav, output, ruby, section, summary,
+// time, mark, audio, video {
+//     margin: 0;
+//     padding: 0;
+//     border: 0;
+//     font-size: 100%;
+//     font: inherit;
+//     vertical-align: baseline;
+// }
+// /* HTML5 display-role reset for older browsers */
+// article, aside, details, figcaption, figure, 
+// footer, header, hgroup, menu, nav, section {
+//     display: block;
+// }
+// body {
+//     line-height: 1.5; /*1*/
+//     font-family:sans-serif;
+//     color:rgba(40,40,40,0.9);
+// }
+// ol, ul {
+//     list-style: none;
+// }
+// blockquote, q {
+//     quotes: none;
+// }
+// blockquote:before, blockquote:after,
+// q:before, q:after {
+//     content: '';
+//     content: none;
+// }
+// table {
+//     border-collapse: collapse;
+//     border-spacing: 0;
+// }
+
+
 </script>
+
+
+
 
 </body>
 </html>
