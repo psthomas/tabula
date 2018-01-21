@@ -241,37 +241,22 @@ td, th {
         <h1 id="title">Tabula</h1>
         <em>A minimal, stateless password manager</em>
     </header>
-    <!-- Navigation -->
-<!--     <nav id="menu" class="clearfix">
-        <ul>
-            <li><a href="./tabula-responsive.html#header">Home</a></li>
-            <li><a href="./tabula-responsive.html#about">About</a></li>
-            <li><a href="https://github.com">Source</a></li>
-        </ul>
-    </nav> -->
 
     <!--Intro-->
     <section class="intro">
         <p><strong>What does it do?</strong> Tabula helps you create and remember strong passwords for each site without having to store them anywhere.</p>
         <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate site-specific passwords by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  That way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
-        <!-- <p>Follow 4 steps to get started:</p> -->
     </section>
 
     <!-- Sidebar -->
     <aside id="sidebar">
         
-        <div class='input'>  <!-- style="max-width: 30%" -->
+        <div class='input'> 
             <h3>1. Create a Table</h3>
             <form onsubmit="return false;">
             Master Password: <br>
-            <input id="seed" type="password" /> <br> <!-- size="70" value="CorrectHorseBatteryStaple"-->
+            <input id="seed" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
             <input type="checkbox" onclick="toggleSe();">Show <br>
-            <!-- <input type="button" value="Create" onclick="populateGrid();"/>  --> <!--d3test();-->
-<!--             <button class="button" onclick="populateGrid();">Create</button>
-            <button type="button" class="button" onclick="clearAll();">Clear Table</button> 
-            <button type="button" class="button" onClick="window.print();">Print Table</button> <br> -->
-            <!-- <button type="button"onclick="clearAll();">Clear Table</button>  -->
-            <!-- </form> -->
 
             Character Set: <br>
             <select id="characters" onchange="chooseCharacters();"> <!--onfocus="this.selectedIndex = -1;"-->
@@ -285,7 +270,6 @@ td, th {
             <button type="button" class="button" onclick="clearAll();">Clear</button> 
             <button type="button" class="button" onClick="window.print();">Print</button> <br>
             </form>
-        <!-- </div> -->
         </div>
 
         <div class="input">
@@ -298,17 +282,12 @@ td, th {
                     <option value="spiral">Spiral</option>
             </select> <br>
             <div id='dir'></div>
-            Length: <input id="length" type="text" style="width:25px"  value="16"/> <!--size="3"-->
+            Length: <input id="length" type="text" style="width:25px"  value="16"/>
         </div>
 
         <div class="input">
-            <!-- <h3>Password Options</h3> 
-            If you'd like to create your own pattern, select <strong>manual</strong>.-->
             <h3>3. Click a Cell</h3>
             Click a memorable cell to start the password.  For example, choose coordinates [A,N] for <strong>a</strong>mazo<strong>n</strong>.com. <br>
-<!--             <p> Choose a pattern to follow when building each password.  Then click a memorable starting cell to generate a unique password for each site (e.g. start at coordinates A,N for <strong>a</strong>mazo<strong>n</strong>.com).</p> -->
-
-<!--             <p> <strong>Note:</strong> this project is still in the early stages, so if you do use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output, you'll still have a backup.<p> -->
         </div>
 
         <div class="output">
@@ -318,27 +297,19 @@ td, th {
             <button type="button" class="button" onclick="copyPs()">Copy</button>
             <button type="button" class="button" onclick="clearPs();">Clear</button>
         </div>
-        <!-- <h4> Table Controls </h4> -->
-        <!-- <button type="button" class="button" onclick="clearPs();" >Clear Selection</button> --> 
-        <!-- <button type="button" class="button" onclick="clearAll();">Clear Table</button> -->
-        <!-- <button type="button" class="button" onClick="window.print();">Print Table</button>  -->
     </aside>
 
-    <!-- Main Content area -->
+    <!-- Table Content area -->
     <section id="content">
         <h3 >Table</h3>
-        <!-- <button type="button" onClick="window.print();" class="right">Print</button> <br> -->  <!-- "printDiv('tabula');"-->
         <div id="print">
             <div id="tabula">
             </div>
         </div>
-<!--         <button type="button" class="button-float" onclick="clearPs();" >Clear Selection</button> 
-        <button type="button" class="button-float" onclick="clearAll();">Clear Table</button> 
-        <button type="button" class="button-float" onClick="window.print();">Print Table</button>  -->
     </section>
 
 
-    <!-- Outro -->
+    <!-- About -->
     <section class="intro clearfix">
         <p> <strong>Note:</strong> This project is still in the early stages, so if you use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output, you'll still have a backup.<p>
         <h3 id="about">About</h3>
@@ -356,8 +327,6 @@ td, th {
         <p><strong>Letters:</strong> <code style="font-size:0.9em">AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz</code></p>
         <p><strong>Numbers:</strong> <code style="font-size:0.9em">0123456789</code></p>
 
-    <!--        <h3>FAQ</h3>
-        <p><strong>How do I change my password?</strong></p> -->
 
         <h3>Security</h3>
         <p>Security is important when it comes to passwords, so this page doesn't depend on any externally loaded scripts or make any requests (your master password is never sent anywhere).  As a result, you can still use this page when you're offline, or download the HTML file and use it locally.  Also, you could print out the generated table and only use the website in situations where you don't have access to a physical copy.</p>
