@@ -28,20 +28,13 @@ Alternate: https://codepen.io/johnstonian/pen/guhid*/
 header {
     width: 94%;
     padding: 3% 3% 1% 3%;
-/*    background-color: #FF5722;*/
 }
 header #title {
     font-size: 55px;
-    /*font-size:2em;*/
     font-weight:bold;
-    /*color: #fff;*/
-}
-header p {
-    /*color: #fff;*/
 }
 nav {
     width: 97%;
-/*    background-color: #E64A19;*/
     padding: 0 1.5% 0 1.5%;
 }
 nav ul li {
@@ -81,10 +74,6 @@ aside h3 {
 footer{
     width: 94%;
     padding: 3%;
-/*    background-color: #FF5722;
-    border-top: 5px solid #E64A19;*/
-    /*color: #fff;*/
-    /*text-align: center;*/
 }
 
 @media all and (max-width : 768px) {
@@ -114,8 +103,8 @@ footer{
         width: 94%;
     }
 }
-/*Hovering was preventing click events 
-on mobile*/
+/* Turn off hovering on mobile,
+was preventing click events */
 @media all and (min-width: 700px) {
     /*Hovering*/
     tr:hover {
@@ -132,6 +121,7 @@ on mobile*/
         z-index: -1;        
     }
 }
+/*Printing just shows table*/
 /*https://stackoverflow.com/questions/468881*/
 @media print {
     body * {
@@ -196,17 +186,23 @@ em {
 
 
 /* tables */
-
+/*https://css-tricks.com/simple-css-row-column-highlighting/*/
+/*https://stackoverflow.com/questions/17119594*/
 table {
     display: table;
+    width:100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin:1.2em 0em;
+    overflow: hidden;
+    border-style: hidden;
     /*display:block;*/
 /*    border-collapse: separate;*/
     /*border-spacing: 2px;*/
 /*    border-color: gray;*/
 }
 
-/*https://css-tricks.com/simple-css-row-column-highlighting/*/
-/*https://stackoverflow.com/questions/17119594*/
+
 table {
 /*  overflow-y: hidden;
     overflow-x: auto;*/
