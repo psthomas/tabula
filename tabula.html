@@ -343,8 +343,7 @@ td, th {
 
 
 <script>
-
-//Warning: changing these will change all output tables
+//Warning: changing these will change all dependent output tables
 var passchars = {
     letters: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
     numbers: "0123456789",
@@ -363,54 +362,14 @@ var st = {
 };
 
 appendGrid(st.blankList);
-renderDirections();
+renderDirections();  //Inserts dropdown
 
 
-
-//'charSet': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<'
-//Initialize values, build empty grid
-// var rows = 26;
-// var cols = 26;
-//var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]{}:;>~!@#$%^&*()+=-?<';
-//var emptyChars = ' ';
-
-// var passchars_old = {
-//  V: "AEIOU",
-//  C: "BCDFGHJKLMNPQRSTVWXYZ",
-//  v: "aeiou",
-//  c: "bcdfghjklmnpqrstvwxyz",
-//  A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
-//  a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
-//  n: "0123456789",
-//  o: "@&%?,=[]_:-+*$#!'^~;()/.",
-//  x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
-//  " ": " "
-// };
-
-//DONE: pull the character generating process out & put them in a data
-// structure so they can be iterated over.  List of list?
-//DONE: figure out how to create responsive tables for mobile. . . if you just
-//go with distributing the HTML page as the cross platform idea
-//https://zurb.com/playground/playground/responsive-tables/index.html
-//downloaded as responsive-tables.js/.css
-//swipe demo is cool here too: https://github.com/filamentgroup/tablesaw
-//DONE: Finalize charset, because changing that will change the output
-//of all grids generated with the charSet
-//DONE: charaset dropdown selector?  
-//TODO: Simplify the UI, so it can just be embedded in iframe? have the explanations
-//just on external page?  > have tabula-embed.html, tabula.html.  Don't allow loading as a script,
-//because you want the security of an isoalted iframe anyways.  
-
-//DONE: maybe call appendGrid, or addGrid()
-//and call the clickableGrid buildGrid instead, more descriptive.  
 function appendGrid(charList) {
-    //Reset pw
+    //Reset PW
     document.getElementById('password').value = '';
-
-    //var lastClicked; //Not needed currently
     var grid = buildGrid(st.rows, st.cols, charList, clicked);
     var el = document.getElementById('tabula');
-    //var el = document.getElementById('table-container');
     el.innerHTML = '';
     el.appendChild(grid);
 }
@@ -448,7 +407,7 @@ function clicked(el,row,col,i,str) {
 }
 
 //source: https://stackoverflow.com/questions/9140101,
-// http://jsfiddle.net/6qkdP/2/     
+//http://jsfiddle.net/6qkdP/2/     
 function buildGrid(rows, cols, charList, callback){
     var i=0;
     var grid = document.createElement('table');
@@ -496,7 +455,6 @@ function generateHeader(alpha) {
     header.appendChild(hrow);
     return header;
 }
-
 
 //https://stackoverflow.com/questions/5226285
 function populateGrid() {
@@ -550,8 +508,7 @@ function animateCell(cell, steps, duration) {
 }
 
 function generateCharacters(rows, cols, charset) {
-    //Using seedrandom.js
-    //https://github.com/davidbau/seedrandom
+    //Using seedrandom.js, https://github.com/davidbau/seedrandom
     //MIT License
     var seed = document.getElementById('seed').value;
     Math.seedrandom(seed);
@@ -562,7 +519,6 @@ function generateCharacters(rows, cols, charset) {
     return charList
 }
 
-//ASCII Printable characters: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
 //https://stackoverflow.com/questions/1349404
 function randomString(len, charSet) {
     var randomString = '';
@@ -573,7 +529,6 @@ function randomString(len, charSet) {
     }
     return randomString;
 }
-
 
 function highlightPs(obj) {
     var ids = obj.ids;
@@ -593,7 +548,7 @@ function highlightPs(obj) {
 }
 
 function handleDir(dir) {
-    // [x, y], where South = +y, East = +x 
+    //[x, y], where South = +y, East = +x 
     var allDir = {
         'N': [0, -1], 'S': [0, 1], 'E':[1, 0], 'W':[-1, 0],
         'NE':[1, -1], 'NW':[-1, -1], 'SE':[1, 1], 'SW':[-1, 1]
@@ -602,7 +557,6 @@ function handleDir(dir) {
 }
 
 /* Grid Traversal Functions */
-
 function lineMatrix(x, y, dir,len) {
     var matrix = st.charList;
     var inc = handleDir(dir);
@@ -666,7 +620,6 @@ function stepMatrix(x, y, dir, len) {
 }
 
 function spiralMatrix(x,y,len) {
-
     var matrix = st.charList; //Global matrix
     var xinc = 1;
     var yinc = -1;
@@ -719,14 +672,12 @@ function spiralMatrix(x,y,len) {
 
 }
 
-
 //Needs some work, developed on accident while
 //making spiral.  Just needs a shift for star,
 //could also do galaxy style, where offsets in outward
-//motion.  That would be too hard to re-create though,
-//manually if it was needed.  
+//motion.  This would be too hard to re-create manually, 
+//though, if it was needed.  
 function starMatrix(x,y,len) {
-
     var matrix = st.charList; //Global matrix
     var xinc = 1;
     var yinc = -1;
@@ -771,7 +722,6 @@ function starMatrix(x,y,len) {
 
 }
 
-
 function handleEdge(x, y, pw, ids, len, matrix, callback) {
     //Always moves clockwise when it hits an edge
     if (pw.length === len) {
@@ -807,7 +757,6 @@ function handleEdge(x, y, pw, ids, len, matrix, callback) {
 
 
 /* UI and Helper Functions */
-
 function toggleSe() {
     var x = document.getElementById("seed");
     if (x.type === "password") {
@@ -916,237 +865,19 @@ function chooseCharacters() {
     st.charset = chars;  //Set global object setting
 }
 
-
-//Experiment with d3, replaced above with pure js.   
-function d3test() {
-    var charList = generateCharacters(rows,cols,charSet);
-    var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten matrix
-    //console.log(joinedList);
-    var td = d3.selectAll('td')
-        .data(joinedList)
-        //.enter()
-        //.append('td')
-        .text(function(d) {return d;})
-        .transition()
-        .duration(1200)
-        .ease(d3.easeLinear)
-        .tween("text", function(d) {
-            //https://stackoverflow.com/questions/45831942/tweening-numbers-in-d3-v4-not-working-anymore-like-in-v3
-            var node = this;
-            //var i = d3.interpolate(0, joinedList.length);
-            var i = d3.interpolate(33, d.charCodeAt(0));
-            //var i = d3.interpolate(0, 100);
-            //console.log(i(0.5));
-            return function(t) {
-                //d3.select(this).text(joinedList[i(t)]);
-                //d3.select(node).text(String.fromCharCode(Math.round(i(t))));
-                d3.select(node).text(String.fromCharCode(i(t)));
-            };
-        });
-        //https://bl.ocks.org/bricedev/a0c5ef180272fac3aea6
-        //https://github.com/d3/d3-interpolate
-        //https://github.com/d3/d3-interpolate#interpolateString
-}
-
-
-
-//Scrolling table header:
-//Doesn't work on mobile.  
-// document.getElementById("table-container").addEventListener("scroll",function(){
-//    //console.log(this.scrollTop);
-//    var translate = "translate(0,"+this.scrollTop+"px)";
-//    this.querySelector("thead").style.transform = translate;  //Only selects first header, need both
-//    //this.querySelector("#secondhead").style.transform = translate; 
-// });
-
-
-
-/*Code for responsive tables*/
-/*source: https://zurb.com/playground/projects/responsive-tables/index.html */
-/*modified to remove jQuery */
-
-//$(document).ready(function() {
-//https://stackoverflow.com/questions/799981
-// document.addEventListener("DOMContentLoaded", function(event) { 
-  
-//     var switched = false;
-//     var updateTables = function() {
-//         if ((window.innerWidth < 767) && !switched) {
-//             switched = true;
-//             document.getElementsByClassName("responsive").each(function(i, element) {
-//                 splitTable(element);
-//             });
-//             return true;
-//         } else if (switched && (window.innerWidth > 767)) {
-//             switched = false;
-//             document.getElementsByClassName("responsive").each(function(i, element) {
-//                 unsplitTable($(element));
-//             });
-//         }
-//     };
-//     // $(window).load(updateTables);
-//     // $(window).bind("resize", updateTables);
-//     window.onload(updateTables);
-//     window.bind("resize", updateTables);
-
-//     function splitTable(original) {
-//      //original.wrap("<div class='table-wrapper' />");
-//      //https://stackoverflow.com/questions/6838104
-//      org_html = original.innerHTML;
-//      new_html = "<div class='table-wrapper' />" + org_html + "</div>";
-//      original.innerHTML = new_html;
-
-//         //var copy = original.clone();
-//         var copy = original.cloneNode(true);
-
-//         copy.find("td:not(:first-child), th:not(:first-child)").css("display", "none");
-//         copy.querySelector("td:not(:first-child), th:not(:first-child)") !== null
-
-//         copy.removeClass("responsive");
-//         original.closest(".table-wrapper").append(copy);
-//         copy.wrap("<div class='pinned' />");
-//         original.wrap("<div class='scrollable' />");
-//     }
-
-//     function unsplitTable(original) {
-//         original.closest(".table-wrapper").find(".pinned").remove();
-//         original.unwrap();
-//         original.unwrap();
-//     }
-// });
-
-
-
-// can't quite get this header thing to work out:
-// thead th {
-// /*  height: 0;
-//   line-height: 0;
-//   padding-top: 0;
-//   padding-bottom: 0;*/
-//   /*background-color:transparent;*/
-//   color: transparent;
-//   border: none;
-//   white-space: nowrap;
-// }
-// thead th div{
-// /*  display:block;
-//   white-space: nowrap;*/
-//   position: absolute;
-//   /*position:fixed;*/
-//   /*position:relative;*/
-//   background: transparent;
-//   /*background-color:#f2f2f2;*/
-//   color: #000;
-//   padding: 0px 25px;  /*9px 25px;*/
-//   top: 0;
-//   margin-left: -25px;
-//   line-height: normal;
-//   /*border-left: 1px solid #800;*/
-// }
-// th:first-child div{
-//   border: none;
-// }
-
-
-
-// /* Mobile */
-// @media only screen and (max-width: 767px) {
-//  /*Source: stickyheader5.html*/
-
-//  #table-container {
-//      position: relative;
-//      width: 600px;
-//  /*    height: 100%;*/
-//      height:400px;
-//      overflow:auto;
-//      border: 2px solid red;
-//      display: inline-block;
-//      /*overflow:auto;*/
-//  /*    overflow-y:visible;*/
-//  }
-//  table {
-//      float: left;
-//      /*border-collapse: collapse;*/
-//  /*    display: block; */
-//  /*    height: 700px;
-//      overflow-y: scroll;*/
-//  }
-//  th {
-//      border: 1px solid black;
-//      padding: 10px;
-//      background-color:white;
-//  }
-//  td {
-//      border: 1px solid black;
-//      padding: 10px;
-//      margin: 0;
-//      white-space: nowrap;
-//      height: 100px;
-//  }
-//  .right {
-//      overflow: auto;
-//  }
-
-// }
-
-
-//Old css reset:
-
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-// html, body, div, span, applet, object, iframe,
-// h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-// a, abbr, acronym, address, big, cite, code,
-// del, dfn, em, img, ins, kbd, q, s, samp,
-// small, strike, strong, sub, sup, tt, var,
-// b, u, i, center,
-// dl, dt, dd, ol, ul, li,
-// fieldset, form, label, legend,
-// table, caption, tbody, tfoot, thead, tr, th, td,
-// article, aside, canvas, details, embed, 
-// figure, figcaption, footer, header, hgroup, 
-// menu, nav, output, ruby, section, summary,
-// time, mark, audio, video {
-//     margin: 0;
-//     padding: 0;
-//     border: 0;
-//     font-size: 100%;
-//     font: inherit;
-//     vertical-align: baseline;
-// }
-// /* HTML5 display-role reset for older browsers */
-// article, aside, details, figcaption, figure, 
-// footer, header, hgroup, menu, nav, section {
-//     display: block;
-// }
-// body {
-//     line-height: 1.5; /*1*/
-//     font-family:sans-serif;
-//     color:rgba(40,40,40,0.9);
-// }
-// ol, ul {
-//     list-style: none;
-// }
-// blockquote, q {
-//     quotes: none;
-// }
-// blockquote:before, blockquote:after,
-// q:before, q:after {
-//     content: '';
-//     content: none;
-// }
-// table {
-//     border-collapse: collapse;
-//     border-spacing: 0;
-// }
-
+// var passchars_old = {
+//  V: "AEIOU",
+//  C: "BCDFGHJKLMNPQRSTVWXYZ",
+//  v: "aeiou",
+//  c: "bcdfghjklmnpqrstvwxyz",
+//  A: "AEIOUBCDFGHJKLMNPQRSTVWXYZ",
+//  a: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
+//  n: "0123456789",
+//  o: "@&%?,=[]_:-+*$#!'^~;()/.",
+//  x: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz0123456789!@#$%^&*()",
+//  " ": " "
+// };
 
 </script>
-
-
-
-
 </body>
 </html>
