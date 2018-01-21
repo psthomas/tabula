@@ -14,13 +14,14 @@
     margin: 0;
     padding: 0;
 }
+
+/*https://webdesignerhut.com/responsive-layout-with-html-and-css/
+Alternate: https://codepen.io/johnstonian/pen/guhid*/
 body {
     line-height: 1.5; /*1*/
     font-family:sans-serif;
     color:rgba(40,40,40,0.9);
 }
-/*https://webdesignerhut.com/responsive-layout-with-html-and-css/
-Alternate: https://codepen.io/johnstonian/pen/guhid*/
 #container{
     margin: 0 auto;
     max-width: 1200px; 
@@ -193,71 +194,20 @@ table {
     width:100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin:1.2em 0em;
-    overflow: hidden;
-    border-style: hidden;
-    /*display:block;*/
-/*    border-collapse: separate;*/
-    /*border-spacing: 2px;*/
-/*    border-color: gray;*/
-}
-
-
-table {
-/*  overflow-y: hidden;
-    overflow-x: auto;*/
-    /*width:100%;*/
-    /*display: block;*/
-    /*overflow:hidden;*/
-/*  width: 95%; 
-    overflow: hidden;
-    overflow-x: scroll;*/
-    /*  border:2px solid #ccc;*/
-    /*border:1px solid #ccc;*/
-/*  border:solid #ccc; 
-    border-width: 1px 2px 2px 1px;*/ /*To deal with hidden border*/
-    /*outline:1px solid #ccc;*/
-
-    /*Fits width, but scrunched*/
-    /*allows user to see header and 
-    row columns better */
-    width:100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    margin:1.2em 0em;
-    /*Best, scrollable*/
-/*  overflow-x:auto;
-    display:block;
-    border-collapse: collapse;*/
-    /*Adding in column highlights*/
+    margin:1.2em auto;
     overflow: hidden;
     border-style: hidden;
 }
-/*table tr:nth-child(odd) {
-    background-color:#fcfcfc;
-}*/
-
 /*https://stackoverflow.com/questions/1257430*/
 table td, table th {
     border: 1px solid #999; /*#ccc*/
 }
-
-
-/*table th {*/
 th {
     /*background-color:#f2f2f2;*/
     border:1px solid #ccc;
     padding:1px 0px;
-    /*padding: 1px 6px; */
-    /*text-align: left;*/
-    font-size:14px; /*14px*/
+    font-size:14px; 
     font-weight: 900; /*bold;*/
-    /*padding:3px 3px;*/
-}
-hr {
-/*  background-color: #ddd; 
-    height: 1px; */
-    /*border: 0;*/
 }
 table tr {
     border:1px solid #ccc;
@@ -265,10 +215,7 @@ table tr {
 td, th {
     position: relative;
 }
-
 .grid { 
-    /*margin:1em auto;*/ 
-    /*border-collapse: collapse;*/
     font-family:  Monaco, monospace;
 }
 .grid td {
@@ -276,19 +223,12 @@ td, th {
     width:23px; height:20px;  /*30, 30*/
     border:1px solid #ccc;
     text-align:center;
-    /*padding:3px;*/
-    /*font-family:sans-serif; */
     font-size:12px; /*13px*/
 }
 .grid td.clicked {
-    background-color:#ACCEF7;  /*yellow lightblue*/
+    background-color:#ACCEF7; 
     font-weight:bold; 
-    /*color:red;*/
 }
-
-
-
-
 </style>
 
 
