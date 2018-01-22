@@ -243,7 +243,7 @@ td, th {
     <!--Intro-->
     <section class="intro">
         <p><strong>What does it do?</strong> Tabula helps you create and remember strong passwords for each site without having to store them anywhere.</p>
-        <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate site-specific passwords by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  That way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
+        <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate site-specific passwords by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  This way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
     </section>
 
     <!-- Sidebar -->
@@ -315,7 +315,7 @@ td, th {
 
         <p>The table of characters is created by seeding a random number generator (<a href="https://github.com/davidbau/seedrandom">seedrandom.js</a>) with your master password.  The end result is a unique table that will be re-created whenever you enter your master password in the future.  This makes it easy to have many strong, site-specific passwords while just remembering a master password and a pattern.</p>
 
-        <p>The source code for this project is available on <a href="#">GitHub</a>, and there are further details in my <a href="#">blog post</a> about the project if you're interested.</p>
+        <p>The source code for this project is available on <a href="https://github.com/psthomas/tabula">GitHub</a>, and there are further details in my <a href="https://pstblog.com/2018/1/21/password-manager">blog post</a> about the project if you're interested.</p>
 
         <h3>Characters</h3>
         <p>These are the characters available in each set:</p>
@@ -329,12 +329,12 @@ td, th {
         <h3>Security</h3>
         <p>Security is important when it comes to passwords, so this page doesn't depend on any externally loaded scripts or make any requests (your master password is never sent anywhere).  As a result, you can still use this page when you're offline, or download the HTML file and use it locally.  Also, you could print out the generated table and only use the website in situations where you don't have access to a physical copy.</p>
         <p>Still, it would be ideal to never use a browser for this at all, so I've been looking at using <a href="https://facebook.github.io/react-native/">React Native</a> for a mobile app, or something like <a href="https://electronjs.org/">Electron</a> to create a cross-platform desktop app if people are interested, although that might be overly complicated for this application.</p>
-        <p>The current MD5 Hash of this page is available on <a href="https://github.com">GitHub</a>.</p>
+        <p>The current sha256 checksum of this page is available at the project page on <a href="https://github.com/psthomas/tabula">GitHub</a>.</p>
     </section>
 
     <!-- Footer -->
     <footer id="footer" class="clearfix">
-        <div  style="font-size:0.95em;">© 2018 Philip Thomas, <a href="https://github.com">source</a>, <a href="https://pstblog.com">author</a>.</div>
+        <div  style="font-size:0.95em;">© 2018 Philip Thomas, <a href="https://github.com/psthomas/tabula">source</a>, <a href="https://pstblog.com">author</a>.</div>
     </footer>
 </div>
 
