@@ -237,13 +237,14 @@ td, th {
     <!-- header -->
     <header id="header">
         <h1 id="title">Tabula</h1>
-        <em>A minimal, stateless password manager</em>
+        <em>A simple, stateless password manager</em>
     </header>
 
     <!--Intro-->
     <section class="intro">
         <p><strong>What does it do?</strong> Tabula helps you create and remember strong passwords for each site without having to store them anywhere.</p>
-        <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate site-specific passwords by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  This way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
+        <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate each site-specific password by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  This way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
+        <p><strong>Note:</strong> This project is still in the early stages, so it needs more scrutiny before I'd recommend people use it full time. If you do, print out a copy of the generated table so if changes to the code alter the output, you'll still have a backup.<p>
     </section>
 
     <!-- Sidebar -->
@@ -293,7 +294,8 @@ td, th {
             <input type="password" value="" id="password"> <br><!--size="70" -->
             <input type="checkbox" onclick="togglePs();">Show 
             <button type="button" class="button" onclick="copyPs()">Copy</button>
-            <button type="button" class="button" onclick="clearPs();">Clear</button>
+            <button type="button" class="button" onclick="clearPs();">Clear</button> <br>
+            <input id="highlight" type="checkbox" onclick="toggleHl();" checked>Highlight Selection
         </div>
     </aside>
 
@@ -309,9 +311,8 @@ td, th {
 
     <!-- About -->
     <section class="intro clearfix">
-        <p> <strong>Note:</strong> This project is still in the early stages, so if you use this to generate your passwords, print out a copy of the generated table. That way, if any modifications to the code change the output (although I don't expect them to), you'll still have a backup.<p>
         <h3 id="about">About</h3>
-        <p> The name Tabula comes from a cryptographic tool called a <a href="https://en.wikipedia.org/wiki/Tabula_recta">tabula recta</a>, which is used to create cyphers.  I came across this concept while reading John Graham-Cumming's <a href="http://blog.jgc.org/2010/12/write-your-passwords-down.html">blog post</a> outlining how he uses a tabula to generate his own passwords.  I decided to make the technique more user friendly by allowing access on the web and automating a few steps, so this is the result.</p>
+        <p> The name Tabula comes from a cryptographic tool called a <a href="https://en.wikipedia.org/wiki/Tabula_recta">tabula recta</a>, which is used to create cyphers.  I came across this concept while reading John Graham-Cumming's <a href="http://blog.jgc.org/2010/12/write-your-passwords-down.html">blog post</a> describing how he uses a tabula to generate his own passwords.  I decided to make the technique more user friendly by allowing access on the web and automating a few steps, so this is the result.</p>
 
         <p>The table of characters is created by seeding a random number generator (<a href="https://github.com/davidbau/seedrandom">seedrandom.js</a>) with your master password.  The end result is a unique table that will be re-created whenever you enter your master password in the future.  This makes it easy to have many strong, site-specific passwords while just remembering a master password and a pattern.</p>
 
@@ -334,7 +335,7 @@ td, th {
 
     <!-- Footer -->
     <footer id="footer" class="clearfix">
-        <div  style="font-size:0.95em;">© 2018 Philip Thomas, <a href="https://github.com/psthomas/tabula">source</a>, <a href="https://pstblog.com">author</a>.</div>
+        <div  style="font-size:0.95em;">© 2018 <a href="https://pstblog.com">Philip Thomas</a>, <a href="https://github.com/psthomas/tabula">source</a>.</div>
     </footer>
 </div>
 
@@ -631,7 +632,8 @@ var st = {
     'cols': 26,
     'charset': passchars.standard + passchars.advanced,  //Initial selection
     'blankList': generateCharacters(26,26,' '),
-    'charList': []
+    'charList': [],
+    'highlightIds': []
 };
 
 appendGrid(st.blankList);
@@ -653,11 +655,18 @@ function clicked(el,row,col,i,str) {
     var len = document.getElementById('length');
     var length = Number(len.value);
 
+    //Skip if grid not populated yet
+    if (st.charList.length < 1) {return;}
+
     switch(method) {
         case 'manual':
             var ps = document.getElementById('password');
             ps.value = ps.value += el.textContent;
-            el.className='clicked';
+            st.highlightIds.push(el.id);
+            if (document.getElementById('highlight').checked) {
+                el.className='clicked';
+            }
+
             break;
         case 'line':
             clearPs();
@@ -805,17 +814,22 @@ function randomString(len, charSet) {
 
 function highlightPs(obj) {
     var ids = obj.ids;
+    st.highlightIds = ids; //Set global
+
     var pw = obj.pw;
     var delay = 50;
 
-    function changeClass(id) { 
+    function changeClass(id) {
         var el = document.getElementById(id);
         el.className = 'clicked';
     }
 
-    for (var j=0; j<ids.length; j++) {
-        setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+    if (document.getElementById('highlight').checked) {
+        for (var j=0; j<ids.length; j++) {
+            setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+        }
     }
+
     var ps = document.getElementById('password');
     ps.value = pw;
 }
@@ -1061,15 +1075,39 @@ function copyPs() {
 function clearPs() {
     var ps = document.getElementById('password');
     ps.value = '';
+    //Clear highlight ids
+    st.highlightIds = [];
     //Remove all highlighted classes
     //https://stackoverflow.com/questions/22754315
     var hls = Array.from(document.getElementsByClassName('clicked'));
     hls.map(function(el){el.className = '';});
 }
 
+function toggleHl() {
+
+    var hl = document.getElementById('highlight').checked;
+    var ids = st.highlightIds;
+    //Turn on/off at once
+    for (var j=0; j<ids.length; j++) {
+        var el = document.getElementById(ids[j]);
+        el.className = hl ? 'clicked': '';   
+    }
+
+    // Stagger effect
+    // var delay = hl ? 50: 0;
+    // function changeClass(id) { 
+    //     var el = document.getElementById(id);
+    //     el.className = hl ? 'clicked': '';
+    // }
+    // for (var j=0; j<ids.length; j++) {
+    //     setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+    // }
+}
+
 function clearAll() {
     appendGrid(st.blankList);
     clearPs();
+    st.charList = [];//Clear global character list;
     var el = document.getElementById('seed');
     el.value = '';
 }
