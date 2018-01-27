@@ -246,7 +246,7 @@ td, th {
             <h3>1. Create a Table</h3>
             <form onsubmit="return false;">
             Master Password: <br>
-            <input id="seed" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
+            <input id="masterpassword" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
             <input type="checkbox" onclick="toggleSe();">Show Password<br>
             <input type="checkbox" id="mask" onclick="toggleMask();">Mask Table<br>
             
@@ -1028,10 +1028,13 @@ function animateCell(cell, steps, duration) {
 function generateCharacters(rows, cols, charset) {
     //Using seedrandom.js, https://github.com/davidbau/seedrandom
     //MIT License
-    var seed = document.getElementById('seed').value;
-    var sd = sjcl.misc.scrypt(seed, 'SaltySaltSalt');
-    Math.seedrandom(sd);
-    //Math.seedrandom(sjcl.misc.pbkdf2(seed, 'saltySaltSalt'));
+    var masterpass = document.getElementById('masterpassword').value;
+    //https://github.com/bitwiseshiftleft/sjcl
+    //Deriving salt from masterpass at least ensures a unique salt per user, although 
+    //not ideal.  Added to 128bit base64 string.
+    var seed = sjcl.misc.scrypt(masterpass, masterpass + 'njk1OhfB2y9mbLYLaFkEkD');
+    Math.seedrandom(seed);
+    //Math.seedrandom(sjcl.misc.pbkdf2(seed, 'SaltySaltSalt'));
     var charList = [];
     for (var i=0; i<cols; i++) {
         charList.push(randomString(cols, charset).split(''));
