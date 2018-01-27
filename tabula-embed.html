@@ -6,6 +6,15 @@
 <meta name="HandheldFriendly" content="True">
 <meta name="MobileOptimized" content="320">
 
+<!-- <script src="./js/sjcl.js"></script> -->
+<script src="./js/sjcl-build.js"></script>
+
+<!--MPW scrypt 
+https://github.com/tmthrgd/mpw-js/blob/5972a1c80f9bc721e79e5c218057143ade4acf68/scrypt.js
+note, also requires their pbkdf2 implementation-->
+<!-- <script src="./js/mpw_scrypt.js"></script> -->
+
+
 <style>
 /*Simple CSS Reset*/
 * {
@@ -144,14 +153,6 @@ h3 {
     font-weight:bold;
     font-size:1.15rem;
 }
-h4 {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 0.75em;
-    margin-top: 1em;  /*2em 1.5em 0.75*/
-    padding-bottom:0.3em;
-    font-weight:bold;
-    font-size:1.075rem;
-}
 strong {
     font-weight:bold;
 }
@@ -182,8 +183,6 @@ code {
 em {
     font-style:italic;
 }
-
-
 /* tables */
 /*https://css-tricks.com/simple-css-row-column-highlighting/*/
 /*https://stackoverflow.com/questions/17119594*/
@@ -193,6 +192,8 @@ table {
     border-collapse: collapse;
     table-layout: fixed;
     margin:1.2em auto;
+    /*margin-bottom:1.5em;*/
+    /*padding-bottom:2em;*/
     overflow: hidden;
     border-style: hidden;
 }
@@ -235,24 +236,17 @@ td, th {
 <body>
 <div id="container">
 
-    <!-- Table Content area -->
-    <section id="content">
-        <h3 >Table</h3>
-        <div id="print">
-            <div id="tabula">
-            </div>
-        </div>
-    </section>
-
+    <!-- Begin Embed -->
     <!-- Sidebar -->
     <aside id="sidebar">
-
         <div class='input'> 
             <h3>1. Create a Table</h3>
             <form onsubmit="return false;">
             Master Password: <br>
             <input id="seed" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
-            <input type="checkbox" onclick="toggleSe();">Show <br>
+            <input type="checkbox" onclick="toggleSe();">Show Password<br>
+            <input type="checkbox" id="mask" onclick="toggleMask();">Mask Table<br>
+            
 
             Character Set: <br>
             <select id="characters" onchange="chooseCharacters();"> <!--onfocus="this.selectedIndex = -1;"-->
@@ -262,10 +256,11 @@ td, th {
                 <option value="letters">Letters</option>
                 <option value="numbers">Numbers</option>
             </select> <br>
-            <button class="button" onclick="populateGrid();">Create</button>
+            <button class="button" onclick="create();">Create</button>
             <button type="button" class="button" onclick="clearAll();">Clear</button> 
             <button type="button" class="button" onClick="window.print();">Print</button> <br>
             </form>
+            
         </div>
 
         <div class="input">
@@ -284,18 +279,29 @@ td, th {
         <div class="input">
             <h3>3. Click a Cell</h3>
             Click a memorable cell to start the password.  For example, choose coordinates [A,N] for <strong>a</strong>mazo<strong>n</strong>.com. <br>
+            <input id="highlight" type="checkbox" onclick="toggleHl();" checked>Highlight Selection
         </div>
 
         <div class="output">
             <h3>4. View the Results</h3>
             <input type="password" value="" id="password"> <br><!--size="70" -->
             <input type="checkbox" onclick="togglePs();">Show 
-            <button type="button" class="button" onclick="copyPs()">Copy</button>
-            <button type="button" class="button" onclick="clearPs();">Clear</button>
+            <!-- <button type="button" class="button" onclick="copyPs()">Copy</button> -->
+            <button type="button" id="copy" class="button" onclick="copyPs();">Copy</button>
+            
+            <button type="button" class="button" onclick="clearPs();">Clear</button> <br>
         </div>
-        <br>
-        <div  style="font-size:0.95em;">© 2018 Philip Thomas, <a href="https://github.com/psthomas/tabula">source</a>, <a href="https://pstblog.com">author</a>.</div>
     </aside>
+
+    <!-- Table Content area -->
+    <section id="content">
+        <h3 >Table</h3>
+        <div id="print">
+            <div id="tabula">
+            </div>
+        </div>
+    </section>
+    <!-- End Embed -->
 
 </div>
 
@@ -551,7 +557,6 @@ if ((typeof module) == 'object' && module.exports) {
 </script>
 
 
-
 <script>
 /*
 MIT License
@@ -591,8 +596,10 @@ var st = {
     'rows': 26,  //Either this, or zero index rows/columns
     'cols': 26,
     'charset': passchars.standard + passchars.advanced,  //Initial selection
-    'blankList': generateCharacters(26,26,' '),
-    'charList': []
+    'blankList': generateFill(26,26,' '), //generateCharacters(26,26,' '),
+    'maskList': generateFill(26,26,'*'),  //generateCharacters(26,26,'*'),
+    'charList': [],
+    'highlightIds': []
 };
 
 appendGrid(st.blankList);
@@ -614,11 +621,17 @@ function clicked(el,row,col,i,str) {
     var len = document.getElementById('length');
     var length = Number(len.value);
 
+    //Skip if grid not populated yet
+    if (st.charList.length < 1) {return;}
+
     switch(method) {
         case 'manual':
             var ps = document.getElementById('password');
             ps.value = ps.value += el.textContent;
-            el.className='clicked';
+            st.highlightIds.push(el.id);
+            if (document.getElementById('highlight').checked) {
+                el.className='clicked';
+            }
             break;
         case 'line':
             clearPs();
@@ -690,28 +703,38 @@ function generateHeader(alpha) {
     return header;
 }
 
-//https://stackoverflow.com/questions/5226285
-function populateGrid() {
-    clearPs();
-
+function create() {
     var charList = generateCharacters(st.rows,st.cols,st.charset);
     st.charList = charList;  //Sets Global
-    var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []); //flatten
-    var cells = Array.from(document.getElementsByTagName('td'));
+    populateGrid(charList);
+}
 
+//https://stackoverflow.com/questions/5226285
+function populateGrid(charList, animate=true, clear=true) {
+    
+    if (clear) {
+        clearPs();
+    }
+
+    if (document.getElementById('mask').checked) {
+        var joinedList = st.maskList.reduce(function(a, b){return a.concat(b);}, []);
+    } else {
+        var joinedList = charList.reduce(function(a, b){return a.concat(b);}, []);
+    }
+    
+    var cells = Array.from(document.getElementsByTagName('td'));
     //Using requestAnimationFrame
     for (var i=0; i<cells.length; i++) {
-        var num = 32;
-        var endNum = joinedList[i].charCodeAt(0);
-        var cell = cells[i];
-        var steps = endNum - num;
-        var duration = 750; 
-        //https://stackoverflow.com/questions/45829536
-        // (function(cell,steps,duration) {
-        //  animate(cell,steps,duration);
-        // })(cell,steps,duration);
-        // This function now is the closure:
-        animateCell(cell,steps,duration);
+        if (animate) {
+            var num = 32;
+            var endNum = joinedList[i].charCodeAt(0);
+            var cell = cells[i];
+            var steps = endNum - num;
+            var duration = 750;  //750
+            animateCell(cell,steps,duration);
+        } else {
+            cells[i].textContent = joinedList[i];
+        }
     }
 
 }
@@ -741,14 +764,62 @@ function animateCell(cell, steps, duration) {
     });
 }
 
+//Note, main file does not include all of sjcl, and it excludes scrypt,
+//need to build yourself if you want it.  
+//https://github.com/bitwiseshiftleft/sjcl/issues/315
+//https://github.com/bitwiseshiftleft/sjcl/blob/master/core/scrypt.js
+/** scrypt Password-Based Key-Derivation Function.
+ *
+ * @param {bitArray|String} password  The password.
+ * @param {bitArray|String} salt      The salt.  Should have lots of entropy.
+ *
+ * @param {Number} [N=16384] CPU/Memory cost parameter.
+ * @param {Number} [r=8]     Block size parameter.
+ * @param {Number} [p=1]     Parallelization parameter.
+ *
+ * @param {Number} [length] The length of the derived key.  Defaults to the
+ *                          output size of the hash function.
+ * @param {Object} [Prff=sjcl.misc.hmac] The pseudorandom function family.
+ *
+ * @return {bitArray} The derived key.
+ */
+
+//Less secure, but available in standard distribution:
+//https://github.com/bitwiseshiftleft/sjcl/blob/master/core/pbkdf2.js
+/** Password-Based Key-Derivation Function, version 2.0.
+ *
+ * Generate keys from passwords using PBKDF2-HMAC-SHA256.
+ *
+ * This is the method specified by RSA's PKCS #5 standard.
+ *
+ * @param {bitArray|String} password  The password.
+ * @param {bitArray|String} salt The salt.  Should have lots of entropy.
+ * @param {Number} [count=1000] The number of iterations.  Higher numbers make the function slower but more secure.
+ * @param {Number} [length] The length of the derived key.  Defaults to the
+                            output size of the hash function.
+ * @param {Object} [Prff=sjcl.misc.hmac] The pseudorandom function family.
+ * @return {bitArray} the derived key.
+ */
+
 function generateCharacters(rows, cols, charset) {
     //Using seedrandom.js, https://github.com/davidbau/seedrandom
     //MIT License
     var seed = document.getElementById('seed').value;
-    Math.seedrandom(seed);
+    var sd = sjcl.misc.scrypt(seed, 'SaltySaltSalt');
+    Math.seedrandom(sd);
+    //Math.seedrandom(sjcl.misc.pbkdf2(seed, 'saltySaltSalt'));
     var charList = [];
     for (var i=0; i<cols; i++) {
         charList.push(randomString(cols, charset).split(''));
+    }
+    return charList
+}
+
+function generateFill(rows, cols, fill) {
+    var charList = [];
+    for (var i=0; i<cols; i++) {
+        var row = new Array(cols + 1).join(fill);
+        charList.push(row.split(''));
     }
     return charList
 }
@@ -766,17 +837,22 @@ function randomString(len, charSet) {
 
 function highlightPs(obj) {
     var ids = obj.ids;
+    st.highlightIds = ids; //Set global
+
     var pw = obj.pw;
     var delay = 50;
 
-    function changeClass(id) { 
+    function changeClass(id) {
         var el = document.getElementById(id);
         el.className = 'clicked';
     }
 
-    for (var j=0; j<ids.length; j++) {
-        setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+    if (document.getElementById('highlight').checked) {
+        for (var j=0; j<ids.length; j++) {
+            setTimeout(changeClass.bind(null, ids[j]), delay*j); 
+        }
     }
+
     var ps = document.getElementById('password');
     ps.value = pw;
 }
@@ -878,6 +954,9 @@ function spiralMatrix(x,y,len) {
                 pw += matrix[y][x]; 
                 ids.push('c' + String(x) + ',' + String(y));
                 x += xinc; //Increment x in the current direction
+                if (pw.length === len) {
+                    return {pw: pw, ids: ids};
+                }
             }
             xlen += 1;  //Increas arm length for next time
             xinc = -xinc;  //Switch sign of the increment direction
@@ -895,6 +974,9 @@ function spiralMatrix(x,y,len) {
                 pw += matrix[y][x];  //From top left, x is across, y works down on outer arrays
                 ids.push('c' + String(x) + ',' + String(y));
                 y += yinc; //Increment y in the current direction
+                if (pw.length === len) {
+                    return {pw: pw, ids: ids};
+                }
             }
             ylen += 1;  //Increas arm length for next time
             yinc = -yinc;  //Switch sign of the increment
@@ -902,7 +984,7 @@ function spiralMatrix(x,y,len) {
         }
     }
     //If recursion isn't entered:
-    return {pw: pw, ids: ids};
+    //return {pw: pw, ids: ids};
 
 }
 
@@ -948,8 +1030,6 @@ function starMatrix(x,y,len) {
             yinc = yinc < 0 ? (-1*yinc + 1) : (-1*(yinc + 1));; //Flips sign, gets one longer
             across = true;
         }
-        //console.log(pw);
-        //console.log(pw.length);
     }
     //If recursion isn't entered:
     return {pw: pw, ids: ids};
@@ -1009,6 +1089,29 @@ function togglePs() {
     }
 }
 
+function toggleHl() {
+
+    var hl = document.getElementById('highlight').checked;
+    var ids = st.highlightIds;
+    //Turn on/off at once
+    for (var j=0; j<ids.length; j++) {
+        var el = document.getElementById(ids[j]);
+        el.className = hl ? 'clicked': '';   
+    }
+}
+
+function toggleMask() {
+    if (st.charList.length !== 0 && document.getElementById('mask').checked) {
+        populateGrid(st.maskList, animate=false, clear=false);
+    } else if (st.charList.length !== 0) {
+        populateGrid(st.charList, animate=false, clear=false);
+    }
+    //Querying checkbox status happens in populateGrid
+    // if (st.charList.length !== 0) {
+    //     populateGrid(st.maskList, animate=false, clear=false, gen=false);
+    // }
+}
+
 function copyPs() {
     var x = document.getElementById("password");
     var open = false;
@@ -1017,11 +1120,14 @@ function copyPs() {
     x.select();
     document.execCommand("Copy");
     if(open) {togglePs();}
+    //document.getElementById('copy').select();
 }
 
 function clearPs() {
     var ps = document.getElementById('password');
     ps.value = '';
+    //Clear highlight ids
+    st.highlightIds = [];
     //Remove all highlighted classes
     //https://stackoverflow.com/questions/22754315
     var hls = Array.from(document.getElementsByClassName('clicked'));
@@ -1031,6 +1137,7 @@ function clearPs() {
 function clearAll() {
     appendGrid(st.blankList);
     clearPs();
+    st.charList = [];//Clear global character list;
     var el = document.getElementById('seed');
     el.value = '';
 }
