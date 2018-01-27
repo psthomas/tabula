@@ -8,7 +8,7 @@
 
 Try it out [here](https://pstblog.com/vis/tabula.html), or read more about it on my [blog](https://pstblog.com/XXXXXXXXXXXXXXXX/password-manager).
 
-**Note:** This project is still in the early stages, so it needs more scrutiny before I'd recommend using it.  If you do, print out a copy of the table so if I change the code in the future, you'll still have a backup.
+**Note:** This project is still in the early stages, so it needs more scrutiny before I'd recommend using it.  If you do, print out a copy of the table so you have a backup if I change the code.
 
 ![Example Image](example.png) 
 
