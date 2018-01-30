@@ -6,7 +6,7 @@
 
 **How does it work?** When you enter a master password, a table of characters that's unique to your password is created. You then use this table to generate each site-specific password by starting at a memorable cell and following a pattern across the grid. When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern. This way you can remember strong passwords for every site without the risk of storing them anywhere.
 
-Try it out [here](https://pstblog.com/projects/tabula.html), or read more about it on my [blog](https://pstblog.com/2018/1/30/password-manager).
+Try it out [here](https://pstblog.com/projects/tabula.html), or read more about it on my [blog](https://pstblog.com/2018/01/30/password-manager).
 
 **Note:** This project is still experimental, so it needs more scrutiny before I'd recommend using it. If you do, print out a copy of the table so you have a backup if I change the code.
 
@@ -36,14 +36,14 @@ Numbers: `0123456789`
 
 For web security, everything is included in a single HTML file that doesn't depend on any externally loaded scripts or make any network requests (your master password is never sent anywhere). As a result, you can still use this page when you're offline, or download the file and use it locally. Also, you could print out the table and only use the webpage in situations where you don't have access to a physical copy.  Depending on interest, I'm considering building an Electron or React Native app to avoid the web security issues altogether.  
 
-In terms of cryptography, there are a few threats that I go more in-depth about in my [blogpost](https://pstblog.com/2018/1/30/password-manager).  The main one I'm concerned about is the situation where someone's table or master password is revealed because this opens them up to a brute force attack.  I'm looking for advice on how to reduce this risk.  
+In terms of cryptography, there are a few threats that I go more in-depth about in my [blogpost](https://pstblog.com/2018/01/30/password-manager).  The main one I'm concerned about is the situation where someone's table or master password is revealed because this opens them up to a brute force attack.  I'm looking for advice on how to reduce this risk.  
 
 These are the current sha256 checksums of the files:
 
 `tabula.html`:
 ```
 $ shasum -pa 256 tabula.html
-198b1e80e6fa5a1b804a08d21f4ff50a05bed5c21e2f67ad71e22ce8e9b7204b ?tabula.html
+0c6b6e8fb6d58bce5bcc0a23688f70142f6c03b354f5de195dc2e3ed392e2a9f ?tabula.html
 ```
 
 `tabula-embed.html`:
