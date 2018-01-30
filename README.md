@@ -8,13 +8,13 @@
 
 Try it out [here](https://pstblog.com/vis/tabula.html), or read more about it on my [blog](https://pstblog.com/XXXXXXXXXXXXXXXX/password-manager).
 
-**Note:** This project is still in the early stages, so it needs more scrutiny before I'd recommend using it.  If you do, print out a copy of the table so you have a backup if I change the code.
+**Note:** This project is still experimental, so it needs more scrutiny before I'd recommend using it. If you do, print out a copy of the table so you have a backup if I change the code.
 
 ![Example Image](example.png) 
 
 ## About
 
-The name Tabula comes from a cryptographic tool called a [tabula recta](https://en.wikipedia.org/wiki/Tabula_recta), which is used to create ciphers. I came across this concept while reading John Graham-Cumming's [blog post](http://blog.jgc.org/2010/12/write-your-passwords-down.html) describing how he uses a tabula to generate his own passwords. I decided to try to make the technique a little more user friendly automating a few steps, so this is the result.
+The name Tabula comes from a cryptographic tool called a [tabula recta](https://en.wikipedia.org/wiki/Tabula_recta), which is used to create ciphers. I came across this concept while reading an interesting [blog post](http://blog.jgc.org/2010/12/write-your-passwords-down.html) where the author describes using a tabula to generate his own passwords. I decided to try to make the technique a little more user friendly automating a few steps, so this is the result.
 
 The table of characters is created by seeding a random number generator ([seedrandom.js](https://github.com/davidbau/seedrandom)) with your master password after passing it through [scrypt](https://github.com/bitwiseshiftleft/sjcl/blob/master/core/scrypt.js). The end result is a unique table that will be re-created whenever you enter your master password in the future. This makes it easy to have many strong, site-specific passwords while just remembering a master password and a pattern.
 
@@ -34,7 +34,7 @@ Numbers: `0123456789`
 
 ## Security
 
-As far as web security goes, everything is included in a single HTML file that doesn't depend on any externally loaded scripts or make any network requests (your master password is never sent anywhere). As a result, you can still use this page when you're offline, or download the HTML file and use it locally. Also, you could print out the table and only use the webpage in situations where you don't have access to a physical copy.  Depending on interest, I'm considering building an Electron or React Native app to avoid the web security issues altogether.  
+For web security, everything is included in a single HTML file that doesn't depend on any externally loaded scripts or make any network requests (your master password is never sent anywhere). As a result, you can still use this page when you're offline, or download the file and use it locally. Also, you could print out the table and only use the webpage in situations where you don't have access to a physical copy.  Depending on interest, I'm considering building an Electron or React Native app to avoid the web security issues altogether.  
 
 In terms of cryptography, there are a few threats that I go more in-depth about in my [blogpost](https://pstblog.com/XXXXXXXXXXXXXXXX/password-manager).  The main one I'm concerned about is the situation where someone's table or master password is revealed because this opens them up to a brute force attack.  I'm looking for advice on how to reduce this risk.  
 

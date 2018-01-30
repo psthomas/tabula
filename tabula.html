@@ -226,6 +226,8 @@ td, th {
 </head>
 <body>
 <div id="container">
+
+<!-- Exclude Embed -->
     <!-- header -->
     <header id="header">
         <h1 id="title">Tabula</h1>
@@ -236,10 +238,11 @@ td, th {
     <section class="intro">
         <p><strong>What does it do?</strong> Tabula helps you create and remember strong passwords for each site without having to store them anywhere.</p>
         <p> <strong>How does it work?</strong> When you enter a master password below, a table of characters that's unique to your password is created.  You then use this table to generate each site-specific password by starting at a memorable cell and following a pattern across the grid.  When you need a site's password in the future, just regenerate this table using your master password, find the starting cell, and follow the pattern.  This way you can remember strong passwords for every site without the risk of storing them anywhere.</p>
-        <p><strong>Note:</strong> This project is still in the early stages, so it needs more scrutiny before I'd recommend using it.  If you do, print out a copy of the table so you have a backup if I change the code.</p>
+        <p><strong>Note:</strong> This project is still experimental, so it needs more scrutiny before I'd recommend using it. If you do, print out a copy of the table so you have a backup if I change the code.</p>
     </section>
+<!-- End Exclude -->
 
-    <!-- Begin Embed -->
+    
     <!-- Sidebar -->
     <aside id="sidebar">
         <div class='input'> 
@@ -304,12 +307,12 @@ td, th {
             </div>
         </div>
     </section>
-    <!-- End Embed -->
 
+<!-- Exclude Embed -->
     <!-- About -->
     <section class="intro"> <!--clearfix-->
         <h3 id="about">About</h3>
-        <p> The name Tabula comes from a cryptographic tool called a <a href="https://en.wikipedia.org/wiki/Tabula_recta">tabula recta</a>, which is used to create ciphers.  I came across this concept while reading John Graham-Cumming's <a href="http://blog.jgc.org/2010/12/write-your-passwords-down.html">blog post</a> describing how he uses a tabula to generate his own passwords.  I decided to make the technique more user friendly by automating a few steps, and this is the result.</p>
+        <p> The name Tabula comes from a cryptographic tool called a <a href="https://en.wikipedia.org/wiki/Tabula_recta">tabula recta</a>, which is used to create ciphers.  I came across this concept while reading a interesting <a href="http://blog.jgc.org/2010/12/write-your-passwords-down.html">blog post</a> where the author describes using a tabula to generate his own passwords.  I decided to make the technique more user friendly by automating a few steps, and this is the result.</p>
 
         <p>The table of characters is created by seeding a random number generator (<a href="https://github.com/davidbau/seedrandom">seedrandom.js</a>) with your master password after passing it through <a href="https://github.com/bitwiseshiftleft/sjcl/blob/master/core/scrypt.js">scrypt</a>.  The end result is a unique table that will be re-created whenever you enter your master password in the future.  This makes it easy to have many strong, site-specific passwords while just remembering a master password and a pattern.</p>
 
@@ -325,7 +328,7 @@ td, th {
 
 
         <h3>Security</h3>
-        <p>As far as web security goes, everything is included in a single file that doesn't depend on any externally loaded scripts or make any network requests (your master password is never sent anywhere). As a result, you can still use this page when you're offline, or download the HTML file and use it locally. Also, you could print out the table and only use the webpage in situations where you don't have access to a physical copy.  Depending on interest, I'm considering building an Electron or React Native app to avoid the web security issues altogether.</p> 
+        <p>For web security, everything is included in a single HTML file that doesn't depend on any externally loaded scripts or make any network requests (your master password is never sent anywhere). As a result, you can still use this page when you're offline, or download the file and use it locally. Also, you could print out the table and only use the webpage in situations where you don't have access to a physical copy.  Depending on interest, I'm considering building an Electron or React Native app to avoid the web security issues altogether.</p> 
         <p>In terms of cryptography, there are a few threats that I go more in-depth about in my <a href="https://pstblog.com/XXXXXXXXXXXXXXXX/password-manager">blogpost</a>.  The main one I'm concerned about is the situation where someone's table or master password is revealed because this opens them up to a brute force attack.  I'm looking for advice on how to reduce this risk.</p> 
         <p>The current sha256 checksum of this page is available on <a href="https://github.com/psthomas/tabula">GitHub</a>.</p>
     </section>
@@ -334,6 +337,7 @@ td, th {
     <footer id="footer" class="clearfix">
         <div  style="font-size:0.95em;">© 2018 <a href="https://pstblog.com">Philip Thomas</a>, <a href="https://github.com/psthomas/tabula">source</a>.</div>
     </footer>
+<!-- End Exclude-->
 </div>
 
 
@@ -1028,13 +1032,13 @@ function animateCell(cell, steps, duration) {
 function generateCharacters(rows, cols, charset) {
     //Using seedrandom.js, https://github.com/davidbau/seedrandom
     //MIT License
-    var masterpass = document.getElementById('masterpassword').value;
+    var master = document.getElementById('masterpassword').value;
     //https://github.com/bitwiseshiftleft/sjcl
-    //Deriving salt from masterpass at least ensures a unique salt per user, although 
+    //Deriving salt from masterpass at least ensures a unique-ish salt per user, although 
     //not ideal.  Added to 128bit base64 string.
-    var seed = sjcl.misc.scrypt(masterpass, masterpass + 'njk1OhfB2y9mbLYLaFkEkD');
+    var seed = sjcl.misc.scrypt(master, master + 'njk1OhfB2y9mbLYLaFkEkD');
     Math.seedrandom(seed);
-    //Math.seedrandom(sjcl.misc.pbkdf2(seed, 'SaltySaltSalt'));
+    //Math.seedrandom(sjcl.misc.pbkdf2(seed, 'njk1OhfB2y9mbLYLaFkEkD'));
     var charList = [];
     for (var i=0; i<cols; i++) {
         charList.push(randomString(cols, charset).split(''));
@@ -1298,8 +1302,9 @@ function handleEdge(x, y, pw, ids, len, matrix, callback) {
 
 
 /* UI and Helper Functions */
+
 function toggleSe() {
-    var x = document.getElementById("seed");
+    var x = document.getElementById("masterpassword");
     if (x.type === "password") {
         x.type = "text";
     } else {
@@ -1365,7 +1370,7 @@ function clearAll() {
     appendGrid(st.blankList);
     clearPs();
     st.charList = [];//Clear global character list;
-    var el = document.getElementById('seed');
+    var el = document.getElementById('masterpassword');
     el.value = '';
 }
 
