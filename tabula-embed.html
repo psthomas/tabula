@@ -545,6 +545,7 @@ if ((typeof module) == 'object' && module.exports) {
 );
 </script>
 
+
 <script>
 /*
 SJCL is open. You can use, modify and redistribute it under a BSD
@@ -774,7 +775,7 @@ var passchars = {
 
 //Initial settings, build grid:
 var st = {
-    'rows': 26,  //Either this, or zero index rows/columns
+    'rows': 26,  
     'cols': 26,
     'charset': passchars.standard + passchars.advanced,  //Initial selection
     'blankList': generateFill(26,26,' '),
@@ -1202,10 +1203,8 @@ function starMatrix(x,y,len) {
 
         //Alternates [Up, Right], [Down, Left] adding 1 cell length each time
         if (across) {
-
             // for (i<0; i<xinc; i++) {
             //  pw += matri
-
             // }
             x += xinc;
             xinc = xinc < 0 ? (-1*xinc + 1) : (-1*(xinc + 1)); //Flips sign, gets one longer

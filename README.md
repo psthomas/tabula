@@ -43,11 +43,11 @@ These are the current sha256 checksums of the files:
 `tabula.html`:
 ```
 $ shasum -pa 256 tabula.html
-bcbe946f686724efff4cc15ceded040efef6847ee2dc36b33509abe7f5d951c9 ?tabula.html
+198b1e80e6fa5a1b804a08d21f4ff50a05bed5c21e2f67ad71e22ce8e9b7204b ?tabula.html
 ```
 
 `tabula-embed.html`:
 ```
 $ shasum -pa 256 tabula-embed.html
-bab8d5432b549bb879351b21cc386f9f2a08624131c9ae0f7c64d3194f721a91 ?tabula-embed.html
+e6ac1e50b61e46f9cfa5072c16497907cd8b9329c83a8fad6d62701ea26e9558 ?tabula-embed.html
 ```
