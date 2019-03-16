@@ -663,10 +663,10 @@ function chooseCharacters() {
 //  " ": " "
 // };
 
-function print() {
+function printPage() {
+    //https://stackoverflow.com/questions/30167749
     window.print();
 }
-
 
 function openTab(evt, tabName) {
     // Declare all variables
@@ -743,7 +743,7 @@ document.addEventListener("click", function(e) {
             clearAll();
             break;
         case "print":
-            print();
+            printPage();
             break;
         case "highlight":
             toggleHl();
@@ -784,5 +784,3 @@ document.addEventListener("DOMContentLoaded", function(){
     document.getElementById('masterpassword').focus();
     document.getElementById('masterform').onsubmit = function(){return false;}
 });
-
-
