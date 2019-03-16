@@ -1,0 +1,290 @@
+<!doctype html>
+<head>
+<title>Tabula</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+
+<style>
+/*Simple CSS Reset*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/*https://webdesignerhut.com/responsive-layout-with-html-and-css/
+Alternate: https://codepen.io/johnstonian/pen/guhid*/
+body {
+    line-height: 1.5; /*1*/
+    font-family:sans-serif;
+    color:rgba(40,40,40,0.9);
+    font-size:13px; /*12px*/
+}
+#container{
+    margin: 7px 12px; /*0 auto;*/
+    /*min-width:675px;*/
+    max-width: 1200px; 
+	/*border: 1px solid #ccc;*/
+}
+header {
+    width: 94%;
+    padding: 3% 3% 1% 3%;
+}
+header #title {
+    font-size: 55px;
+    font-weight:bold;
+}
+nav {
+    width: 97%;
+    padding: 0 1.5% 0 1.5%;
+}
+nav ul li {
+    display: inline-block;
+    padding: 15px 1.5% 15px 1.5% ;
+}
+nav ul li a {
+    text-decoration: none;
+    /*color: #ffffff;*/
+    font-size: 1.2em;
+}
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+
+/* Turn off hovering on mobile,
+was preventing click events */
+@media all and (min-width: 600px) {
+    /*Hovering*/
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+    td:hover::after { 
+        background-color: #f2f2f2;
+        content: '';  
+        height: 10000px;    
+        left: 0;
+        position: absolute;  
+        top: -5000px;
+        width: 100%;
+        z-index: -1;        
+    }
+}
+/*Printing just shows table*/
+/*https://stackoverflow.com/questions/468881*/
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print, #print * {
+        visibility: visible;
+    }
+    #print {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
+h3 {
+    border-bottom: 1px solid #ddd;
+/*    margin-bottom: 0.75em;
+    margin-top: 0.5em; */
+    padding: 0.6em 0em 0.2em 0em; 
+    /*padding-bottom:0.2em;*/
+    font-weight:bold;
+    font-size:1.15rem;
+}
+strong {
+    font-weight:bold;
+}
+input {
+    margin:0.3em;
+}
+input[type=password], input[type=text] {
+    font-family: Monaco, monospace;
+    width:25%; /*95%*/
+    font-size:11px;
+}
+.inputs {
+    /*display: none;*/
+}
+.inputs.active {
+    display: inline;
+}
+p {
+    margin:1em 0em;
+}
+button {
+    cursor:pointer;
+    padding: 0.15em 0.3em; /*0.2em 0.5em;*/
+}
+a {
+    color:rgba(40,40,40,0.9);
+}
+p {
+    line-height:1.5;
+    word-wrap:break-word;
+}
+code {
+    font-family:Monaco, monospace;
+}
+em {
+    font-style:italic;
+}
+/* tables */
+/*https://css-tricks.com/simple-css-row-column-highlighting/*/
+/*https://stackoverflow.com/questions/17119594*/
+table {
+    display: table;
+    width:100%; /*100%*/
+    max-width:650px;  /*675*/
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin:0.5em auto;  /*1.2em auto;*/
+    /*margin-bottom:1.5em;*/
+    /*padding-bottom:2em;*/
+    overflow: hidden;
+    border-style: hidden;
+}
+/*https://stackoverflow.com/questions/1257430*/
+table td, table th {
+    border: 1px solid #999; /*#ccc*/
+}
+th {
+    /*background-color:#f2f2f2;*/
+    border:1px solid #ccc;
+    padding:1px 0px;  /*1px 0px*/
+    font-size:10px; /*14px*/
+    font-weight: 900; /*bold;*/
+}
+table tr {
+    border:1px solid #ccc;
+}
+td, th {
+    position: relative;
+}
+.grid { 
+    font-family:  Monaco, monospace;
+}
+.grid td {
+    cursor:pointer;
+    width:15px; height:18px;  /*30, 30*/ /*23 20*/
+    border:1px solid #ccc;
+    text-align:center;
+    font-size:10px; /*13px 12px*/
+}
+.grid td.clicked {
+    background-color:#ACCEF7; 
+    font-weight:bold; 
+}
+
+#settingstoggle {
+    font-size:30px;
+    color:#666;
+    padding:0px;
+    margin:0px;
+    border:none;
+    background-image:none;
+    background-color:#fff;
+    position: absolute;
+    right: 10px;
+    top:-7px;
+    /*padding-bottom:-5px;*/
+    /*margin-bottom:-5px;*/
+/*    float:right;
+    vertical-align:top;*/
+    /*text-align:right;*/
+}
+a[target="_blank"]::after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin: 0 3px 0 5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="container">	
+	<!-- Tab content -->
+	<div >
+
+
+	    <div class='inputs' id='settings'> 
+	        <!-- <b>Characters:</b> -->
+            Characters:
+	        <select id="characters"> <!--onfocus="this.selectedIndex = -1;"-->
+	            <option value="advanced" selected="selected">Letters, Numbers, Advanced</option>
+	            <option value="standard">Letters, Numbers, Symbols</option>
+	            <option value="alphanumeric">Letters, Numbers</option>
+	            <option value="letters">Letters</option>
+	            <option value="numbers">Numbers</option>
+	        </select>  
+<!-- 	    </div>
+
+	    <div class="input"> -->
+            &nbsp;
+	        <!-- <b>Pattern:</b> -->
+            Pattern:
+	        <select id="method"> <!--onfocus="this.selectedIndex = -1;"-->
+	                <option value="manual">Manual</option>
+	                <option value="line">Line</option>
+	                <option value="step" selected="selected">Step</option>
+	                <option value="spiral">Spiral</option>
+	        </select>
+            &nbsp;
+	        <span id='dir'></span>
+            &nbsp;
+	        Length: <input id="length" type="text" style="width:25px"  value="16"/>
+            &nbsp;
+            <a href="https://pstblog.com/2018/01/30/password-manager" style="text-decoration:none;" target="_blank">Help</a>
+	    </div>
+
+        <!-- <div> -->
+        <form id='masterform'>
+            <!-- <b>Master Password:</b> -->
+            Master:
+            <input id="masterpassword" type="password">
+            <input type="checkbox" id="showpassword">Show
+            <!-- Prevent implicit submission of the form -->
+            <!--https://stackoverflow.com/questions/895171-->
+<!--             <button type="submit" disabled style="display:none;"></button> -->
+            <button class="button" id="create">Create</button>
+            <button type="button" class="button" id="cleartable">Clear</button>
+            <input type="checkbox" id="mask">Mask
+            <!-- <span id="settingstoggle">&#9881;</span> -->
+            <!-- <button id="settingstoggle">&#9881;</button> -->
+        </form>
+        <!-- </div> -->
+
+	</div>
+
+	<div>
+
+        <div id="print">
+            <div id="tabula">
+            </div>
+        </div>
+
+        <div class="output">
+            <!-- <b>Password:</b> -->
+            Password:
+            <input type="password" value="" id="password">
+            <input type="checkbox" id="show">Show
+            <button type="button" id="copy" class="button">Copy</button>
+            <button type="button" id="clearpassword" class="button">Clear</button>
+            <input id="highlight" type="checkbox" checked>Highlight
+        </div>
+
+	</div>
+</div>
+
+
+<script src="tabula-simple.js"></script>
+<script src="seedrandom.js"></script>
+<script src="sjcl-build.js"></script>
+
+
+</body>

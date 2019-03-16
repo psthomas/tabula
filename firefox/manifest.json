@@ -1,0 +1,16 @@
+{
+  "description": "Tabula Password Manager",
+  "manifest_version": 2,
+  "name": "Tabula",
+  "version": "1.0",
+  "browser_action": {
+    "browser_style": true,
+    //All script imports done within here
+    "default_popup": "popup/tabula-extff.html", 
+    "default_icon": {
+      "16": "icons/grid16.png",
+      "32": "icons/grid32.png"
+    }
+  }
+
+}
