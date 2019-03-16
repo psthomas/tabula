@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 //Warning: changing these will change all dependent output tables
 var passchars = {
     letters: "AEIOUaeiouBCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz",
@@ -705,31 +704,12 @@ function openSettings() {
     }
 }
 
-
-//Changes I've made so far: added print function, added event listeners below.  
-//I think current problem is that button is causing reload?
-// YUP: <form onsubmit="return false;">
-// this js won't execute, so I just removed the form, it's not needed, unless you
-// want it to create on pressing 'enter', but that's not necessary for now.
-// Changed a lot of html styling to give small window better view.    
-
-
 // Need to replace all function calls within popup.html with even listeners
 // that wait for a click or onchange events on the elements.  
 //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Add_a_button_to_the_toolbar
 //https://github.com/mdn/webextensions-examples/blob/master/menu-demo/background.js
 document.addEventListener("click", function(e) {
     switch (e.target.id) {
-        case "settingslink":
-            //console.log(e);
-            openTab(e, 'settingstab');
-            break;
-        case "tabulalink":
-            openTab(e, 'tabulatab');
-            break;
-        case "settingstoggle":
-            openSettings();
-            break;
         case "showpassword":
             toggleSe();
             break;
@@ -771,14 +751,6 @@ document.addEventListener("change", function(e) {
             break;
     }
 });
-
-//Initialize by opening Settings tab
-//done in html + " active" instead
-//document.getElementById('settingslink').click();
-// browser.browserAction.onClicked.addListener(function() {
-//     document.getElementById('settingslink').click();  
-// });
-
 
 document.addEventListener("DOMContentLoaded", function(){
     document.getElementById('masterpassword').focus();

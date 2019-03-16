@@ -123,6 +123,10 @@ button {
 a {
     color:rgba(40,40,40,0.9);
 }
+a[target="_blank"]::after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin: 0 3px 0 5px;
+}
 p {
     line-height:1.5;
     word-wrap:break-word;
@@ -179,94 +183,46 @@ td, th {
     background-color:#ACCEF7; 
     font-weight:bold; 
 }
-
-#settingstoggle {
-    font-size:30px;
-    color:#666;
-    padding:0px;
-    margin:0px;
-    border:none;
-    background-image:none;
-    background-color:#fff;
-    position: absolute;
-    right: 10px;
-    top:-7px;
-    /*padding-bottom:-5px;*/
-    /*margin-bottom:-5px;*/
-/*    float:right;
-    vertical-align:top;*/
-    /*text-align:right;*/
-}
-a[target="_blank"]::after {
-  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
-  margin: 0 3px 0 5px;
-}
-
 </style>
 </head>
-
 <body>
-
 <div id="container">	
-	<!-- Tab content -->
 	<div >
-
-
 	    <div class='inputs' id='settings'> 
             Characters:
-	        <select id="characters"> <!--onfocus="this.selectedIndex = -1;"-->
+	        <select id="characters"> 
 	            <option value="advanced" selected="selected">Letters, Numbers, Advanced</option>
 	            <option value="standard">Letters, Numbers, Symbols</option>
 	            <option value="alphanumeric">Letters, Numbers</option>
 	            <option value="letters">Letters</option>
 	            <option value="numbers">Numbers</option>
-	        </select>  
-
-            &nbsp;
+	        </select>&nbsp;
             Pattern:
-	        <select id="method"> <!--onfocus="this.selectedIndex = -1;"-->
+	        <select id="method"> 
 	                <option value="manual">Manual</option>
 	                <option value="line">Line</option>
 	                <option value="step" selected="selected">Step</option>
 	                <option value="spiral">Spiral</option>
-	        </select>
-            &nbsp;
-	        <span id='dir'></span>
-            &nbsp;
-	        Length: <input id="length" type="text" style="width:25px"  value="16"/>
-            &nbsp;
+	        </select>&nbsp;
+	        <span id='dir'></span>&nbsp;
+	        Length: <input id="length" type="text" style="width:25px"  value="16"/>&nbsp;
             <a href="https://pstblog.com/2018/01/30/password-manager" style="text-decoration:none;" target="_blank">Help</a>
 	    </div>
-
-        <!-- <div> -->
         <form id='masterform'>
-            <!-- <b>Master Password:</b> -->
             Master:
             <input id="masterpassword" type="password">
             <input type="checkbox" id="showpassword">Show
-            <!-- Prevent implicit submission of the form -->
-            <!--https://stackoverflow.com/questions/895171-->
-<!--             <button type="submit" disabled style="display:none;"></button> -->
             <button class="button" id="create">Create</button>
             <button type="button" class="button" id="cleartable">Clear</button>
             <button type="button" class="button" id="print">Print</button>
             <input type="checkbox" id="mask">Mask
-            <!-- <span id="settingstoggle">&#9881;</span> -->
-            <!-- <button id="settingstoggle">&#9881;</button> -->
         </form>
-        <!-- </div> -->
-
 	</div>
-
 	<div>
-
         <div id="print">
-            <div id="tabula">
-            </div>
+            <div id="tabula"></div>
         </div>
-
         <div class="output">
-            <!-- <b>Password:</b> -->
             Password:
             <input type="password" value="" id="password">
             <input type="checkbox" id="show">Show
@@ -274,14 +230,9 @@ a[target="_blank"]::after {
             <button type="button" id="clearpassword" class="button">Clear</button>
             <input id="highlight" type="checkbox" checked>Highlight
         </div>
-
 	</div>
 </div>
-
-
 <script src="tabula.js"></script>
 <script src="seedrandom.js"></script>
 <script src="sjcl_build.js"></script>
-
-
 </body>
