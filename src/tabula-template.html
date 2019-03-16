@@ -1,0 +1,366 @@
+<!doctype html>
+<head>
+<title>Tabula</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+
+<style>
+/*Simple CSS Reset*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/*https://webdesignerhut.com/responsive-layout-with-html-and-css/
+Alternate: https://codepen.io/johnstonian/pen/guhid*/
+body {
+    line-height: 1.5; /*1*/
+    font-family:sans-serif;
+    color:rgba(40,40,40,0.9);
+}
+#container{
+    margin: 0 auto;
+    max-width: 1200px; 
+}
+header {
+    width: 94%;
+    padding: 3% 3% 1% 3%;
+}
+header #title {
+    font-size: 55px;
+    font-weight:bold;
+}
+nav {
+    width: 97%;
+    padding: 0 1.5% 0 1.5%;
+}
+nav ul li {
+    display: inline-block;
+    padding: 15px 1.5% 15px 1.5% ;
+}
+nav ul li a {
+    text-decoration: none;
+    /*color: #ffffff;*/
+    font-size: 1.2em;
+}
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+#content {
+    float: left;
+    padding: 0% 3%;  /*2% 3% 0% 3%*/
+    width: 64%;
+}
+.intro {
+    /*float: left;*/
+    padding: 1% 3% 0% 3%; /*2% 3%*/
+    width: 64%;
+}
+aside {
+    float: right;
+    padding: 0% 3%;
+    width: 24%;
+    font-size:15px;
+    line-height:1.7; /*1.7*/
+    /*background-color: #eee;*/
+}
+aside h3 {
+    line-height:1.5;
+}
+footer{
+    width: 94%;
+    padding: 3%;
+}
+
+@media all and (max-width : 768px) {
+    header {
+        text-align: center;
+    }
+    nav {
+        text-align: center;
+    }
+    #content {
+        width: 94%;
+        padding: 0% 3%;
+    }
+    .intro {
+        width: 94%;
+        padding: 0% 3%;
+    }
+    #sidebar {
+        width: 94%;
+        padding: 0% 3%;
+        /*border-top: 3px solid #E64A19;*/
+    }
+}
+@media all and (max-width : 330px) {
+    nav ul li {
+        display:block;
+        width: 94%;
+    }
+}
+/* Turn off hovering on mobile,
+was preventing click events */
+@media all and (min-width: 700px) {
+    /*Hovering*/
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+    td:hover::after { 
+        background-color: #f2f2f2;
+        content: '';  
+        height: 10000px;    
+        left: 0;
+        position: absolute;  
+        top: -5000px;
+        width: 100%;
+        z-index: -1;        
+    }
+}
+/*Printing just shows table*/
+/*https://stackoverflow.com/questions/468881*/
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print, #print * {
+        visibility: visible;
+    }
+    #print {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
+h3 {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0.75em;
+    margin-top: 1.5em;  /*2em 1.5em 1em*/
+    padding-bottom:0.2em;
+    font-weight:bold;
+    font-size:1.15rem;
+}
+strong {
+    font-weight:bold;
+}
+input {
+    margin:0.3em;
+}
+input[type=password], input[type=text] {
+    font-family: Monaco, monospace;
+    width:95%;
+}
+p {
+    margin:1em 0em;
+}
+button {
+    cursor:pointer;
+    padding: 0.2em 0.5em;
+}
+a {
+    color:rgba(40,40,40,0.9);
+}
+p {
+    line-height:1.5;
+    word-wrap:break-word;
+}
+code {
+    font-family:Monaco, monospace;
+}
+em {
+    font-style:italic;
+}
+/* tables */
+/*https://css-tricks.com/simple-css-row-column-highlighting/*/
+/*https://stackoverflow.com/questions/17119594*/
+table {
+    display: table;
+    width:100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin:1.2em auto;
+    /*margin-bottom:1.5em;*/
+    /*padding-bottom:2em;*/
+    overflow: hidden;
+    border-style: hidden;
+}
+/*https://stackoverflow.com/questions/1257430*/
+table td, table th {
+    border: 1px solid #999; /*#ccc*/
+}
+th {
+    /*background-color:#f2f2f2;*/
+    border:1px solid #ccc;
+    padding:1px 0px;
+    font-size:14px; 
+    font-weight: 900; /*bold;*/
+}
+table tr {
+    border:1px solid #ccc;
+}
+td, th {
+    position: relative;
+}
+.grid { 
+    font-family:  Monaco, monospace;
+}
+.grid td {
+    cursor:pointer;
+    width:23px; height:20px;  /*30, 30*/
+    border:1px solid #ccc;
+    text-align:center;
+    font-size:12px; /*13px*/
+}
+.grid td.clicked {
+    background-color:#ACCEF7; 
+    font-weight:bold; 
+}
+</style>
+
+</head>
+<body>
+<div id="container">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class='input'> 
+            <h3>1. Create a Table</h3>
+            <form id="masterform">
+            Master Password: <br>
+            <input id="masterpassword" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
+            <input type="checkbox" id="showpassword">Show Password<br>
+            <input type="checkbox" id="mask">Mask Table<br>
+            
+
+            Character Set: <br>
+            <select id="characters"> <!--onfocus="this.selectedIndex = -1;"-->
+                <option value="advanced" selected="selected">Letters, Numbers, Advanced Symbols</option>
+                <option value="standard">Letters, Numbers, Symbols</option>
+                <option value="alphanumeric">Letters, Numbers</option>
+                <option value="letters">Letters</option>
+                <option value="numbers">Numbers</option>
+            </select> <br>
+            <button class="button" id="create">Create</button>
+            <button type="button" class="button" id="cleartable">Clear</button> 
+            <button type="button" class="button" id="print">Print</button> <br>
+            </form>
+            
+        </div>
+
+        <div class="input">
+            <h3>2. Choose a Pattern</h3>
+            Pattern:
+            <select id="method"> <!--onfocus="this.selectedIndex = -1;"-->
+                    <option value="manual">Manual</option>
+                    <option value="line">Line</option>
+                    <option value="step" selected="selected">Step</option>
+                    <option value="spiral">Spiral</option>
+            </select> <br>
+            <div id='dir'></div>
+            Length: <input id="length" type="text" style="width:25px"  value="16"/>
+        </div>
+
+        <div class="input">
+            <h3>3. Click a Cell</h3>
+            Click a memorable cell to start the password.  For example, choose coordinates [A,N] for <strong>a</strong>mazo<strong>n</strong>.com. <br>
+            <input id="highlight" type="checkbox" checked>Highlight Selection
+        </div>
+
+        <div class="output">
+            <h3>4. View the Results</h3>
+            <input type="password" value="" id="password"> <br><!--size="70" -->
+            <input type="checkbox" id="show">Show 
+            <button type="button" id="copy" class="button">Copy</button>
+            <button type="button" class="button" id="clearpassword">Clear</button> <br>
+        </div>
+    </aside>
+
+    <!-- Table Content area -->
+    <section id="content">
+        <h3 >Table</h3>
+        <div id="print">
+            <div id="tabula">
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+/*
+Copyright 2014 David Bau.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
+${seedrandom}
+</script>
+
+
+<script>
+/*
+SJCL is open. You can use, modify and redistribute it under a BSD
+license or under the GNU GPL, version 2.0.
+
+---------------------------------------------------------------------
+
+http://opensource.org/licenses/BSD-2-Clause
+
+Copyright (c) 2009-2015, Emily Stark, Mike Hamburg and Dan Boneh at
+Stanford University. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+---------------------------------------------------------------------
+*/
+${sjcl_build}
+</script>
+
+<script>
+${tabula}
+</script>
+
+</body>
+</html>

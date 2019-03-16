@@ -5,13 +5,17 @@ from string import Template
 def update_hash():
 	pass
 
+def build_firefox():
+	pass
+
 
 def build_web():
-	cwd = os.getcwd() 
+	cwd = os.getcwd()
+	src_dir = os.path.join(cwd, 'src')
 	web_dir = os.path.join(cwd, 'web')
-	template_path = os.path.join(web_dir, 'tabula-template.html')
+	template_path = os.path.join(src_dir, 'tabula-template.html')
 	out_path = os.path.join(web_dir, 'tabula.html')
-	js_dir =  os.path.join(cwd, 'js')
+	js_dir =  os.path.join(src_dir, 'js')
 	js_files = ['tabula', 'seedrandom', 'sjcl_build']
 	sub_obj = {} 
 
@@ -20,8 +24,6 @@ def build_web():
 		file_obj = open(js_path, 'r')
 		sub_obj[js_file] = file_obj.read()
 		file_obj.close()
-
-	# print(sub_obj)
 
 	with open(template_path, 'r') as html_template, open(out_path, 'w') as out:
 		temp = Template(html_template.read())

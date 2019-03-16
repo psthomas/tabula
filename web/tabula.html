@@ -221,8 +221,6 @@ td, th {
 }
 </style>
 
-
-
 </head>
 <body>
 <div id="container">
@@ -231,24 +229,24 @@ td, th {
     <aside id="sidebar">
         <div class='input'> 
             <h3>1. Create a Table</h3>
-            <form onsubmit="return false;">
+            <form id="masterform">
             Master Password: <br>
             <input id="masterpassword" type="password" /> <br> <!--value="CorrectHorseBatteryStaple"-->
-            <input type="checkbox" onclick="toggleSe();">Show Password<br>
-            <input type="checkbox" id="mask" onclick="toggleMask();">Mask Table<br>
+            <input type="checkbox" id="showpassword">Show Password<br>
+            <input type="checkbox" id="mask">Mask Table<br>
             
 
             Character Set: <br>
-            <select id="characters" onchange="chooseCharacters();"> <!--onfocus="this.selectedIndex = -1;"-->
+            <select id="characters"> <!--onfocus="this.selectedIndex = -1;"-->
                 <option value="advanced" selected="selected">Letters, Numbers, Advanced Symbols</option>
                 <option value="standard">Letters, Numbers, Symbols</option>
                 <option value="alphanumeric">Letters, Numbers</option>
                 <option value="letters">Letters</option>
                 <option value="numbers">Numbers</option>
             </select> <br>
-            <button class="button" onclick="create();">Create</button>
-            <button type="button" class="button" onclick="clearAll();">Clear</button> 
-            <button type="button" class="button" onClick="window.print();">Print</button> <br>
+            <button class="button" id="create">Create</button>
+            <button type="button" class="button" id="cleartable">Clear</button> 
+            <button type="button" class="button" id="print">Print</button> <br>
             </form>
             
         </div>
@@ -256,7 +254,7 @@ td, th {
         <div class="input">
             <h3>2. Choose a Pattern</h3>
             Pattern:
-            <select id="method" onchange="renderDirections();"> <!--onfocus="this.selectedIndex = -1;"-->
+            <select id="method"> <!--onfocus="this.selectedIndex = -1;"-->
                     <option value="manual">Manual</option>
                     <option value="line">Line</option>
                     <option value="step" selected="selected">Step</option>
@@ -269,17 +267,15 @@ td, th {
         <div class="input">
             <h3>3. Click a Cell</h3>
             Click a memorable cell to start the password.  For example, choose coordinates [A,N] for <strong>a</strong>mazo<strong>n</strong>.com. <br>
-            <input id="highlight" type="checkbox" onclick="toggleHl();" checked>Highlight Selection
+            <input id="highlight" type="checkbox" checked>Highlight Selection
         </div>
 
         <div class="output">
             <h3>4. View the Results</h3>
             <input type="password" value="" id="password"> <br><!--size="70" -->
-            <input type="checkbox" onclick="togglePs();">Show 
-            <!-- <button type="button" class="button" onclick="copyPs()">Copy</button> -->
-            <button type="button" id="copy" class="button" onclick="copyPs();">Copy</button>
-            
-            <button type="button" class="button" onclick="clearPs();">Clear</button> <br>
+            <input type="checkbox" id="show">Show 
+            <button type="button" id="copy" class="button">Copy</button>
+            <button type="button" class="button" id="clearpassword">Clear</button> <br>
         </div>
     </aside>
 
@@ -294,12 +290,30 @@ td, th {
 
 </div>
 
-<script src="../js/tabula.js"></script>
-<script src="../js/seedrandom.js"></script>
-<script src="../js/sjcl-build.js"></script>
-
-
 <script>
+/*
+Copyright 2014 David Bau.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 /*
 Copyright 2014 David Bau.
 
@@ -547,6 +561,7 @@ if ((typeof module) == 'object' && module.exports) {
   [],     // pool: entropy pool starts empty
   Math    // math: package containing random, pow, and seedrandom
 );
+
 </script>
 
 
@@ -740,8 +755,8 @@ a);c=this.f;a=this.f=c+sjcl.bitArray.bitLength(a);if(0x1fffffffffffff<a)throw ne
 4294967296)));a.length;){e=a.splice(0,16);for(c=0;16>c;++c)e[c]=b(e[c]);d.call(this,e)}a=this.c;this.reset();for(c=0;5>c;++c)a[c]=b(a[c]);return a}};for(var c=[1732584193,4023233417,2562383102,271733878,3285377520],e=[0,1518500249,1859775393,2400959708,2840853838],f=[1352829926,1548603684,1836072691,2053994217,0],g=4;0<=g;--g)for(var h=1;16>h;++h)e.splice(g,0,e[g]),f.splice(g,0,f[g]);var k=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,7,4,13,1,10,6,15,3,12,0,9,5,2,14,11,8,3,10,14,4,9,15,8,1,2,7,0,6,13,11,
 5,12,1,9,11,10,0,8,12,4,13,3,7,15,14,5,6,2,4,0,5,9,7,12,2,10,14,1,3,8,11,6,15,13],l=[5,14,7,0,9,2,11,4,13,6,15,8,1,10,3,12,6,11,3,7,0,13,5,10,14,15,8,12,4,9,1,2,15,5,1,3,7,14,6,9,11,8,12,2,10,0,4,13,8,6,4,1,3,11,15,0,5,12,2,13,9,7,10,14,12,15,10,4,1,5,8,7,6,2,13,14,0,3,9,11],m=[11,14,15,12,5,8,7,9,11,13,14,15,6,7,9,8,7,6,8,13,11,9,7,15,7,12,15,9,11,7,13,12,11,13,6,7,14,9,13,15,14,8,13,6,5,12,7,5,11,12,14,15,14,15,9,8,9,14,5,6,8,6,5,12,9,15,5,11,6,8,13,12,5,12,13,14,11,8,5,6],n=[8,9,9,11,13,15,15,
 5,7,7,8,11,14,14,12,6,9,13,15,7,12,8,9,11,7,7,12,7,6,15,13,11,9,7,15,11,8,6,6,14,12,13,5,14,13,13,7,5,15,5,8,11,14,14,6,14,6,9,12,9,12,5,15,8,8,5,12,9,12,5,14,6,8,13,6,5,15,13,11,11]})();"undefined"!==typeof module&&module.exports&&(module.exports=sjcl);"function"===typeof define&&define([],function(){return sjcl});
-</script>
 
+</script>
 
 <script>
 /*
@@ -767,6 +782,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 
 //Warning: changing these will change all dependent output tables
 var passchars = {
@@ -1408,6 +1424,129 @@ function chooseCharacters() {
 //  " ": " "
 // };
 
+function printPage() {
+    //https://stackoverflow.com/questions/30167749
+    window.print();
+}
+
+function openTab(evt, tabName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    console.log(evt);
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(tabName).style.display = "block";
+    //evt.currentTarget.className += " active";
+    evt.originalTarget.className += " active";
+}
+
+function openSettings() {
+    var el = document.getElementById('settings');
+    var cls = el.className;
+    //console.log(e);
+    //var cls = e.target.className;
+    console.log(cls);
+    if (cls.indexOf('active') == -1) {
+        el.className += ' active';
+    } else {
+        el.className = cls.replace(' active', '');
+    }
+}
+
+
+//Changes I've made so far: added print function, added event listeners below.  
+//I think current problem is that button is causing reload?
+// YUP: <form onsubmit="return false;">
+// this js won't execute, so I just removed the form, it's not needed, unless you
+// want it to create on pressing 'enter', but that's not necessary for now.
+// Changed a lot of html styling to give small window better view.    
+
+
+// Need to replace all function calls within popup.html with even listeners
+// that wait for a click or onchange events on the elements.  
+//https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Add_a_button_to_the_toolbar
+//https://github.com/mdn/webextensions-examples/blob/master/menu-demo/background.js
+document.addEventListener("click", function(e) {
+    switch (e.target.id) {
+        case "settingslink":
+            //console.log(e);
+            openTab(e, 'settingstab');
+            break;
+        case "tabulalink":
+            openTab(e, 'tabulatab');
+            break;
+        case "settingstoggle":
+            openSettings();
+            break;
+        case "showpassword":
+            toggleSe();
+            break;
+        case "mask":
+            toggleMask();
+            break;
+        case "create":
+            create();
+            break;
+        case "cleartable":
+            clearAll();
+            break;
+        case "print":
+            printPage();
+            break;
+        case "highlight":
+            toggleHl();
+            break;
+        case "show":
+            togglePs();
+            break;
+        case "copy":
+            copyPs();
+            break;
+        case "clearpassword":
+            clearPs();
+            break;
+    }
+});
+
+//https://stackoverflow.com/questions/2889840
+document.addEventListener("change", function(e) {
+    switch (e.target.id) {
+        case "characters":
+            chooseCharacters();
+            break;
+        case "method":
+            renderDirections();
+            break;
+    }
+});
+
+//Initialize by opening Settings tab
+//done in html + " active" instead
+//document.getElementById('settingslink').click();
+// browser.browserAction.onClicked.addListener(function() {
+//     document.getElementById('settingslink').click();  
+// });
+
+
+document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById('masterpassword').focus();
+    document.getElementById('masterform').onsubmit = function(){return false;}
+});
+
 </script>
+
 </body>
 </html>
