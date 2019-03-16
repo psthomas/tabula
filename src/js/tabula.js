@@ -249,7 +249,10 @@ function generateCharacters(rows, cols, charset) {
     //https://github.com/bitwiseshiftleft/sjcl
     //Deriving salt from masterpass at least ensures a unique-ish salt per user, although 
     //not ideal.  Added to 128bit base64 string.
-    var seed = sjcl.misc.scrypt(master, master + 'njk1OhfB2y9mbLYLaFkEkD');
+    //var seed = sjcl.misc.scrypt(master, master + 'njk1OhfB2y9mbLYLaFkEkD');
+    //Note, using master + 'njk1OhfB2y9mbLYLaFkEkD' above won't add any security
+    //because whoever is building the rainbow table will know that from this source.
+    var seed = sjcl.misc.scrypt(master, 'njk1OhfB2y9mbLYLaFkEkD');
     Math.seedrandom(seed);
     //Math.seedrandom(sjcl.misc.pbkdf2(seed, 'njk1OhfB2y9mbLYLaFkEkD'));
     var charList = [];
