@@ -213,7 +213,6 @@ a[target="_blank"]::after {
 
 
 	    <div class='inputs' id='settings'> 
-	        <!-- <b>Characters:</b> -->
             Characters:
 	        <select id="characters"> <!--onfocus="this.selectedIndex = -1;"-->
 	            <option value="advanced" selected="selected">Letters, Numbers, Advanced</option>
@@ -222,11 +221,8 @@ a[target="_blank"]::after {
 	            <option value="letters">Letters</option>
 	            <option value="numbers">Numbers</option>
 	        </select>  
-<!-- 	    </div>
 
-	    <div class="input"> -->
             &nbsp;
-	        <!-- <b>Pattern:</b> -->
             Pattern:
 	        <select id="method"> <!--onfocus="this.selectedIndex = -1;"-->
 	                <option value="manual">Manual</option>
@@ -253,6 +249,7 @@ a[target="_blank"]::after {
 <!--             <button type="submit" disabled style="display:none;"></button> -->
             <button class="button" id="create">Create</button>
             <button type="button" class="button" id="cleartable">Clear</button>
+            <button type="button" class="button" id="print">Print</button>
             <input type="checkbox" id="mask">Mask
             <!-- <span id="settingstoggle">&#9881;</span> -->
             <!-- <button id="settingstoggle">&#9881;</button> -->
@@ -282,9 +279,9 @@ a[target="_blank"]::after {
 </div>
 
 
-<script src="tabula-simple.js"></script>
+<script src="tabula.js"></script>
 <script src="seedrandom.js"></script>
-<script src="sjcl-build.js"></script>
+<script src="sjcl_build.js"></script>
 
 
 </body>

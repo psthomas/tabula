@@ -38,7 +38,7 @@ For web security, everything is included in a single HTML file that doesn't depe
 
 In terms of cryptography, there are a few threats that I go more in-depth about in my [blogpost](https://pstblog.com/2018/01/30/password-manager).  The main one I'm concerned about is the situation where someone's table or master password is revealed because this opens them up to a brute force attack.  I'm looking for advice on how to reduce this risk.  
 
-These are the current sha256 checksums of the files:
+This is the current sha256 checksums of the web file:
 
 `tabula.html`:
 ```

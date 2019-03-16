@@ -5,8 +5,8 @@
   "version": "1.0",
   "browser_action": {
     "browser_style": true,
-    //All script imports done within here
-    "default_popup": "popup/tabula-extff.html", 
+    //All script imports done within html
+    "default_popup": "popup/tabula-ff.html", 
     "default_icon": {
       "16": "icons/grid16.png",
       "32": "icons/grid32.png"
