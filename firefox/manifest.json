@@ -11,6 +11,11 @@
       "16": "icons/grid16.png",
       "32": "icons/grid32.png"
     }
+    //https://icons8.com/icon/11393/grid
+    // "default_icon": {
+    //   "16": "icons/grid-filled-16.png",
+    //   "32": "icons/grid-filled-32.png"
+    // }
   }
 
 }

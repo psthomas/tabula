@@ -756,6 +756,6 @@ document.addEventListener("change", function(e) {
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-    document.getElementById('masterpassword').focus();
+    //document.getElementById('masterpassword').focus();
     document.getElementById('masterform').onsubmit = function(){return false;}
 });
