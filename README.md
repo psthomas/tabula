@@ -43,5 +43,5 @@ This is the current sha256 checksum of the web file:
 `tabula.html`:
 ```
 $ shasum -pa 256 tabula.html
-2d1d935b344043d398b848fd25bd60e4107680b5685409c35b3f89e9e23d580c ?tabula.html
+20e1187442c00f94d0c67bee65604c79341c2658b1df72a8a4fc10fcaec9bc0f ?tabula.html
 ```
